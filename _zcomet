@@ -1,0 +1,21 @@
+#compdef zcomet
+
+local -a commands
+commands=(
+	'load:clone and load a plugin'
+	'trigger:create a shortcut for loading and running a plugin'
+	'snippet:load a snippet of code from Oh-My-ZSH'
+	'unload:unload a prompt or plugin'
+	'update:update all plugins and snippets'
+	'list:list all loaded plugins and snippets'
+	'compile:(re)compile script(s) if necessary'
+	'self-update:update zcomet itself'
+	'help:print this help text'
+	'fpath:clone a repository and add one of its directories to FPATH'
+)
+
+if (( CURRENT == 2 )); then
+	_describe -t commands 'commands' commands
+fi
+
+return 0

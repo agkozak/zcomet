@@ -1,0 +1,21 @@
+zcomet load willghatch/zsh-saneopt
+
+zcomet unload agkozak/zsh-z
+zcomet trigger z rupa/z
+
+zcomet load zdharma/fast-syntax-highlighting
+
+[[ ! -o ksharrays && ! -o shwordsplit ]] && {
+	zcomet unload agkozak/agkozak-zsh-prompt
+	zcomet load sindresorhus/pure async.zsh pure.zsh
+
+	zcomet load zsh-users/zsh-autosuggestions
+}
+
+zcomet load oldratlee/hacker-quotes
+
+zcomet trigger hist marlonrichert/zsh-hist
+
+zcomet load zsh-users/zsh-completions
+
+zcomet load ohmyzsh lib git.zsh
