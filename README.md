@@ -110,7 +110,15 @@ or save time by listing a number of triggers before the repository name:
 
 This example will download Oh-My-Zsh's `git` aliases without cloning the whole Oh-My-Zsh repository -- a great time-saver.
 
-For now, only Oh-My-Zsh files are supported, but soon I will include support for any URL.
+`zcomet` will translate `github.com` URLs into their `raw.githubusercontent.com` equivalents:
+
+    zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+
+is translated into
+
+    zcomet snippet https://raw.githubusercontent.com/jreese/zsh-titles/master/titles.plugin.zsh
+
+For snippets that are not hosted by GitHub, you will want to make sure that the URL you use points towards raw code, not a pretty HTML display of it.
 
 ### `update`
 
@@ -143,7 +151,6 @@ Unloads a plugin that has an [unload function](https://github.com/zdharma/Zsh-10
 * Allow user to update just one repository or snippet
 * Improve the `unload` command
 * Allow the loading of repositories not on GitHub
-* Allow for snippets from any source (not just from Oh-My-Zsh)
 * Allow user to clone `trigger` repositories before they are needed
 
 *Copyright (C) 2021 Alexandros Kozak*
