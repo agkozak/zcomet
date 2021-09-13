@@ -16,14 +16,6 @@
 
 `zcomet` is still in the initial phases of its development. I have to implement prettier and more informative messages (you will see some raw Git output), and error handling is very basic at present. I also expect that I will make the occasional change to the command syntax as I move forward.
 
-## News
-
-<!-- <details>
-    <summary>Here are the latest features and updates.</summary> -->
-- September 13, 2021
-    + The `snippet` command now supports any URL that points to raw Zsh code (not HTML). It will translate `github.com` addresses into their `raw.githubusercontent.com` equivalents. The `OMZ::` shorthand for Oh-My-Zsh code has been kept intact.
-<!-- </details> -->
-
 ## Example `.zshrc`
 
 ```sh
@@ -39,15 +31,13 @@ zcomet load agkozak/agkozak-zsh-prompt
 
 # Load some plugins
 zcomet load agkozak/zsh-z
+zcomet load jreese/zsh-titles
 zcomet load ohmyzsh plugins/gitfast
 
 # Lazyload some plugins
 zcomet trigger zhooks agkozak/zhooks
 zcomet trigger extract x ohmyzsh plugins/extract
 zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
-
-# A code snippet
-zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
 
 # Load compinit
 autoload -Uz compinit
@@ -120,15 +110,7 @@ or save time by listing a number of triggers before the repository name:
 
 This example will download Oh-My-Zsh's `git` aliases without cloning the whole Oh-My-Zsh repository -- a great time-saver.
 
-`zcomet` will translate `github.com` URLs into their `raw.githubusercontent.com` equivalents:
-
-    zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
-
-is translated into
-
-    zcomet snippet https://raw.githubusercontent.com/jreese/zsh-titles/master/titles.plugin.zsh
-
-For snippets that are not hosted by GitHub, you will want to make sure that the URL you use points towards raw code, not a pretty HTML display of it.
+For now, only Oh-My-Zsh files are supported, but soon I will include support for any URL.
 
 ### `update`
 
@@ -161,6 +143,7 @@ Unloads a plugin that has an [unload function](https://github.com/zdharma/Zsh-10
 * Allow user to update just one repository or snippet
 * Improve the `unload` command
 * Allow the loading of repositories not on GitHub
+* Allow for snippets from any source (not just from Oh-My-Zsh)
 * Allow user to clone `trigger` repositories before they are needed
 
 *Copyright (C) 2021 Alexandros Kozak*

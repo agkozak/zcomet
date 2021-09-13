@@ -4,7 +4,7 @@ local -a commands
 commands=(
 	'load:clone and load a plugin'
 	'trigger:create a shortcut for loading and running a plugin'
-	'snippet:load a snippet of code'
+	'snippet:load a snippet of code from Oh-My-ZSH'
 	'unload:unload a prompt or plugin'
 	'update:update all plugins and snippets'
 	'list:list all loaded plugins and snippets'
