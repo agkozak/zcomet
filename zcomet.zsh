@@ -315,22 +315,24 @@ zcomet() {
       url=$REPLY
       snippet=${snippet#http(|s)\:\/\/}
       if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet} ]] || (( update )); then
-        if [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*} ]]; then
-          mkdir -p "${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}"
-        fi
+        [[ ! -d /tmp/zcomet ]] && mkdir /tmp/zcomet
         print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
         if (( ${+commands[curl]} )); then
           method='curl'
-          curl "$url" > "${ZCOMET[SNIPPETS_DIR]}/${snippet}" ||
+          curl "$url" > "/tmp/zcomet/${snippet}"
           ret=$?
         elif (( ${+commands[wget]} )); then
           method='wget'
-          wget -P "${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}" "$url"
+          wget -P "/tmp/zcomet/${snippet%/*}" "$url"
           ret=$?
         else
           >&2 print "You need \`curl' to download snippets." && return 1
         fi
         if (( ret == 0 )); then
+          if [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*} ]]; then
+            mkdir -p "${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}"
+          fi
+          mv "/tmp/zcomet/${snippet}" "${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}"
           _zcomet_compile "${ZCOMET[SNIPPETS_DIR]}/${snippet}"
         else
           >&2 print "Could not \`${method}' that snippet."
