@@ -58,11 +58,11 @@ _zcomet_compile() {
   done
 }
 
-###########################################################
+############################################################
 # Allow the user to employ the shorthand `ohmyzsh' for the
 # ohmyzsh/ohmyzsh repo and `prezto' for
 # sorin-ionescu/prezto
-###########################################################
+############################################################
 _zcomet_repo_shorthand() {
   emulate -L zsh
   setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
@@ -77,7 +77,7 @@ _zcomet_repo_shorthand() {
   fi
 }
 
-##########################################################
+############################################################
 # This function loads plugins that have already been
 # cloned. Loading consists of sourcing a main file or
 # adding the root directory or a /functions/ subdirectory
@@ -93,7 +93,7 @@ _zcomet_repo_shorthand() {
 #     added to FPATH; otherwise 1
 # Outputs:
 #   Error messages
-##########################################################
+############################################################
 _zcomet_load() {
   typeset repo subdir file plugin_path plugin_name plugin_loaded
   typeset -a files
@@ -166,7 +166,7 @@ _zcomet_load() {
   fi
 }
 
-##########################################################
+############################################################
 # Manage the arrays used when running `zcomet list'
 # Globals:
 #   zsh_loaded_plugins
@@ -176,7 +176,7 @@ _zcomet_load() {
 #   $1 The command being run (load/snippet/trigger)
 #   $2 Repository and optional subpackage, e.g.,
 #     themes/robbyrussell
-##########################################################
+############################################################
 _zcomet_add_list() {
   emulate -L zsh
   setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
@@ -192,7 +192,7 @@ _zcomet_add_list() {
   fi
 }
 
-##########################################################
+############################################################
 # Clone a repository, switch to a branch/tag/commit if
 # requested, and compile the scripts
 # Globals:
@@ -202,7 +202,7 @@ _zcomet_add_list() {
 #
 # TODO: At present, this function will compile every
 # script in ohmyzsh/ohmyzsh! Rein it in.
-##########################################################
+############################################################
 _zcomet_clone_repo() {
   setopt LOCAL_OPTIONS NO_KSH_ARRAYS NO_SH_WORD_SPLIT
 
@@ -290,7 +290,7 @@ zcomet() {
       [[ -z $1 ]] && print 'You need to specify a snippet.' && return 1
       [[ $1 == '--update' ]] && update=1 && shift
       snippet=$1 && shift
-      local url
+      local url method
       url='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
       if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet} ]] || (( update )); then
         if [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*} ]]; then
@@ -298,16 +298,22 @@ zcomet() {
         fi
         print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
         if (( ${+commands[curl]} )); then
+          method='curl'
           curl "${url}${snippet#OMZ::}" > "${ZCOMET[SNIPPETS_DIR]}/${snippet}"
           ret=$?
         elif (( ${+commands[wget]} )); then
+          method='wget'
           wget -P "${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}" \
             "${url}${snippet#OMZ::}"
           ret=$?
         else
-          >&2 print "You need \`curl' to download snippets." && return 1
+          >&2 print "You need \`curl' or \`wget' to download snippets." && return 1
         fi
-        (( ret == 0 )) && _zcomet_compile "${ZCOMET[SNIPPETS_DIR]}/${snippet}"
+        if (( ret == 0 )); then
+          _zcomet_compile "${ZCOMET[SNIPPETS_DIR]}/${snippet}"
+        else
+          >&2 print "Could not ${method} snippet ${snippet}."
+        fi
       fi
       (( update )) && return
       if source "${ZCOMET[SNIPPETS_DIR]}/${snippet}"; then
