@@ -319,7 +319,7 @@ zcomet() {
           mkdir -p "${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}"
         fi
         print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
-        if (( ${+commands[cul]} )); then
+        if (( ${+commands[curl]} )); then
           method='curl'
           curl "$url" > "${ZCOMET[SNIPPETS_DIR]}/${snippet}" ||
           ret=$?
