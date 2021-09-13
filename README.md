@@ -9,6 +9,10 @@
 
 `zcomet` is a backwards-compatible Zsh plugin manager that gets you to the prompt quickly without having to use a cache. It began as a series of routines that I used in my dotfiles to source plugins and snippets whenever I was using a version of Zsh that was too old for [Zinit](https://github.com/zdharma/zinit). I was pleasantly surprised to find that my code performs impressively in [Zim's framework benchmark test](https://github.com/zimfw/zsh-framework-benchmark).
 
+![Benchmarks](img/benchmarks.png)
+
+*\*100 iterations on a four-core Ubuntu laptop*
+
 `zcomet` is still in the initial phases of its development. I have to implement prettier and more informative messages (you will see some raw Git output), and error handling is very basic at present. I also expect that I will make the occasional change to the command syntax as I move forward.
 
 ## Example `.zshrc`
