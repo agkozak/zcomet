@@ -161,6 +161,7 @@ Unloads a plugin that has an [unload function](https://github.com/zdharma/Zsh-10
 * Allow user to update just one repository or snippet
 * Improve the `unload` command
 * Allow the loading of repositories not on GitHub
+* Support for `ssh://` and `git://`
 * Allow for snippets from any source (not just from Oh-My-Zsh)
 * Allow user to clone `trigger` repositories before they are needed
 
