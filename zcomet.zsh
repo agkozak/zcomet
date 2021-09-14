@@ -376,7 +376,7 @@ zcomet() {
       fi
       ;;
     update)
-      local i j
+      local file
       for i in "${ZCOMET[REPOS_DIR]}"/**/.git(N/); do
         print -Pn "%B%F{yellow}${${i:h}#${ZCOMET[REPOS_DIR]}/}:%f%b "
         command git --git-dir="${i}" --work-tree="${i:h}" pull
@@ -389,21 +389,21 @@ zcomet() {
       done
       local -a snippets
       snippets=( "${ZCOMET[SNIPPETS_DIR]}"/**/*(N.) )
-      for i in "${snippets[@]}"; do
-        j=${i#${ZCOMET[SNIPPETS_DIR]}/}
-        if [[ $j == *.zwc ]]; then
+      for file in "${snippets[@]}"; do
+        snippet=${file#${ZCOMET[SNIPPETS_DIR]}/}
+        if [[ $snippet == *.zwc ]]; then
           continue
-        elif [[ $j == OMZ::* ]]; then
+        elif [[ $snippet == OMZ::* ]]; then
           :
-        elif [[ $j == https/* ]]; then
-          j="https:/${j#https}"
-        elif [[ $j == http/* ]]; then
-          j="http:/${j#http}"
+        elif [[ $snippet == https/* ]]; then
+          snippet="https:/${snippet#https}"
+        elif [[ $snippet == http/* ]]; then
+          snippet="http:/${snippet#http}"
         else
-          >&2 print "Snippet ${i} not supported."
+          >&2 print "Snippet ${file} not supported."
         fi
-        zcomet snippet --update "${j}"
-        _zcomet_compile "$i"
+        zcomet snippet --update "${snippet}"
+        _zcomet_compile "$file"
       done
       i=
       if (( ${#ZCOMET_SNIPPETS} )); then
