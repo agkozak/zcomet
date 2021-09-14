@@ -235,28 +235,32 @@ _zcomet_add_list() {
 _zcomet_clone_repo() {
   setopt LOCAL_OPTIONS NO_KSH_ARRAYS NO_SH_WORD_SPLIT
 
-  [[ -z $1 ]] && return 1
-  local repo branch
-  repo=${1%@*}
-  [[ $1 == *@* ]] && branch=${1#*@}
-  _zcomet_repo_shorthand "$repo"
+  [[ $1 == ?*/?* || $1 == 'ohmyzsh' || $1 == 'prezto' ]] || return 1
+  local repo branch repo_dir ret file
+  _zcomet_repo_shorthand "${1%@*}"
   repo=$REPLY
+  repo_dir="${ZCOMET[REPOS_DIR]}/${repo}"
+  [[ $1 == *@* ]] && branch=${1#*@}
 
-  if [[ ! -d ${ZCOMET[REPOS_DIR]}/${repo} ]]; then
-    print -P "%B%F{yellow}Cloning ${repo}:%f%b"
-    command git clone "https://github.com/${repo}" \
-      "${ZCOMET[REPOS_DIR]}/${repo}" || return $?
-    if [[ -n $branch ]]; then
-      command git --git-dir="${ZCOMET[REPOS_DIR]}/${repo}/.git" \
-        --work-tree="${ZCOMET[REPOS_DIR]}/${repo}" checkout -q "$branch"
-    fi
-    local file
-    for file in "${ZCOMET[REPOS_DIR]}/${repo}"/**/*.zsh(N.) \
-                "${ZCOMET[REPOS_DIR]}/${repo}"/**/prompt_*_setup(N.) \
-                "${ZCOMET[REPOS_DIR]}/${repo}"/**/*.zsh-theme(N.); do
-      _zcomet_compile "$file"
-    done
+  [[ -d ${repo_dir} ]] && return
+
+  print -P "%B%F{yellow}Cloning ${repo}:%f%b"
+  if ! command git clone "https://github.com/${repo}" "${repo_dir}"; then
+    ret=$?
+    >&2 print "Could not clone repository ${repo}."
+    return $ret
   fi
+  if [[ -n $branch ]] && ! command git --git-dir="${repo_dir}/.git" \
+    --work-tree="${repo_dir}" checkout -q "$branch"; then
+    ret=$?
+    >&2 print "Could not checkout branch ${branch}."
+    return $ret
+  fi
+  for file in "${repo_dir}/${repo}"/**/*.zsh(N.) \
+              "${repo_dir}"/**/prompt_*_setup(N.) \
+              "${repo_dir}"/**/*.zsh-theme(N.); do
+    _zcomet_compile "$file"
+  done
 }
 
 ############################################################
