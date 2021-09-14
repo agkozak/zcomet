@@ -442,16 +442,16 @@ zcomet() {
     -h|--help|help)
       print "usage: $0 command [...]
 
-load            clone and load a plugin
-fpath           clone a plugin and add one of its directories to FPATH
-trigger         create a shortcut for loading and running a plugin
-snippet         load a snippet of code
-unload          unload a plugin
-update          update all plugins and snippets
-list            list all loaded plugins and snippets
 compile         (re)compile script(s) (only when necessary)
+fpath           clone a plugin and add one of its directories to FPATH
+help            print this help text
+list            list all loaded plugins and snippets
+load            clone and load a plugin
 self-update     update zcomet itself
-help            print this help text" | fold -s -w $COLUMNS
+snippet         load a snippet of code
+trigger         create a shortcut for loading and running a plugin
+unload          unload a plugin
+update          update all plugins and snippets" | fold -s -w $COLUMNS
       ;;
     *) zcomet help; return 1 ;;
   esac
