@@ -126,8 +126,7 @@ _zcomet_snippet_shorthand() {
 _zcomet_load() {
   typeset repo subdir file plugin_path plugin_name plugin_loaded
   typeset -a files
-  repo=$1
-  _zcomet_repo_shorthand $repo
+  _zcomet_repo_shorthand "$1"
   repo=$REPLY
   shift
   if [[ -n $1 && -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
@@ -170,7 +169,8 @@ _zcomet_load() {
       if source "$file"; then
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}" && plugin_loaded=1
       else
-        >&2 print "Cannot source ${file}." && return 1
+        >&2 print "Cannot source ${file}."
+        return 1
       fi
     fi
   fi
@@ -190,8 +190,8 @@ _zcomet_load() {
       fi
     fi
   else
-    >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH." &&
-      return 1
+    >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH."
+    return 1
   fi
 }
 
@@ -342,7 +342,8 @@ zcomet() {
             "${url}"
           ret=$?
         else
-          >&2 print "You need \`curl' or \`wget' to download snippets." && return 1
+          >&2 print "You need \`curl' or \`wget' to download snippets."
+          return 1
         fi
         if (( ret == 0 )); then
           _zcomet_compile "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"
@@ -463,7 +464,10 @@ trigger         create a shortcut for loading and running a plugin
 unload          unload a plugin
 update          update all plugins and snippets" | fold -s -w $COLUMNS
       ;;
-    *) zcomet help; return 1 ;;
+    *)
+      zcomet help
+      return 1
+      ;;
   esac
 }
 
