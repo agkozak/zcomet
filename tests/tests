@@ -1,7 +1,7 @@
 zcomet load willghatch/zsh-saneopt
 
 zcomet unload agkozak/zsh-z
-zcomet trigger z rupa/z
+zcomet snippet https://github.com/rupa/z/blob/master/z.sh
 
 zcomet load zdharma/fast-syntax-highlighting
 
