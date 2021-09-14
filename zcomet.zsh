@@ -445,7 +445,7 @@ zcomet() {
 load            clone and load a plugin
 fpath           clone a plugin and add one of its directories to FPATH
 trigger         create a shortcut for loading and running a plugin
-snippet         load a snippet of code from Oh-My-ZSH
+snippet         load a snippet of code
 unload          unload a plugin
 update          update all plugins and snippets
 list            list all loaded plugins and snippets
