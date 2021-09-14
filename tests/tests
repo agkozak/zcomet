@@ -1,4 +1,4 @@
-zcomet load willghatch/zsh-saneopt
+zcomet snippet https://github.com/willghatch/zsh-saneopt/blob/master/saneopt.plugin.zsh
 
 zcomet unload agkozak/zsh-z
 zcomet snippet https://github.com/rupa/z/blob/master/z.sh
