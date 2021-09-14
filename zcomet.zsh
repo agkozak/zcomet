@@ -62,6 +62,10 @@ _zcomet_compile() {
 # Allows the user to employ the shorthand `ohmyzsh' for the
 # ohmyzsh/ohmyzsh repo and `prezto' for
 # sorin-ionescu/prezto
+# Arguments:
+#   $1 A repo or its shorthand
+# Outputs:
+#   The repo
 ############################################################
 _zcomet_repo_shorthand() {
   emulate -L zsh
@@ -82,6 +86,11 @@ _zcomet_repo_shorthand() {
 # snippets or an https://github.com address that gets
 # translated into https://raw.githubuser.com; otherwise, a
 # simple URL of raw shell code.
+# Arguments:
+#   $1 A URL to raw code, a normative github.com URL, or
+#      shorthand
+# Outputs:
+#   A URL to raw code
 ############################################################
 _zcomet_snippet_shorthand() {
   emulate -L zsh
@@ -195,7 +204,7 @@ _zcomet_load() {
 # Arguments:
 #   $1 The command being run (load/snippet/trigger)
 #   $2 Repository and optional subpackage, e.g.,
-#     themes/robbyrussell
+#     ohmyzsh/ohmyzsh plugins/extract
 ############################################################
 _zcomet_add_list() {
   emulate -L zsh
@@ -259,6 +268,7 @@ _zcomet_clone_repo() {
 #   ZCOMET_TRIGGERS
 # Arguments:
 #   load <repo> [...]
+#   fpath <repo> [...]
 #   trigger <trigger> <repo] [...]
 #   snippet <snippet>
 #   update
@@ -276,16 +286,12 @@ zcomet() {
   typeset -gUa zsh_loaded_plugins ZCOMET_SNIPPETS ZCOMET_TRIGGERS
   typeset -Ua triggers
 
-  ##########################################################
-  # THE MAIN ROUTINE
-  ##########################################################
-
   local cmd update trigger snippet repo_branch
   [[ -n $1 ]] && cmd=$1 && shift
 
   case $cmd in
     load)
-      if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]] then
+      if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; then
         >&2 print 'You need to specify a valid repository.' && return 1
       fi
       repo_branch=$1 && shift
@@ -293,7 +299,7 @@ zcomet() {
       _zcomet_load "${repo_branch%@*}" "$@"
       ;;
     fpath)
-      if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]] then
+      if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; then
         >&2 print 'You need to specify a valid repository.' && return 1
       fi
       repo_branch=$1 && shift
