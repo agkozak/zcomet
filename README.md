@@ -16,6 +16,14 @@
 
 `zcomet` is still in the initial phases of its development. I have to implement prettier and more informative messages (you will see some raw Git output), and error handling is very basic at present. I also expect that I will make the occasional change to the command syntax as I move forward.
 
+## News
+
+<!-- <details>
+    <summary>Here are the latest features and updates.</summary> -->
+- September 13, 2021
+    + The `snippet` command now supports any URL that points to raw Zsh code (not HTML) via HTTP or HTTPS. It will translate `github.com` addresses into their `raw.githubusercontent.com` equivalents. You may still use the `OMZ::` shorthand for Oh-My-Zsh code.
+<!-- </details> -->
+
 ## Example `.zshrc`
 
 ```sh
@@ -31,8 +39,10 @@ zcomet load agkozak/agkozak-zsh-prompt
 
 # Load some plugins
 zcomet load agkozak/zsh-z
-zcomet load jreese/zsh-titles
 zcomet load ohmyzsh plugins/gitfast
+
+# Load a code snippet
+zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
 
 # Lazyload some plugins
 zcomet trigger zhooks agkozak/zhooks
@@ -110,7 +120,15 @@ or save time by listing a number of triggers before the repository name:
 
 This example will download Oh-My-Zsh's `git` aliases without cloning the whole Oh-My-Zsh repository -- a great time-saver.
 
-For now, only Oh-My-Zsh files are supported, but soon I will include support for any URL.
+`zcomet` will translate `github.com` URLs into their raw code `raw.githubusercontent.com` equivalents. For example,
+
+    zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+
+really executes
+
+    zcomet snippet https://raw.githubusercontent.com/jreese/zsh-titles/master/titles.plugin.zsh
+
+For snippets that are not hosted by GitHub, you will want to make sure that the URL you use points towards raw code, not a pretty HTML display of it.
 
 ### `update`
 
