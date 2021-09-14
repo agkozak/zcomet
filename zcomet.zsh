@@ -59,7 +59,7 @@ _zcomet_compile() {
 }
 
 ############################################################
-# Allow the user to employ the shorthand `ohmyzsh' for the
+# Allows the user to employ the shorthand `ohmyzsh' for the
 # ohmyzsh/ohmyzsh repo and `prezto' for
 # sorin-ionescu/prezto
 ############################################################
@@ -72,6 +72,26 @@ _zcomet_repo_shorthand() {
     REPLY='ohmyzsh/ohmyzsh'
   elif [[ $1 == 'prezto' ]]; then
     REPLY='sorin-ionescu/prezto'
+  else
+    REPLY=$1
+  fi
+}
+
+############################################################
+# Allows the user to use the shorthand OMZ:: for Oh-My-Zsh
+# snippets or an https://github.com address that gets
+# translated into https://raw.githubuser.com; otherwise, a
+# simple URL of raw shell code.
+############################################################
+_zcomet_snippet_shorthand() {
+  emulate -L zsh
+  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
+  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
+
+  if [[ $1 == OMZ::* ]]; then
+    REPLY="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${1#OMZ::}"
+  elif [[ $1 == https://github.com/* ]]; then
+    REPLY=${${1/github/raw.githubusercontent}/\/blob/}
   else
     REPLY=$1
   fi
@@ -290,33 +310,38 @@ zcomet() {
       [[ -z $1 ]] && print 'You need to specify a snippet.' && return 1
       [[ $1 == '--update' ]] && update=1 && shift
       snippet=$1 && shift
-      local url method
-      url='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
-      if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet} ]] || (( update )); then
-        if [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*} ]]; then
-          mkdir -p "${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}"
+      local url method snippet_file snippet_dir
+      _zcomet_snippet_shorthand "$snippet"
+      url=$REPLY
+      snippet_file=${snippet##*/}
+      snippet_dir=${snippet%/*}
+      snippet_dir=${snippet_dir/:\//}
+      if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file} ]] ||
+         (( update )); then
+        if [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet_dir} ]]; then
+          mkdir -p "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}"
         fi
         print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
         if (( ${+commands[curl]} )); then
           method='curl'
-          curl "${url}${snippet#OMZ::}" > "${ZCOMET[SNIPPETS_DIR]}/${snippet}"
+          curl "${url}" > "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"
           ret=$?
         elif (( ${+commands[wget]} )); then
           method='wget'
-          wget -P "${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}" \
-            "${url}${snippet#OMZ::}"
+          wget -P "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}" \
+            "${url}"
           ret=$?
         else
           >&2 print "You need \`curl' or \`wget' to download snippets." && return 1
         fi
         if (( ret == 0 )); then
-          _zcomet_compile "${ZCOMET[SNIPPETS_DIR]}/${snippet}"
+          _zcomet_compile "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"
         else
           >&2 print "Could not ${method} snippet ${snippet}."
         fi
       fi
       (( update )) && return
-      if source "${ZCOMET[SNIPPETS_DIR]}/${snippet}"; then
+      if source "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"; then
         _zcomet_add_list "$cmd" "$snippet"
       else
         >&2 print "Could not source snippet ${snippet}."
@@ -351,7 +376,7 @@ zcomet() {
       fi
       ;;
     update)
-      local i
+      local i j
       for i in "${ZCOMET[REPOS_DIR]}"/**/.git(N/); do
         print -Pn "%B%F{yellow}${${i:h}#${ZCOMET[REPOS_DIR]}/}:%f%b "
         command git --git-dir="${i}" --work-tree="${i:h}" pull
@@ -365,11 +390,20 @@ zcomet() {
       local -a snippets
       snippets=( "${ZCOMET[SNIPPETS_DIR]}"/**/*(N.) )
       for i in "${snippets[@]}"; do
-        if [[ $i != *.zwc ]]; then
-          print -P "%B%F{yellow}${i#${ZCOMET[SNIPPETS_DIR]}/}:%f%b"
-          zcomet snippet --update "${i#${ZCOMET[SNIPPETS_DIR]}/}"
-          _zcomet_compile "$i"
+        j=${i#${ZCOMET[SNIPPETS_DIR]}/}
+        if [[ $j == *.zwc ]]; then
+          continue
+        elif [[ $j == OMZ::* ]]; then
+          :
+        elif [[ $j == https/* ]]; then
+          j="https:/${j#https}"
+        elif [[ $j == http/* ]]; then
+          j="http:/${j#http}"
+        else
+          >&2 print "Snippet ${i} not supported."
         fi
+        zcomet snippet --update "${j}"
+        _zcomet_compile "$i"
       done
       i=
       if (( ${#ZCOMET_SNIPPETS} )); then
