@@ -23,9 +23,9 @@ zcomet load zimfw/input
 zcomet load zimfw/termtitle
 zcomet load zimfw/utility
 zcomet load zimfw/duration-info
-zcomet load zimfw/git-info
+zcomet fpath zimfw/git-info
 zcomet load zimfw/asciiship
-zcomet load zsh-users/zsh-completions
+zcomet fpath zsh-users/zsh-completions src
 zcomet load zsh-users/zsh-autosuggestions
 zcomet load zsh-users/zsh-syntax-highlighting
 zcomet load zsh-users/zsh-history-substring-search
