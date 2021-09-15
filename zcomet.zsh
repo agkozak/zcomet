@@ -478,4 +478,5 @@ update          update all plugins and snippets" | fold -s -w $COLUMNS
   esac
 }
 
-zcomet compile "${ZCOMET[SCRIPT]}"
+zcomet compile "${ZCOMET[SCRIPT]}" \
+               "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
