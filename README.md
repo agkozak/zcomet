@@ -14,12 +14,32 @@
 
 *\*100 iterations on a four-core Ubuntu laptop*
 
-`zcomet` is still in the initial phases of its development. I have to implement prettier and more informative messages (you will see some raw Git output), and error handling is very basic at present. I also expect that I will make the occasional change to the command syntax as I move forward.
+`zcomet` is still in the initial phases of its development. I have to implement prettier and more informative messages (you will see some raw Git output), and error handling is very basic at present. If I make any changes early on that are likely to break your configuration, I will explain them in the [News](#news) section.
+
+## Table of Contents
+
+- [News](#news)
+- [Example `.zshrc`](#example-zshrc)
+- [Directory Customization](#directory-customization)
+- [Commands and Arguments](#commands-and-arguments)
+  + [`load`](#load-repository-name-subdirectory-file1-file2-)
+  + [`fpath`](#fpath-repository-name-subdirectory)
+  + [`trigger`](#trigger-trigger-name-arguments)
+  + [`snippet`](#snippet-snippet)
+  + [`update`](#update)
+  + [`list`](#list)
+  + [`compile`](#compile)
+  + [`help`](#help)
+  + [`self-update`](#self-update)
+  + [`unload`](#unload-repository-name)
+- [TODO](#todo)
 
 ## News
 
 <!-- <details>
     <summary>Here are the latest features and updates.</summary> -->
+- September 15, 2021
+    + `zcomet` will store your plugins and snippets in `${ZDOTDIR}`, if you have set that variable and if `${HOME}/.zcomet` does not already exist. Props to @mattjamesdev.
 - September 13, 2021
     + The `snippet` command now supports any URL that points to raw Zsh code (not HTML) via HTTP or HTTPS. It will translate `github.com` addresses into their `raw.githubusercontent.com` equivalents. You may still use the `OMZ::` shorthand for Oh-My-Zsh code.
 <!-- </details> -->
@@ -55,6 +75,18 @@ compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 # Compile compinit's dumpfile to wordcode
 zcomet compile "${HOME}/.zcompdump_${ZSH_VERSION}"
 ```
+
+## Directory Customization
+
+`zcomet` will store plugins, snippets, and the like in `~/.zcomet` by default. If you have set `$ZDOTDIR`, then `zcomet` will use `${ZDOTDIR}/.zcomet` instead. You can also specify a custom home directory for `zcomet` thus:
+
+    typeset -A ZCOMET
+    ZCOMET[HOME_DIR]=/path/to/zcomet_home_directory
+    source /path/to/zcomet.zsh
+
+In the home directory there will usually be a `/repos` subdirectory for plugins and a `/snippets` subdirectory for snippets, but you may use the variables `${ZCOMET[REPOS_DIR]}` and `${ZCOMET[SNIPPETS_DIR]}` to name your own locations.
+
+I recommend cloning the `agkozak/zcomet` repository to a `/bin` subdirectory in your `zcomet` home directory (e.g., `~/.zcomet/bin`), as in the [example `.zshrc`](#example-zshrc) above.
 
 ## Commands and Arguments
 
@@ -162,7 +194,6 @@ Unloads a plugin that has an [unload function](https://github.com/zdharma/Zsh-10
 * Improve the `unload` command
 * Allow the loading of repositories not on GitHub
 * Support for `ssh://` and `git://`
-* Allow for snippets from any source (not just from Oh-My-Zsh)
 * Allow user to clone `trigger` repositories before they are needed
 
 *Copyright (C) 2021 Alexandros Kozak*
