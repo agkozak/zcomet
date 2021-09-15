@@ -57,9 +57,10 @@ PMSPEC='0fuiPs'
 ############################################################
 _zcomet_compile() {
   while (( $# )); do
+    # Only zcompile if there isn't already a .zwc file or the .zwc is outdated,
+    # and never compile zsh-syntax-highlighting's test data
     if [[ -s $1                                &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
-          # Don't compile zsh-syntax-highlighting's test data
           $1 != */test-data/* ]]; then
       zcompile "$1"
     fi
@@ -77,10 +78,6 @@ _zcomet_compile() {
 #   The repo
 ############################################################
 _zcomet_repo_shorthand() {
-  emulate -L zsh
-  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
-  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
-
   if [[ $1 == 'ohmyzsh' ]]; then
     REPLY='ohmyzsh/ohmyzsh'
   elif [[ $1 == 'prezto' ]]; then
@@ -216,11 +213,6 @@ _zcomet_load() {
 #     ohmyzsh/ohmyzsh plugins/extract
 ############################################################
 _zcomet_add_list() {
-  emulate -L zsh
-  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
-  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
-
-  2=${2% }
   if [[ $1 == 'load' ]]; then
     zsh_loaded_plugins+=( "$2" )
   elif [[ $1 == 'snippet' ]]; then
@@ -374,8 +366,12 @@ zcomet() {
         shift
       done
       for trigger in "${triggers[@]}"; do
-        functions[$trigger]="ZCOMET_TRIGGERS=( "\${ZCOMET_TRIGGERS[@]:#${trigger}}" );
-          unfunction $trigger;
+        functions[$trigger]="local i;
+          for i in ${triggers[@]};
+          do
+            ZCOMET_TRIGGERS=( "\${ZCOMET_TRIGGERS[@]:#\${i}}" );
+          done
+          unfunction ${triggers[@]};
           zcomet load $@;
           eval $trigger \$@" && _zcomet_add_list "$cmd" "$trigger"
       done
