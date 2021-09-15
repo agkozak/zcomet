@@ -339,7 +339,8 @@ zcomet() {
         elif (( ${+commands[wget]} )); then
           method='wget'
           wget -P "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}" \
-            "${url}"
+               "${url}" \
+               -O "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"
           ret=$?
         else
           >&2 print "You need \`curl' or \`wget' to download snippets."
