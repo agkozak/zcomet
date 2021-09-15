@@ -1,4 +1,5 @@
 [submodule "zsh-framework-benchmark"]
 	path = zsh-framework-benchmark
-	url = https://github.com/zimfw/zsh-framework-benchmark
+	url = https://github.com/agkozak/zsh-framework-benchmark
 	ignore = dirty
+	branch = xfinity
