@@ -265,9 +265,8 @@ _zcomet_clone_repo() {
     >&2 print "Could not checkout branch ${branch}."
     return $ret
   fi
-  for file in "${repo_dir}/${repo}"/**/*.zsh(N.) \
-              "${repo_dir}"/**/prompt_*_setup(N.) \
-              "${repo_dir}"/**/*.zsh-theme(N.); do
+  for file in "${repo_dir}"/**/*.zsh(|-theme)(N.) \
+              "${repo_dir}"/**/prompt_*_setup(N.); do
     _zcomet_compile "$file"
   done
 }
@@ -400,9 +399,8 @@ zcomet() {
       for i in "${ZCOMET[REPOS_DIR]}"/**/.git(N/); do
         print -Pn "%B%F{yellow}${${i:h}#${ZCOMET[REPOS_DIR]}/}:%f%b "
         command git --git-dir="${i}" --work-tree="${i:h}" pull
-        for file in "${i:h}"/*.zsh(N.) \
-                    "${i:h}"/prompt_*_setup(N.) \
-                    "${i:h}"/*.zsh_theme(N.); do
+        for file in "${i:h}"/**/*.zsh(|-theme)(N.) \
+                    "${i:h}"/**/prompt_*_setup(N.); do
           _zcomet_compile "$file"
         done
         (( ${ZCOMET_PLUGINS[(Ie)$i]} )) && zcomet load "$i"
