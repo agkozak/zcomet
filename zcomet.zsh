@@ -17,7 +17,16 @@ ZCOMET[SCRIPT]=$0
 fpath=( "${ZCOMET[SCRIPT]:A:h}" "${fpath[@]}" )
 
 # Allow the user to specify custom directories
-ZCOMET[HOME_DIR]=${ZCOMET[HOME_DIR]:-${HOME}/.zcomet}
+if [[ -z ${ZINIT[HOME_DIR]} ]]; then
+  # Use ~/.zcomet, if it already exists
+  if [[ -d ${HOME}/.zcomet ]]; then
+    ZCOMET[HOME_DIR]="${HOME}/.zcomet"
+  # Otherwise respect ZDOTDIR
+  else
+    : ${ZCOMET[HOME_DIR]:=${ZDOTDIR:-${HOME}}/.zcomet}
+  fi
+fi
+
 ZCOMET[REPOS_DIR]=${ZCOMET[REPOS_DIR]:-${ZCOMET[HOME_DIR]}/repos}
 ZCOMET[SNIPPETS_DIR]=${ZCOMET[SNIPPETS_DIR]:-${ZCOMET[HOME_DIR]}/snippets}
 
