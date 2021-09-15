@@ -7,8 +7,8 @@
 () {
 local -r home_dir=${1}
 
-if [[ -f ../zcomet.zsh ]]; then
-  cp ../zcomet.zsh ${home_dir}
+if [[ -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
+  cp ${HOME}/.zcomet/bin/zcomet.zsh ${home_dir}
 else
 # download the repository
   command curl -Ss -L https://raw.githubusercontent.com/agkozak/zcomet/master/zcomet.zsh \
@@ -23,7 +23,7 @@ zcomet load zimfw/input
 zcomet load zimfw/termtitle
 zcomet load zimfw/utility
 zcomet load zimfw/duration-info
-zcomet fpath zimfw/git-info
+zcomet fpath zimfw/git-info functions
 zcomet load zimfw/asciiship
 zcomet fpath zsh-users/zsh-completions src
 zcomet load zsh-users/zsh-autosuggestions
