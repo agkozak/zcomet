@@ -38,6 +38,8 @@
 
 <!-- <details>
     <summary>Here are the latest features and updates.</summary> -->
+- Setpember 16, 2021
+    + `zcomet list` now reflects `FPATH` elements added using the `fpath` command.
 - September 15, 2021
     + `zcomet` will store your plugins and snippets in `${ZDOTDIR}`, if you have set that variable and if `${HOME}/.zcomet` does not already exist. Props to @mattjamesdev.
 - September 13, 2021

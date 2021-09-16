@@ -215,6 +215,8 @@ _zcomet_load() {
 _zcomet_add_list() {
   if [[ $1 == 'load' ]]; then
     zsh_loaded_plugins+=( "$2" )
+  elif [[ $1 == 'fpath' ]]; then
+    ZCOMET_FPATH+=( "$2" )
   elif [[ $1 == 'snippet' ]]; then
     ZCOMET_SNIPPETS+=( "$2" )
   elif [[ $1 == 'trigger' ]]; then
@@ -287,7 +289,7 @@ zcomet() {
   local MATCH REPLY; integer MBEGIN MEND
   local -a match mbegin mend reply
 
-  typeset -gUa zsh_loaded_plugins ZCOMET_SNIPPETS ZCOMET_TRIGGERS
+  typeset -gUa zsh_loaded_plugins ZCOMET_FPATH ZCOMET_SNIPPETS ZCOMET_TRIGGERS
   typeset -Ua triggers
 
   local cmd update trigger snippet repo_branch
@@ -314,6 +316,7 @@ zcomet() {
         local ret=$? && >&2 print 'Invalid directory.' && return $ret
       if (( ! ${fpath[(Ie)${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}]} )); then
         fpath=( "${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}" "${fpath[@]}" )
+        _zcomet_add_list "$cmd" "$repo_branch${@:+ $@}"
       fi
       ;; 
     snippet)
@@ -432,13 +435,16 @@ zcomet() {
       fi
       ;;
     list)
-      (( ${#zsh_loaded_plugins} ))           &&
-        print -P '%B%F{yellow}Plugins:%f%b'  &&
+      (( ${#zsh_loaded_plugins} )) &&
+        print -P '%B%F{yellow}Plugins:%f%b' &&
         print -l -f '  %s\n' "${(o)zsh_loaded_plugins[@]}"
-      (( ${#ZCOMET_SNIPPETS} ))              &&
+      (( ${#ZCOMET_FPATH} )) &&
+        print -P '%B%F{yellow}FPATH elements:%f%b' &&
+        print -l -f '  %s\n' "${(o)ZCOMET_FPATH[@]}"
+      (( ${#ZCOMET_SNIPPETS} )) &&
         print -P '%B%F{yellow}Snippets:%f%b' &&
         print -l -f '  %s\n' "${(o)ZCOMET_SNIPPETS[@]}"
-      (( ${#ZCOMET_TRIGGERS} ))              &&
+      (( ${#ZCOMET_TRIGGERS} )) &&
         print -P '%B%F{yellow}Triggers:%f%b' &&
         print "  ${(o)ZCOMET_TRIGGERS[@]}"
       ;;
