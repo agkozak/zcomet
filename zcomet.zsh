@@ -104,10 +104,6 @@ _zcomet_repo_shorthand() {
 #   A URL to raw code
 ############################################################
 _zcomet_snippet_shorthand() {
-  emulate -L zsh
-  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
-  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
-
   if [[ $1 == OMZ::* ]]; then
     REPLY="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${1#OMZ::}"
   elif [[ $1 == https://github.com/* ]]; then
@@ -241,8 +237,6 @@ _zcomet_add_list() {
 # script in ohmyzsh/ohmyzsh! Rein it in.
 ############################################################
 _zcomet_clone_repo() {
-  setopt LOCAL_OPTIONS NO_KSH_ARRAYS NO_SH_WORD_SPLIT
-
   [[ $1 == ?*/?* || $1 == 'ohmyzsh' || $1 == 'prezto' ]] || return 1
   local repo branch repo_dir ret file
   _zcomet_repo_shorthand "${1%@*}"
