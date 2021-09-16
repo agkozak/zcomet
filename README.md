@@ -12,7 +12,7 @@
 
 ![Benchmarks](img/benchmarks.png)
 
-*\*100 iterations on a four-core Ubuntu laptop*
+*\*100 iterations on a four-core Ubuntu laptop. The separate "`zcomet`-snippet" benchmark shows that use of the `snippet` command can make your startup time even faster.*
 
 `zcomet` is still in the initial phases of its development. I have to implement prettier and more informative messages (you will see some raw Git output), and error handling is very basic at present. If I make any changes early on that are likely to break your configuration, I will explain them in the [News](#news) section.
 
@@ -28,6 +28,7 @@
   + [`snippet`](#snippet-snippet)
   + [`update`](#update)
   + [`list`](#list)
+  + [`compinit`](#compinit)
   + [`compile`](#compile)
   + [`help`](#help)
   + [`self-update`](#self-update)
@@ -40,6 +41,7 @@
     <summary>Here are the latest features and updates.</summary> -->
 - Setpember 16, 2021
     + `zcomet list` now reflects `FPATH` elements added using the `fpath` command.
+    + New command: `zcomet compinit` runs `compinit` and compiles its cache for you.
 - September 15, 2021
     + `zcomet` will store your plugins and snippets in `${ZDOTDIR}`, if you have set that variable and if `${HOME}/.zcomet` does not already exist. Props to @mattjamesdev.
 - September 13, 2021
@@ -71,11 +73,8 @@ zcomet trigger zhooks agkozak/zhooks
 zcomet trigger extract x ohmyzsh plugins/extract
 zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
-# Load compinit
-autoload -Uz compinit
-compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-# Compile compinit's dumpfile to wordcode
-zcomet compile "${HOME}/.zcompdump_${ZSH_VERSION}"
+# Run compinit and compile its cache
+zcomet compinit
 ```
 
 ## Directory Customization
@@ -171,6 +170,10 @@ For snippets that are not hosted by GitHub, you will want to make sure that the 
 ### `list`
 
 `zcomet list` displays any active plugins, added `FPATH` elements, snippets, and triggers. As you use the triggers, you will see them disappear as triggers and reappear as loaded plugins.
+
+### `compinit`
+
+Runs Zsh's `compinit` command, which is necessary if you want to use command line completions. `compinit`'s cache is then stored in a file in the `$HOME` directory (or in `$ZDOTDIR`, if you have defined it) starting with `.zcompdump_` and ending with the version number of the `zsh` you are using, e.g. `.zcompdump_5.8`. `zcomet` compiles the cache for you.
 
 ### `compile`
 

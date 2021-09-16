@@ -62,7 +62,12 @@ _zcomet_compile() {
     if [[ -s $1                                &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
           $1 != */test-data/* ]]; then
-      zcompile -R "$1"
+      # prompt_*_setup files are autoloadable functions
+      if [[ $1 == prompt_*_setup ]]; then
+        zcompile -Uz "$1"
+      else
+        zcompile -UzR "$1"
+      fi
     fi
     shift
   done
@@ -99,10 +104,6 @@ _zcomet_repo_shorthand() {
 #   A URL to raw code
 ############################################################
 _zcomet_snippet_shorthand() {
-  emulate -L zsh
-  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
-  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
-
   if [[ $1 == OMZ::* ]]; then
     REPLY="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${1#OMZ::}"
   elif [[ $1 == https://github.com/* ]]; then
@@ -236,8 +237,6 @@ _zcomet_add_list() {
 # script in ohmyzsh/ohmyzsh! Rein it in.
 ############################################################
 _zcomet_clone_repo() {
-  setopt LOCAL_OPTIONS NO_KSH_ARRAYS NO_SH_WORD_SPLIT
-
   [[ $1 == ?*/?* || $1 == 'ohmyzsh' || $1 == 'prezto' ]] || return 1
   local repo branch repo_dir ret file
   _zcomet_repo_shorthand "${1%@*}"
@@ -448,6 +447,11 @@ zcomet() {
         print -P '%B%F{yellow}Triggers:%f%b' &&
         print "  ${(o)ZCOMET_TRIGGERS[@]}"
       ;;
+    compinit)
+      autoload -Uz compinit
+      compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}" &&
+        _zcomet_compile "$_comp_dumpfile"
+      ;;
     compile)
       if [[ -z $1 ]]; then
         >&2 print 'Which script(s) would you like to zcompile?'
@@ -468,6 +472,7 @@ zcomet() {
       print "usage: $0 command [...]
 
 compile         (re)compile script(s) (only when necessary)
+compinit        run compinit and compile its cache
 fpath           clone a plugin and add one of its directories to FPATH
 help            print this help text
 list            list all loaded plugins and snippets
@@ -485,5 +490,5 @@ update          update all plugins and snippets" | fold -s -w $COLUMNS
   esac
 }
 
-zcomet compile "${ZCOMET[SCRIPT]}" \
+_zcomet_compile "${ZCOMET[SCRIPT]}" \
                "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
