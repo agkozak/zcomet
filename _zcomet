@@ -12,6 +12,7 @@ commands=(
 	'self-update:update zcomet itself'
 	'help:print this help text'
 	'fpath:clone a repository and add one of its directories to FPATH'
+	'compinit:run compinit and compile its cache'
 )
 
 if (( CURRENT == 2 )); then

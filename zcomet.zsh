@@ -447,6 +447,11 @@ zcomet() {
         print -P '%B%F{yellow}Triggers:%f%b' &&
         print "  ${(o)ZCOMET_TRIGGERS[@]}"
       ;;
+    compinit)
+      autoload -Uz compinit
+      compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}" &&
+        _zcomet_compile "${HOME}/.zcompdump_${ZSH_VERSION}"
+      ;;
     compile)
       if [[ -z $1 ]]; then
         >&2 print 'Which script(s) would you like to zcompile?'
@@ -467,6 +472,7 @@ zcomet() {
       print "usage: $0 command [...]
 
 compile         (re)compile script(s) (only when necessary)
+compinit        run compinit and compile its cache
 fpath           clone a plugin and add one of its directories to FPATH
 help            print this help text
 list            list all loaded plugins and snippets
@@ -484,5 +490,5 @@ update          update all plugins and snippets" | fold -s -w $COLUMNS
   esac
 }
 
-zcomet compile "${ZCOMET[SCRIPT]}" \
+_zcomet_compile "${ZCOMET[SCRIPT]}" \
                "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
