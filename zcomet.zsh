@@ -62,7 +62,12 @@ _zcomet_compile() {
     if [[ -s $1                                &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
           $1 != */test-data/* ]]; then
-      zcompile -R "$1"
+      # prompt_*_setup files are autoloadable functions
+      if [[ $1 == prompt_*_setup ]]; then
+        zcompile -Uz "$1"
+      else
+        zcompile -UzR "$1"
+      fi
     fi
     shift
   done
