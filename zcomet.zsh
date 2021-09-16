@@ -449,8 +449,8 @@ zcomet() {
       ;;
     compinit)
       autoload -Uz compinit
-      compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}" &&
-        _zcomet_compile "${HOME}/.zcompdump_${ZSH_VERSION}"
+      compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}" &&
+        _zcomet_compile "$_comp_dumpfile"
       ;;
     compile)
       if [[ -z $1 ]]; then
