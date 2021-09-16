@@ -445,7 +445,7 @@ zcomet() {
         print -l -f '  %s\n' "${(o)ZCOMET_SNIPPETS[@]}"
       (( ${#ZCOMET_TRIGGERS} )) &&
         print -P '%B%F{yellow}Triggers:%f%b' &&
-        print "  ${(o)ZCOMET_TRIGGERS[@]}"
+        print "  ${(o)ZCOMET_TRIGGERS[@]}" || :
       ;;
     compinit)
       autoload -Uz compinit
