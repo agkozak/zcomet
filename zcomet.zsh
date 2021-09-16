@@ -62,7 +62,7 @@ _zcomet_compile() {
     if [[ -s $1                                &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
           $1 != */test-data/* ]]; then
-      zcompile "$1"
+      zcompile -R "$1"
     fi
     shift
   done
