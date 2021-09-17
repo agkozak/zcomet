@@ -13,8 +13,9 @@ typeset -A ZCOMET
 
 ZCOMET[SCRIPT]=$0
 
-# Add zcomet completions to FPATH
-fpath=( "${ZCOMET[SCRIPT]:A:h}" "${fpath[@]}" )
+# Add zcomet functions to FPATH and autoload
+fpath=( "${ZCOMET[SCRIPT]:A:h}/functions" "${fpath[@]}" )
+autoload -Uz zcomet_{unload,update,list,self-update,help}
 
 # Allow the user to specify custom directories
 if [[ -z ${ZINIT[HOME_DIR]} ]]; then
@@ -59,12 +60,14 @@ _zcomet_compile() {
   while (( $# )); do
     # Only zcompile if there isn't already a .zwc file or the .zwc is outdated,
     # and never compile zsh-syntax-highlighting's test data
-    if [[ -s $1                                &&
+    if [[ -s $1 &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
           $1 != */test-data/* ]]; then
-      # prompt_*_setup files are autoloadable functions
-      if [[ $1 == prompt_*_setup ]]; then
+      # Autoloadable functions
+      if [[ $1 == ${ZCOMET[SCRIPT]:A:h}/functions/zcomet_* ||
+            $1 == prompt_*_setup ]]; then
         zcompile -Uz "$1"
+      # Scripts to be sourced
       else
         zcompile -UzR "$1"
       fi
@@ -265,6 +268,188 @@ _zcomet_clone_repo() {
 }
 
 ############################################################
+# The `load' command
+#
+# Clones a repo (if necessary). Sources init file(s) or adds
+# one of its directories to FPATH or both.
+#
+# Arguments:
+#   The repo      A GitHub repository, in the format
+#                 user/repo@branch, where @branch could also
+#                 be a tag or a commit.
+#   Subdirectory  [Optional] A subdirectory of a larger repo
+#   Script(s)     [Optional] A list of specific scripts to
+#                 source
+# Outputs:
+#   Confirmation and error messages, plus raw Git output
+#   (for the time being)
+############################################################
+_zcomet_load_command() {
+  if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; then
+    >&2 print 'You need to specify a valid repository.' && return 1
+  fi
+
+  local repo_branch
+  repo_branch=$1
+  shift
+
+  _zcomet_clone_repo "$repo_branch" || return $?
+  _zcomet_load "${repo_branch%@*}" "$@"
+}
+
+############################################################
+# The `fpath' command
+#
+# Clones a repo (if necessary). Adds one of its
+# subdirectories to FPATH. This command does not try to
+# guess which directory to add; it must be made explicit.
+#
+# Arguments:
+#   The repo       A Git repository
+#                  (username/repo@branch/tag/commit), as
+#                  with `load'.
+#   A subdirectory [Optional] A subdirectory within the
+#                  repo to add to FPATH
+# Output:
+#   Raw Git output and error messages
+############################################################
+_zcomet_fpath_command() {
+  if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; then
+    >&2 print 'You need to specify a valid repository.' && return 1
+  fi
+
+  local repo_branch
+  repo_branch=$1 && shift
+
+  _zcomet_clone_repo "$repo_branch" || return $?
+  _zcomet_repo_shorthand "${repo_branch%@*}"
+  repo_branch=$REPLY
+  [[ ! -d ${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}} ]] &&
+    local ret=$? && >&2 print 'Invalid directory.' && return $ret
+  if (( ! ${fpath[(Ie)${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}]} )); then
+    fpath=( "${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}" "${fpath[@]}" )
+    _zcomet_add_list "$cmd" "$repo_branch${@:+ $@}"
+  fi
+}
+
+############################################################
+# The `snippet' command
+#
+# Downloads a script (if it has not already been
+# downloaded) using either curl or wget. Sources it. This
+# command understands how to translate normative Github URLs
+# into raw code (and includes the OMZ:: shorthand for
+# Oh-My-Zsh scripts); otherwise you must make sure that the
+# snippet you direct it to is genuinely Zsh code and not a
+# pretty HTML representation of it.
+#
+# Arguments:
+#   --update  The script is being updated; don't source it
+#             for now
+#   $1        The snippet
+# Outputs:
+#   Informative messages, raw curl or wget output, error
+#   messages
+############################################################
+_zcomet_snippet_command() {
+  [[ -z $1 ]] && print 'You need to specify a snippet.' && return 1
+
+  local update snippet url method snippet_file snippet_dir
+
+  [[ $1 == '--update' ]] && update=1 && shift
+  snippet=$1 && shift
+
+  _zcomet_snippet_shorthand "$snippet"
+  url=$REPLY
+  snippet_file=${snippet##*/}
+  snippet_dir=${snippet%/*}
+  snippet_dir=${snippet_dir/:\//}
+
+  if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file} ]] ||
+     (( update )); then
+    if [[ ! -d /tmp/${snippet_dir} ]]; then
+      mkdir -p "/tmp/${snippet_dir}"
+    fi
+    print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
+    if (( ${+commands[curl]} )); then
+      method='curl'
+      curl "${url}" > "/tmp/${snippet_dir}/${snippet_file}"
+      ret=$?
+    elif (( ${+commands[wget]} )); then
+      method='wget'
+      wget "${url}" \
+           -O "/tmp/${snippet_dir}/${snippet_file}"
+      ret=$?
+    else
+      >&2 print "You need \`curl' or \`wget' to download snippets."
+      return 1
+    fi
+    if (( ret == 0 )); then
+      [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet_dir} ]] &&
+        mkdir -p "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}"
+      command mv "/tmp/${snippet_dir}/${snippet_file}" \
+        "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}" &&
+        _zcomet_compile \
+          "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"
+    else
+      >&2 print "Could not ${method} snippet ${snippet}."
+    fi
+  fi
+
+  (( update )) && return
+
+  if source "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"; then
+    _zcomet_add_list "$cmd" "$snippet"
+  else
+    >&2 print "Could not source snippet ${snippet}."
+  fi
+}
+
+############################################################
+# The `trigger' command - lazy-loading plugins
+#
+# This command creates one or more functions that will, at
+# some point in the future, `load` a plugin and the run a
+# command from that plugin. When any of the triggers that
+# have been defined is pulled, all of the triggers for that
+# plugin are unfunctioned to make way for their namesake
+# commands. By putting off loading a plugin until it is
+# is needed, precious shell startup time can be conserved.
+#
+# Arguments:
+#   Trigger(s)  Commands that will load a plugin and then
+#               run plugin commands of the same name
+#   Repo        A GitHub repository; uses the same format
+#               as `load` and `fpath`
+#
+# TODO: Add some way to pre-clone repos to be triggered in
+# the future so that the cloning process doesn't slow the
+# user down.
+############################################################
+_zcomet_trigger_command() {
+  [[ -z $1 ]] && >&2 print 'You need to name a trigger.' && return 1
+
+  local -Ua triggers
+  local trigger
+
+  while [[ -n $1 && $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; do
+    triggers+=( "$1" )
+    shift
+  done
+
+  for trigger in "${triggers[@]}"; do
+    functions[$trigger]="local i;
+      for trigger in ${triggers[@]};
+      do
+        ZCOMET_TRIGGERS=( "\${ZCOMET_TRIGGERS[@]:#\${trigger}}" );
+      done
+      unfunction ${triggers[@]};
+      zcomet load $@;
+      eval $trigger \$@" && _zcomet_add_list "$cmd" "$trigger"
+  done
+}
+
+############################################################
 # The main command
 # Globals:
 #   ZCOMET
@@ -280,6 +465,7 @@ _zcomet_clone_repo() {
 #   unload <repo>
 #   list
 #   compile
+#   compinit
 #   help
 # Outputs:
 #   Status updates
@@ -289,168 +475,31 @@ zcomet() {
   local -a match mbegin mend reply
 
   typeset -gUa zsh_loaded_plugins ZCOMET_FPATH ZCOMET_SNIPPETS ZCOMET_TRIGGERS
-  typeset -Ua triggers
 
-  local cmd update trigger snippet repo_branch
+  local cmd
   [[ -n $1 ]] && cmd=$1 && shift
 
   case $cmd in
-    load)
-      if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; then
-        >&2 print 'You need to specify a valid repository.' && return 1
-      fi
-      repo_branch=$1 && shift
-      _zcomet_clone_repo "$repo_branch" || return $?
-      _zcomet_load "${repo_branch%@*}" "$@"
+    load|fpath|snippet|trigger)
+      _zcomet_${cmd}_command "$@"
       ;;
-    fpath)
-      if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; then
-        >&2 print 'You need to specify a valid repository.' && return 1
-      fi
-      repo_branch=$1 && shift
-      _zcomet_clone_repo "$repo_branch" || return $?
-      _zcomet_repo_shorthand "${repo_branch%@*}"
-      repo_branch=$REPLY
-      [[ ! -d ${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}} ]] &&
-        local ret=$? && >&2 print 'Invalid directory.' && return $ret
-      if (( ! ${fpath[(Ie)${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}]} )); then
-        fpath=( "${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}" "${fpath[@]}" )
-        _zcomet_add_list "$cmd" "$repo_branch${@:+ $@}"
-      fi
-      ;; 
-    snippet)
-      [[ -z $1 ]] && print 'You need to specify a snippet.' && return 1
-      [[ $1 == '--update' ]] && update=1 && shift
-      snippet=$1 && shift
-      local url method snippet_file snippet_dir
-      _zcomet_snippet_shorthand "$snippet"
-      url=$REPLY
-      snippet_file=${snippet##*/}
-      snippet_dir=${snippet%/*}
-      snippet_dir=${snippet_dir/:\//}
-      if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file} ]] ||
-         (( update )); then
-        if [[ ! -d /tmp/${snippet_dir} ]]; then
-          mkdir -p "/tmp/${snippet_dir}"
-        fi
-        print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
-        if (( ${+commands[curl]} )); then
-          method='curl'
-          curl "${url}" > "/tmp/${snippet_dir}/${snippet_file}"
-          ret=$?
-        elif (( ${+commands[wget]} )); then
-          method='wget'
-          wget "${url}" \
-               -O "/tmp/${snippet_dir}/${snippet_file}"
-          ret=$?
-        else
-          >&2 print "You need \`curl' or \`wget' to download snippets."
-          return 1
-        fi
-        if (( ret == 0 )); then
-          [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet_dir} ]] &&
-            mkdir -p "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}"
-          command mv "/tmp/${snippet_dir}/${snippet_file}" \
-            "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}" &&
-            _zcomet_compile \
-              "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"
-        else
-          >&2 print "Could not ${method} snippet ${snippet}."
-        fi
-      fi
-      (( update )) && return
-      if source "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"; then
-        _zcomet_add_list "$cmd" "$snippet"
-      else
-        >&2 print "Could not source snippet ${snippet}."
-      fi
-      ;;
-    trigger)
-      # TODO: Add a pre-clone option
-      [[ -z $1 ]] && >&2 print 'You need to name a trigger.' && return 1
-      while [[ -n $1 && $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; do
-        triggers+=( "$1" )
-        shift
-      done
-      for trigger in "${triggers[@]}"; do
-        functions[$trigger]="local i;
-          for i in ${triggers[@]};
-          do
-            ZCOMET_TRIGGERS=( "\${ZCOMET_TRIGGERS[@]:#\${i}}" );
-          done
-          unfunction ${triggers[@]};
-          zcomet load $@;
-          eval $trigger \$@" && _zcomet_add_list "$cmd" "$trigger"
-      done
-      ;;
-    unload)
-      # TODO: This routine is still rather primitive.
-      [[ $1 != ?*/?* ]] &&
-        >&2 print 'Specify a plugin to unload.' && return 1
-      if (( ${+functions[${1#*/}_plugin_unload]} )) &&
-         ${1#*/}_plugin_unload; then
-        zsh_loaded_plugins=( "${zsh_loaded_plugins[@]:#${1}}" )
-        zsh_loaded_plugins=( "${zsh_loaded_plugins[@]:#${1} *}" )
-        fpath=( "${fpath[@]:#${ZCOMET[REPOS_DIR]}/${1}}" )
-      else
-        >&2 print 'I cannot find an unload function for that plugin.'
-        return 1
-      fi
-      ;;
-    update)
-      local file
-      for i in "${ZCOMET[REPOS_DIR]}"/**/.git(N/); do
-        print -Pn "%B%F{yellow}${${i:h}#${ZCOMET[REPOS_DIR]}/}:%f%b "
-        command git --git-dir="${i}" --work-tree="${i:h}" pull
-        for file in "${i:h}"/**/*.zsh(|-theme)(N.) \
-                    "${i:h}"/**/prompt_*_setup(N.); do
-          _zcomet_compile "$file"
-        done
-        (( ${ZCOMET_PLUGINS[(Ie)$i]} )) && zcomet load "$i"
-      done
-      local -a snippets
-      snippets=( "${ZCOMET[SNIPPETS_DIR]}"/**/*(N.) )
-      for file in "${snippets[@]}"; do
-        snippet=${file#${ZCOMET[SNIPPETS_DIR]}/}
-        if [[ $snippet == *.zwc ]]; then
-          continue
-        elif [[ $snippet == OMZ::* ]]; then
-          :
-        elif [[ $snippet == https/* ]]; then
-          snippet="https:/${snippet#https}"
-        elif [[ $snippet == http/* ]]; then
-          snippet="http:/${snippet#http}"
-        else
-          >&2 print "Snippet ${file} not supported."
-        fi
-        zcomet snippet --update "${snippet}"
-        _zcomet_compile "$file"
-      done
-      i=
-      if (( ${#ZCOMET_SNIPPETS} )); then
-        for i in "${ZCOMET_SNIPPETS[@]}"; do
-          zcomet snippet "$i"
-        done
-      fi
-      ;;
-    list)
-      (( ${#zsh_loaded_plugins} )) &&
-        print -P '%B%F{yellow}Plugins:%f%b' &&
-        print -l -f '  %s\n' "${(o)zsh_loaded_plugins[@]}"
-      (( ${#ZCOMET_FPATH} )) &&
-        print -P '%B%F{yellow}FPATH elements:%f%b' &&
-        print -l -f '  %s\n' "${(o)ZCOMET_FPATH[@]}"
-      (( ${#ZCOMET_SNIPPETS} )) &&
-        print -P '%B%F{yellow}Snippets:%f%b' &&
-        print -l -f '  %s\n' "${(o)ZCOMET_SNIPPETS[@]}"
-      (( ${#ZCOMET_TRIGGERS} )) &&
-        print -P '%B%F{yellow}Triggers:%f%b' &&
-        print "  ${(o)ZCOMET_TRIGGERS[@]}" || :
-      ;;
+    unload|update|list|self-update) zcomet_$cmd "$@" ;;
     compinit)
       autoload -Uz compinit
-      compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}" &&
-        _zcomet_compile "$_comp_dumpfile"
+
+      if compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"; then
+        # If the dumpfile does not contain the _zcomet completion function, it
+        # needs to be deleted and regenerated
+        if (( ! ${+functions[_zcomet]} )); then
+          >&2 print "Regenerating ${_comp_dumpfile}"
+          command rm "${_comp_dumpfile}"*
+          compinit -C -d "${_comp_dumpfile}"
+        else
+          _zcomet_compile "$_comp_dumpfile"
+        fi
+      else
+        >&2 print "Could not load Zsh completions."
+      fi
       ;;
     compile)
       if [[ -z $1 ]]; then
@@ -459,36 +508,18 @@ zcomet() {
       fi
       _zcomet_compile "$@"
       ;;
-    self-update)
-      print -Pn '%B%F{yellow}zcomet:%f%b '
-      if ! command git --git-dir="${${ZCOMET[SCRIPT]}:A:h}/.git" \
-        --work-tree="${ZCOMET[SCRIPT]:A:h}" pull &&
-        source "${ZCOMET[SCRIPT]}"; then
-        >&2 print 'Could not self-update.'
-        return 1
-      fi
-      ;;
-    -h|--help|help)
-      print "usage: $0 command [...]
-
-compile         (re)compile script(s) (only when necessary)
-compinit        run compinit and compile its cache
-fpath           clone a plugin and add one of its directories to FPATH
-help            print this help text
-list            list all loaded plugins and snippets
-load            clone and load a plugin
-self-update     update zcomet itself
-snippet         load a snippet of code
-trigger         create a shortcut for loading and running a plugin
-unload          unload a plugin
-update          update all plugins and snippets" | fold -s -w $COLUMNS
-      ;;
+    -h|--help|help) zcomet_help ;;
     *)
-      zcomet help
+      zcomet_help
       return 1
       ;;
   esac
 }
 
-_zcomet_compile "${ZCOMET[SCRIPT]}" \
-               "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
+() {
+  setopt LOCAL_OPTIONS EXTENDED_GLOB
+
+  _zcomet_compile "${ZCOMET[SCRIPT]}" \
+                  "${ZCOMET[SCRIPT]:A:h}"/functions/zcomet_*~*.zwc(N.) \
+                  "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
+}

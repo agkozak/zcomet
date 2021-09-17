@@ -1,0 +1,28 @@
+#autoload
+
+############################################################
+# The `unload` command - an attempt at implementing part of
+# Sebastian Gniazdowski's Zsh Plugin Standard
+# (https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#4-unload-function)
+#
+# Arguments:
+#   $1 The plugin  Repo name
+# Outputs:
+#   Error messages
+#
+# TODO: This routine needs work.
+############################################################
+
+[[ $1 != ?*/?* ]] &&
+  >&2 print 'Specify a plugin to unload.' &&
+  return 1
+
+if (( ${+functions[${1#*/}_plugin_unload]} )) &&
+   ${1#*/}_plugin_unload; then
+  zsh_loaded_plugins=( "${zsh_loaded_plugins[@]:#${1}}" )
+  zsh_loaded_plugins=( "${zsh_loaded_plugins[@]:#${1} *}" )
+  fpath=( "${fpath[@]:#${ZCOMET[REPOS_DIR]}/${1}}" )
+else
+  >&2 print 'I cannot find an unload function for that plugin.'
+  return 1
+fi

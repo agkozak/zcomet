@@ -1,0 +1,53 @@
+#autoload
+
+############################################################
+# The `update` command
+#
+# For the time being, updates all plugins and snippets that
+# have been downloaded, recompiles their scripts (if
+# necessary), and re-sources any scripts that are already
+# loaded. Eventually this command will be able to update
+# individual plugins and snippets.
+#
+# Arguments:
+#   None
+# Outputs:
+#   Informative messages and raw Git, curl, and wget output
+############################################################
+
+local i file
+local -a snippets
+
+for i in "${ZCOMET[REPOS_DIR]}"/**/.git(N/); do
+  print -Pn "%B%F{yellow}${${i:h}#${ZCOMET[REPOS_DIR]}/}:%f%b "
+  command git --git-dir="${i}" --work-tree="${i:h}" pull
+  for file in "${i:h}"/**/*.zsh(|-theme)(N.) \
+              "${i:h}"/**/prompt_*_setup(N.); do
+    _zcomet_compile "$file"
+  done
+  (( ${ZCOMET_PLUGINS[(Ie)$i]} )) && zcomet load "$i"
+done
+
+snippets=( "${ZCOMET[SNIPPETS_DIR]}"/**/*(N.) )
+for file in "${snippets[@]}"; do
+  snippet=${file#${ZCOMET[SNIPPETS_DIR]}/}
+  if [[ $snippet == *.zwc ]]; then
+    continue
+  elif [[ $snippet == OMZ::* ]]; then
+    :
+  elif [[ $snippet == https/* ]]; then
+    snippet="https:/${snippet#https}"
+  elif [[ $snippet == http/* ]]; then
+    snippet="http:/${snippet#http}"
+  else
+    >&2 print "Snippet ${file} not supported."
+  fi
+  zcomet snippet --update "${snippet}"
+  _zcomet_compile "$file"
+done
+i=
+if (( ${#ZCOMET_SNIPPETS} )); then
+  for i in "${ZCOMET_SNIPPETS[@]}"; do
+    zcomet snippet "$i"
+  done
+fi
