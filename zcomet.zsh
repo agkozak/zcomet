@@ -492,7 +492,7 @@ zcomet() {
         # needs to be deleted and regenerated
         if (( ! ${+functions[_zcomet]} )); then
           >&2 print "Regenerating ${_comp_dumpfile}"
-          command rm "${_comp_dumpfile}"*
+          command rm -f "${_comp_dumpfile}"*
           compinit -C -d "${_comp_dumpfile}"
         else
           _zcomet_compile "$_comp_dumpfile"
