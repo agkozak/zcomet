@@ -169,7 +169,7 @@ For snippets that are not hosted by GitHub, you will want to make sure that the 
 
 ### `list`
 
-`zcomet list` displays any active plugins, snippets, and triggers. As you use the triggers, you will see them disappear as triggers and reappear as loaded plugins.
+`zcomet list` displays any active plugins, added FPATH elements, snippets, and triggers. As you use the triggers, you will see them disappear as triggers and reappear as loaded plugins.
 
 ### `compinit`
 
