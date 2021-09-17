@@ -1,0 +1,19 @@
+#autoload
+
+############################################################
+# Displays help
+############################################################
+
+print "usage: $0 command [...]
+
+compile         (re)compile script(s) (only when necessary)
+compinit        run compinit and compile its cache
+fpath           clone a plugin and add one of its directories to FPATH
+help            print this help text
+list            list all loaded plugins and snippets
+load            clone and load a plugin
+self-update     update zcomet itself
+snippet         load a snippet of code
+trigger         create a shortcut for loading and running a plugin
+unload          unload a plugin
+update          update all plugins and snippets" | fold -s -w $COLUMNS

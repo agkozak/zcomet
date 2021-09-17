@@ -1,0 +1,34 @@
+#autoload
+
+############################################################
+# The `list` command
+#
+# Displays loaded plugins, added FPATH elements, sourced
+# snippets, and defined triggers
+#
+# Arguments:
+#   None
+# Returns:
+#   0 if there is anything to report, otherwise 1
+############################################################
+
+local success
+
+(( ${#zsh_loaded_plugins} )) &&
+  success=1 &&
+  print -P '%B%F{yellow}Plugins:%f%b' &&
+  print -l -f '  %s\n' "${(o)zsh_loaded_plugins[@]}"
+(( ${#ZCOMET_FPATH} )) &&
+  success=1 &&
+  print -P '%B%F{yellow}FPATH elements:%f%b' &&
+  print -l -f '  %s\n' "${(o)ZCOMET_FPATH[@]}"
+(( ${#ZCOMET_SNIPPETS} )) &&
+  success=1 &&
+  print -P '%B%F{yellow}Snippets:%f%b' &&
+  print -l -f '  %s\n' "${(o)ZCOMET_SNIPPETS[@]}"
+(( ${#ZCOMET_TRIGGERS} )) &&
+  success=1 &&
+  print -P '%B%F{yellow}Triggers:%f%b' &&
+  print "  ${(o)ZCOMET_TRIGGERS[@]}"
+
+(( success )) && return 0 || return 1
