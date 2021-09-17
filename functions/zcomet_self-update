@@ -10,21 +10,11 @@
 #   Error message
 ############################################################
 
-local ret
-
 print -Pn '%B%F{yellow}zcomet:%f%b '
 
-command git --git-dir="${${ZCOMET[SCRIPT]}:A:h}/.git" \
-  --work-tree="${ZCOMET[SCRIPT]:A:h}" pull
-ret=$?
-
-if (( ret == 0 )) && (( ! ${fpath[(Ie)${ZCOMET[SCRIPT]}/functions]} )); then
-  fpath=( "${plugin_path}/functions" "${fpath[@]}" )
-  source "${ZCOMET[SCRIPT]}"
-  ret=$?
-fi
-
-if (( ret != 0)); then
+if ! command git --git-dir="${${ZCOMET[SCRIPT]}:A:h}/.git" \
+  --work-tree="${ZCOMET[SCRIPT]:A:h}" pull &&
+  source "${ZCOMET[SCRIPT]}"; then
   >&2 print 'Could not self-update.'
   return 1
 fi
