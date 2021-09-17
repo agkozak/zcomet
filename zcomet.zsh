@@ -437,6 +437,8 @@ _zcomet_trigger_command() {
     shift
   done
 
+  _zcomet_clone_repo "$@"
+
   for trigger in "${triggers[@]}"; do
     functions[$trigger]="local i;
       for trigger in ${triggers[@]};
