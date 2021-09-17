@@ -374,9 +374,9 @@ zcomet() {
       done
       for trigger in "${triggers[@]}"; do
         functions[$trigger]="local i;
-          for i in ${triggers[@]};
+          for trigger in ${triggers[@]};
           do
-            ZCOMET_TRIGGERS=( "\${ZCOMET_TRIGGERS[@]:#\${i}}" );
+            ZCOMET_TRIGGERS=( "\${ZCOMET_TRIGGERS[@]:#\${trigger}}" );
           done
           unfunction ${triggers[@]};
           zcomet load $@;
@@ -491,4 +491,4 @@ update          update all plugins and snippets" | fold -s -w $COLUMNS
 }
 
 _zcomet_compile "${ZCOMET[SCRIPT]}" \
-               "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
+                "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
