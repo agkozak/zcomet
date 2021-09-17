@@ -201,6 +201,5 @@ Unloads a plugin that has an [unload function](https://github.com/zdharma/Zsh-10
 * Improve the `unload` command
 * Allow the loading of repositories not on GitHub
 * Support for `ssh://` and `git://`
-* Allow user to clone `trigger` repositories before they are needed
 
 *Copyright (C) 2021 Alexandros Kozak*
