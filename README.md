@@ -12,7 +12,7 @@
 
 ![Benchmarks](img/benchmarks.png)
 
-*\*100 iterations on a four-core Ubuntu laptop*
+*\*100 iterations on a four-core Ubuntu laptop. The separate "`zcomet`-snippet" benchmark shows that use of the `snippet` command can make your startup time even faster.*
 
 `zcomet` is still in the initial phases of its development. I have to implement prettier and more informative messages (you will see some raw Git output), and error handling is very basic at present. If I make any changes early on that are likely to break your configuration, I will explain them in the [News](#news) section.
 
