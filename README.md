@@ -39,7 +39,9 @@
 
 <!-- <details>
     <summary>Here are the latest features and updates.</summary> -->
-- Setpember 16, 2021
+- September 17, 2021
+    + `zcommet trigger` now always makes sure that the repository it needs has already been cloned, meaning that you will never have to wait for files to be downloaded when you use a defined trigger.
+- September 16, 2021
     + `zcomet list` now reflects `FPATH` elements added using the `fpath` command.
     + New command: `zcomet compinit` runs `compinit` and compiles its cache for you.
 - September 15, 2021
@@ -143,7 +145,7 @@ or save time by listing a number of triggers before the repository name:
 
     zcomet trigger extract x ohmyzsh plugins/extract
 
-`trigger` was inspired by Zinit's `trigger-load` command.
+`trigger` always checks to make sure that the repository it needs has been already cloned; if not, it clones it. The goal is for triggers to take almost no time to load when they are actually run.
 
 ### `snippet` snippet
 
