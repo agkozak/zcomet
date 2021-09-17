@@ -437,6 +437,8 @@ _zcomet_trigger_command() {
     shift
   done
 
+  _zcomet_clone_repo "$@"
+
   for trigger in "${triggers[@]}"; do
     functions[$trigger]="local i;
       for trigger in ${triggers[@]};
@@ -490,7 +492,8 @@ zcomet() {
       if compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"; then
         # If the dumpfile does not contain the _zcomet completion function, it
         # needs to be deleted and regenerated
-        if (( ! ${+functions[_zcomet]} )); then
+        if (( ! ${+functions[_zcomet]} )) &&
+           [[ -f ${ZCOMET[SCRIPT]:A:h}/functions/_zcomet ]]; then
           >&2 print "Regenerating ${_comp_dumpfile}"
           command rm -f "${_comp_dumpfile}"*
           compinit -C -d "${_comp_dumpfile}"
