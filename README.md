@@ -8,7 +8,7 @@
 ![ZSH version 4.3.11 and higher](img/zsh_4.3.11_plus.svg)
 [![GitHub stars](https://img.shields.io/github/stars/agkozak/zcomet.svg)](https://github.com/agkozak/zcomet/stargazers)
 
-`zcomet` is a Zsh plugin manager that gets you to the prompt quickly without having to use a cache. It is backwards-compatible with Zsh v4.3.11. It began as a series of routines that I used in my dotfiles to source plugins and snippets whenever I was using a version of Zsh that was too old for [Zinit](https://github.com/zdharma/zinit). I was pleasantly surprised to find that `zcomet` performs impressively in [Zim's framework benchmark test](https://github.com/zimfw/zsh-framework-benchmark).
+`zcomet` is a Zsh plugin manager that gets you to the prompt quickly without having to use a cache. It is backwards-compatible with Zsh v4.3.11. It began as a series of routines that I used in [my dotfiles](https://github.com/agkozak/dotfiles) to source plugins and snippets whenever I was using a version of Zsh that was too old for [Zinit](https://github.com/zdharma/zinit). I was pleasantly surprised to find that `zcomet` performs impressively in [Zim's framework benchmark test](https://github.com/zimfw/zsh-framework-benchmark).
 
 ![Benchmarks](img/benchmarks.png)
 
