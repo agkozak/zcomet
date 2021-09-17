@@ -17,3 +17,5 @@ snippet         load a snippet of code
 trigger         create a shortcut for loading and running a plugin
 unload          unload a plugin
 update          update all plugins and snippets" | fold -s -w $COLUMNS
+
+# vim: ft=zsh

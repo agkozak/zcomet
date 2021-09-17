@@ -20,3 +20,5 @@ if (( CURRENT == 2 )); then
 fi
 
 return 0
+
+# vim: ft=zsh
