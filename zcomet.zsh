@@ -486,8 +486,20 @@ zcomet() {
     unload|update|list|self-update) zcomet_$cmd "$@" ;;
     compinit)
       autoload -Uz compinit
-      compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}" &&
-        _zcomet_compile "$_comp_dumpfile"
+
+      if compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"; then
+        # If the dumpfile does not contain the _zcomet completion function, it
+        # needs to be deleted and regenerated
+        if (( ! ${+functions[_zcomet]} )); then
+          >&2 print "Regenerating ${_comp_dumpfile}"
+          command rm "${_comp_dumpfile}"*
+          compinit -C -d "${_comp_dumpfile}"
+        else
+          _zcomet_compile "$_comp_dumpfile"
+        fi
+      else
+        >&2 print "Could not load Zsh completions."
+      fi
       ;;
     compile)
       if [[ -z $1 ]]; then
