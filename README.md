@@ -39,6 +39,8 @@
 
 <!-- <details>
     <summary>Here are the latest features and updates.</summary> -->
+- September 18, 2021
+    + `zcomet` directories are now specified using `zstyle`; [see below](#directory-customization).
 - September 17, 2021
     + `zcommet trigger` now always makes sure that the repository it needs has already been cloned, meaning that you will never have to wait for files to be downloaded when you use a defined trigger.
 - September 16, 2021
@@ -83,11 +85,14 @@ zcomet compinit
 
 `zcomet` will store plugins, snippets, and the like in `~/.zcomet` by default. If you have set `$ZDOTDIR`, then `zcomet` will use `${ZDOTDIR}/.zcomet` instead. You can also specify a custom home directory for `zcomet` thus:
 
-    typeset -A ZCOMET
-    ZCOMET[HOME_DIR]=/path/to/zcomet_home_directory
-    source /path/to/zcomet.zsh
+    zstyle ':zcomet:*' home-dir ~/path/to/home_dir
 
-In the home directory there will usually be a `/repos` subdirectory for plugins and a `/snippets` subdirectory for snippets, but you may use the variables `${ZCOMET[REPOS_DIR]}` and `${ZCOMET[SNIPPETS_DIR]}` to name your own locations.
+Make sure to do that before you start loading code.
+
+In the home directory there will usually be a `/repos` subdirectory for plugins and a `/snippets` subdirectory for snippets, but you may name your own locations:
+
+    zstyle ':zcomet:*' repos-dir ~/path/to/repos_dir
+    zstyle ':zcomet:*' snippets-dir ~/path/to/snippets_dir
 
 I recommend cloning the `agkozak/zcomet` repository to a `/bin` subdirectory in your `zcomet` home directory (e.g., `~/.zcomet/bin`), as in the [example `.zshrc`](#example-zshrc) above.
 
