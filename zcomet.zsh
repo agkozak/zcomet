@@ -160,23 +160,21 @@ _zcomet_load() {
     fi
   fi
 
+  local dir
   if [[ -d ${plugin_path}/functions ]]; then
-    if (( ! ${fpath[(Ie)${plugin_path}]} )); then
-      fpath=( "${plugin_path}/functions" "${fpath[@]}" )
-      if (( ! plugin_loaded )); then
-        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
-      fi
-    fi
+    dir="${plugin_path_functions}"
   elif [[ -d ${plugin_path} ]]; then
-    if (( ! ${fpath[(Ie)${plugin_path}]} )); then
-      fpath=( "${plugin_path}" "${fpath[@]}" )
-      if (( ! plugin_loaded )); then
-        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
-      fi
-    fi
+    dir=${plugin_path}
   else
     >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH."
     return 1
+  fi
+    
+  if (( ! ${fpath[(Ie)${dir}]} )); then
+    fpath=( "$dir" "${fpath[@]}" )
+    if (( ! plugin_loaded )); then
+      _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+    fi
   fi
 }
 
