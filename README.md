@@ -37,12 +37,14 @@
 
 ## News
 
-<!-- <details>
-    <summary>Here are the latest features and updates.</summary> -->
 - September 18, 2021
     + `zcomet` directories are now specified using `zstyle`; [see below](#directory-customization).
+    + The `load` command will now add a plugin's `bin/` subdirectory, if it has one, to the `PATH`.
 - September 17, 2021
     + `zcommet trigger` now always makes sure that the repository it needs has already been cloned, meaning that you will never have to wait for files to be downloaded when you use a defined trigger.
+<details>
+    <summary>Older news</summary>
+
 - September 16, 2021
     + `zcomet list` now reflects `FPATH` elements added using the `fpath` command.
     + New command: `zcomet compinit` runs `compinit` and compiles its cache for you.
@@ -50,7 +52,7 @@
     + `zcomet` will store your plugins and snippets in `${ZDOTDIR}`, if you have set that variable and if `${HOME}/.zcomet` does not already exist. Props to @mattjamesdev.
 - September 13, 2021
     + The `snippet` command now supports any URL that points to raw Zsh code (not HTML) via HTTP or HTTPS. It will translate `github.com` addresses into their `raw.githubusercontent.com` equivalents. You may still use the `OMZ::` shorthand for Oh-My-Zsh code.
-<!-- </details> -->
+</details>
 
 ## Example `.zshrc`
 
