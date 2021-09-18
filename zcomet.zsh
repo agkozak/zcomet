@@ -301,16 +301,17 @@ _zcomet_fpath_command() {
     >&2 print 'You need to specify a valid repository.' && return 1
   fi
 
-  local repo_branch
+  local repo_branch plugin_path
   repo_branch=$1 && shift
 
   _zcomet_clone_repo "$repo_branch" || return $?
   _zcomet_repo_shorthand "${repo_branch%@*}"
   repo_branch=$REPLY
-  [[ ! -d ${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}} ]] &&
-    local ret=$? && >&2 print 'Invalid directory.' && return $ret
-  if (( ! ${fpath[(Ie)${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}]} )); then
-    fpath=( "${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}" "${fpath[@]}" )
+  plugin_path="${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}"
+  [[ ! -d $plugin_path ]] && local ret=$? && >&2 print 'Invalid directory.' &&
+    return $ret
+  if (( ! ${fpath[(Ie)${plugin_path}]} )); then
+    fpath=( "${plugin_path}" "${fpath[@]}" )
     _zcomet_add_list "$cmd" "$repo_branch${@:+ $@}"
   fi
 }
