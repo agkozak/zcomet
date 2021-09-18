@@ -37,10 +37,12 @@ _zcomet_compile() {
     # and never compile zsh-syntax-highlighting's test data
     if [[ -s $1 &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
+          $1 != *.zwc &&
           $1 != */test-data/* ]]; then
       # Autoloadable functions
       if [[ $1 == ${ZCOMET[SCRIPT]:A:h}/functions/zcomet_* ||
-            $1 == prompt_*_setup ]]; then
+            $1 == prompt_*_setup ||
+            $1 == _* ]]; then
         zcompile -Uz "$1"
       # Scripts to be sourced
       else
@@ -89,6 +91,18 @@ _zcomet_snippet_shorthand() {
   else
     REPLY=$1
   fi
+}
+
+############################################################
+# Create named directories for plugins. Will not create one
+# if the name is already taken.
+#
+# Arguments
+#   $1  The name
+#   $2  The directory
+############################################################
+_zcomet_named_dir() {
+  [[ -z ${nameddirs[$1]} ]] && hash -d $1=$2
 }
 
 ############################################################
@@ -186,6 +200,8 @@ _zcomet_load() {
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
     fi
   fi
+
+  _zcomet_named_dir "${plugin_path:t}" "${plugin_path}"
 }
 
 ############################################################
@@ -314,6 +330,8 @@ _zcomet_fpath_command() {
     fpath=( "${plugin_path}" "${fpath[@]}" )
     _zcomet_add_list "$cmd" "$repo_branch${@:+ $@}"
   fi
+
+  _zcomet_named_dir "${plugin_path:t}" "${plugin_path}"
 }
 
 ############################################################
@@ -433,6 +451,14 @@ _zcomet_trigger_command() {
       zcomet load $@;
       eval $trigger \$@" && _zcomet_add_list "$cmd" "$trigger"
   done
+
+  _zcomet_repo_shorthand $1
+  1=$REPLY
+  if [[ -n $2 && -d ${ZCOMET[REPOS_DIR]}/$1/$2 ]]; then
+   _zcomet_named_dir "${2:t}" "${ZCOMET[REPOS_DIR]}/${1%@*}/$2"
+  else
+    _zcomet_named_dir "${${1%@*}:t}" "${ZCOMET[REPOS_DIR]}/${1%@*}"
+  fi
 }
 
 ############################################################
@@ -546,3 +572,6 @@ zcomet() {
                   "${ZCOMET[SCRIPT]:A:h}"/functions/zcomet_*~*.zwc(N.) \
                   "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
 }
+
+# zcomet.zsh's directory is ~zcomet
+_zcomet_named_dir zcomet "${ZCOMET[SCRIPT]:A:h}"
