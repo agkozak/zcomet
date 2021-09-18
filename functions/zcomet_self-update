@@ -18,3 +18,5 @@ if ! command git --git-dir="${${ZCOMET[SCRIPT]}:A:h}/.git" \
   >&2 print 'Could not self-update.'
   return 1
 fi
+
+# vim: ft=zsh

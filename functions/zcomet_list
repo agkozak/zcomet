@@ -32,3 +32,5 @@ local success
   print "  ${(o)ZCOMET_TRIGGERS[@]}"
 
 (( success )) && return 0 || return 1
+
+# vim: ft=zsh

@@ -26,3 +26,5 @@ else
   >&2 print 'I cannot find an unload function for that plugin.'
   return 1
 fi
+
+# vim: ft=zsh

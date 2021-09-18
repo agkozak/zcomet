@@ -51,3 +51,5 @@ if (( ${#ZCOMET_SNIPPETS} )); then
     zcomet snippet "$i"
   done
 fi
+
+# vim: ft=zsh
