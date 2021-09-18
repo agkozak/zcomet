@@ -4,7 +4,7 @@
 #
 # MIT License / Copyright (c) 2021 Alexandros Kozak
 
-typeset -A ZCOMET
+typeset -gA ZCOMET
 
 # Standardized $0 Handling
 # https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#zero-handling
@@ -16,31 +16,6 @@ ZCOMET[SCRIPT]=$0
 # Add zcomet functions to FPATH and autoload
 fpath=( "${ZCOMET[SCRIPT]:A:h}/functions" "${fpath[@]}" )
 autoload -Uz zcomet_{unload,update,list,self-update,help}
-
-# Allow the user to specify custom directories
-if [[ -z ${ZINIT[HOME_DIR]} ]]; then
-  # Use ~/.zcomet, if it already exists
-  if [[ -d ${HOME}/.zcomet ]]; then
-    ZCOMET[HOME_DIR]="${HOME}/.zcomet"
-  # Otherwise respect ZDOTDIR
-  else
-    : ${ZCOMET[HOME_DIR]:=${ZDOTDIR:-${HOME}}/.zcomet}
-  fi
-fi
-
-ZCOMET[REPOS_DIR]=${ZCOMET[REPOS_DIR]:-${ZCOMET[HOME_DIR]}/repos}
-ZCOMET[SNIPPETS_DIR]=${ZCOMET[SNIPPETS_DIR]:-${ZCOMET[HOME_DIR]}/snippets}
-
-# Global parameter with PREFIX for make, configure, etc.
-# https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#8-global-parameter-with-prefix-for-make-configure-etc
-typeset -gx ZPFX
-: ${ZPFX:=${ZCOMET[HOME_DIR]}/polaris}
-[[ -z ${path[(re)${ZPFX}/bin]} ]]  &&
-  [[ -d "${ZPFX}/bin" ]]           &&
-  path=( "${ZPFX}/bin" "${path[@]}" )
-[[ -z ${path[(re)${ZPFX}/sbin]} ]] &&
-  [[ -d "${ZPFX}/sbin" ]]          &&
-  path=( "${ZPFX}/sbin" "${path[@]}" )
 
 # Global Parameter holding the plugin-manager’s capabilities
 # https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#9-global-parameter-holding-the-plugin-managers-capabilities
@@ -477,6 +452,42 @@ zcomet() {
   local -a match mbegin mend reply
 
   typeset -gUa zsh_loaded_plugins ZCOMET_FPATH ZCOMET_SNIPPETS ZCOMET_TRIGGERS
+
+  # Allow the user to specify custom directories
+  local home_dir repos_dir snippets_dir
+
+  # E.g., zstyle ':zcomet:*' home-dir ~/.my_dir
+  if zstyle -s :zcomet: home-dir home_dir; then
+    ZCOMET[HOME_DIR]=$home_dir
+    # [[ ! -d ${ZCOMET[HOME_DIR]} ]] && command mkdir -p "${ZCOMET[HOME_DIR]}"
+  else
+    : ${ZCOMET[HOME_DIR]:=${ZDOTDIR:-${HOME}}/.zcomet}
+  fi
+
+  if zstyle -s :zcomet: repos-dir repos_dir; then
+    ZCOMET[REPOS_DIR]=$repos_dir
+  else
+    : ${ZCOMET[REPOS_DIR]:=${ZCOMET[HOME_DIR]}/repos}
+  fi
+
+  if zstyle -s :zcomet: snippets-dir snippets_dir; then
+    ZCOMET[SNIPPETS_DIR]=$snippets_dir
+  else
+    : ${ZCOMET[SNIPPETS_DIR]:=${ZCOMET[HOME_DIR]}/snippets}
+  fi
+
+  # Global parameter with PREFIX for make, configure, etc.
+  # https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#8-global-parameter-with-prefix-for-make-configure-etc
+  [[ -z $ZPFX ]] && {
+    typeset -gx ZPFX
+    : ${ZPFX:=${ZCOMET[HOME_DIR]}/polaris}
+    [[ -z ${path[(re)${ZPFX}/bin]} ]]  &&
+      [[ -d "${ZPFX}/bin" ]]           &&
+      path=( "${ZPFX}/bin" "${path[@]}" )
+    [[ -z ${path[(re)${ZPFX}/sbin]} ]] &&
+      [[ -d "${ZPFX}/sbin" ]]          &&
+      path=( "${ZPFX}/sbin" "${path[@]}" )
+  }
 
   local cmd
   [[ -n $1 ]] && cmd=$1 && shift
