@@ -35,12 +35,13 @@ _zcomet_compile() {
   while (( $# )); do
     # Only zcompile if there isn't already a .zwc file or the .zwc is outdated,
     # and never compile zsh-syntax-highlighting's test data
-    if [[ -s $1 &&
+    if [[ -s $1 && $1 != *.zwc &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
           $1 != */test-data/* ]]; then
       # Autoloadable functions
       if [[ $1 == ${ZCOMET[SCRIPT]:A:h}/functions/zcomet_* ||
-            $1 == prompt_*_setup ]]; then
+            $1 == prompt_*_setup ||
+            $1 == _* ]]; then
         zcompile -Uz "$1"
       # Scripts to be sourced
       else
