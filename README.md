@@ -119,7 +119,7 @@ Note that autoloadable functions are not automatically autoloaded yet; you will 
 
 A specific branch, tag, or commit of a repository can be checked out using the following syntax:
 
-    zcomet load author/name@branch
+    zcomet load author/repo@branch
 
 (`@tag` and `@commit` are equally valid.)
 
