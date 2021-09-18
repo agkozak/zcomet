@@ -179,7 +179,7 @@ Runs Zsh's `compinit` command, which is necessary if you want to use command lin
 
 ### `compile`
 
-`zcompile`s a script or scripts if there is no corresponding wordcode (`.zwc`) file or if a script is newer than its `.zwc`. I strongly recommend that you `zcomet compile` whatever `.zcompdump` file your shell is using, as in the example `.zshrc` above -- it will speed up your load time considerably.
+`zcompile`s a script or scripts if there is no corresponding wordcode (`.zwc`) file or if a script is newer than its `.zwc`.
 
 ### `help`
 
