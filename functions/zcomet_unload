@@ -22,8 +22,9 @@ if (( ${+functions[${1#*/}_plugin_unload]} )) &&
   zsh_loaded_plugins=( "${zsh_loaded_plugins[@]:#${1}}" )
   zsh_loaded_plugins=( "${zsh_loaded_plugins[@]:#${1} *}" )
   fpath=( "${fpath[@]:#${ZCOMET[REPOS_DIR]}/${1}}" )
+  fpath=( "${fpath[@]:#${ZCOMET[REPOS_DIR]}/${1}/functions}" )
 else
-  >&2 print 'I cannot find an unload function for that plugin.'
+  >&2 print "I cannot unload ${1}."
   return 1
 fi
 

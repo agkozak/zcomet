@@ -20,7 +20,7 @@ autoload -Uz zcomet_{unload,update,list,self-update,help}
 # Global Parameter holding the plugin-manager’s capabilities
 # https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#9-global-parameter-holding-the-plugin-managers-capabilities
 typeset -g PMSPEC
-PMSPEC='0fuiPs'
+PMSPEC='0fbuiPs'
 
 ############################################################
 # Compile scripts to wordcode or recompile them when they
@@ -160,20 +160,30 @@ _zcomet_load() {
     fi
   fi
 
-  local dir
+  # Add repo dir or the functions/ subdirectory to FPATH
+  local dir fpath_added
   if [[ -d ${plugin_path}/functions ]]; then
-    dir="${plugin_path_functions}"
+    dir="${plugin_path}/functions"
   elif [[ -d ${plugin_path} ]]; then
     dir=${plugin_path}
   else
-    >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH."
+    >&2 print "Cannot add plugin directory to FPATH."
     return 1
   fi
-    
+  
   if (( ! ${fpath[(Ie)${dir}]} )); then
     fpath=( "$dir" "${fpath[@]}" )
     if (( ! plugin_loaded )); then
-      _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+      _zcomet_add_list load "${repo}${subdir:+ ${subdir}}" && fpath_added=1
+    fi
+  fi
+
+  # Add the bin/ subdirectory, if it exists, to PATH
+  if [[ -d ${plugin_path}/bin ]]; then
+    if (( ! ${path[(Ie)${plugin_path}/bin]} )); then
+      path=( "${plugin_path}/bin" "${path[@]}" )
+      (( ! plugin_added  && ! fpath_added )) &&
+        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
     fi
   fi
 }
