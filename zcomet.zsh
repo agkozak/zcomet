@@ -353,7 +353,7 @@ _zcomet_snippet_command() {
   if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file} ]] ||
      (( update )); then
     if [[ ! -d /tmp/${snippet_dir} ]]; then
-      mkdir -p "/tmp/${snippet_dir}"
+      command mkdir -p "/tmp/${snippet_dir}"
     fi
     print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
     if (( ${+commands[curl]} )); then
@@ -371,7 +371,7 @@ _zcomet_snippet_command() {
     fi
     if (( ret == 0 )); then
       [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet_dir} ]] &&
-        mkdir -p "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}"
+        command mkdir -p "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}"
       command mv "/tmp/${snippet_dir}/${snippet_file}" \
         "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}" &&
         _zcomet_compile \
@@ -469,7 +469,6 @@ zcomet() {
   # E.g., zstyle ':zcomet:*' home-dir ~/.my_dir
   if zstyle -s :zcomet: home-dir home_dir; then
     ZCOMET[HOME_DIR]=$home_dir
-    # [[ ! -d ${ZCOMET[HOME_DIR]} ]] && command mkdir -p "${ZCOMET[HOME_DIR]}"
   else
     : ${ZCOMET[HOME_DIR]:=${ZDOTDIR:-${HOME}}/.zcomet}
   fi
