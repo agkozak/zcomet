@@ -94,6 +94,13 @@ _zcomet_snippet_shorthand() {
   fi
 }
 
+############################################################
+# Checks to see if a dynamic directory name has already been
+# reserved; if not, adds it to the ZCOMET_NAMED_DIRS array.
+#
+# Arguments:
+#   $1 The path
+############################################################
 _zcomet_named_dirs() {
   local -a existing_names
   existing_names=( "${ZCOMET_NAMED_DIRS:t}" )
@@ -570,5 +577,4 @@ zcomet() {
                   "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
 }
 
-hash -d zcomet=${ZCOMET[SCRIPT]:A:h}
 add-zsh-hook zsh_directory_name zcomet_named_dirs

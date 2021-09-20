@@ -21,28 +21,30 @@
 # that contain multiple plugins.
 ############################################################
 
+emulate -L zsh
+
 typeset -ga reply
 local -a dirs
 local expl
 
 if [[ $1 == 'n' ]]; then
+	[[ $2 == 'zcomet-bin' ]] && reply=( ${ZCOMET[SCRIPT]:A:h} ) && return 0
   dirs=( ${(M)ZCOMET_NAMED_DIRS:#*/$2} )
-	# TODO: What if more than one directory qualifies for the same directory
-	# name?
-  [[ -d ${dirs[@]:0:1} ]]	&& reply=( "${dirs[@]:0:1}" ) && return 0
+  [[ -d ${dirs[1]} ]]	&& reply=( ${dirs[1]} ) && return 0
   return 1
 elif [[ $1 == 'd' ]]; then
-  if (( ${ZCOMET_NAMED_DIRS[(Ie)$2]} )); then
-    reply=( "${2:t}" "${#2}" )
+	if [[ $2 == ${ZCOMET[SCRIPT]:A:h} ]]; then
+		reply=( 'zcomet-bin' ${#2} )
+		return 0
+  elif (( ${ZCOMET_NAMED_DIRS[(Ie)$2]} )); then
+    reply=( ${2:t} ${#2} )
     return 0
   fi
   return 1
 elif [[ $1 == 'c' ]]; then
-  # _description completions expl 'dynamic named directories'
-  # compadd "${expl[@]}" -U -V zcomet -S\] -- "${ZCOMET_NAMED_DIRS[@]:t}" && return 0
   _tags named-directories
   _tags && _requested named-directories expl 'dynamic named directories' &&
-    compadd "${expl[@]}" -S\] -- "${ZCOMET_NAMED_DIRS[@]:t}"
+    compadd ${expl} -S\] -- ${ZCOMET_NAMED_DIRS:t} 'zcomet-bin'
   return 1
 fi
 
