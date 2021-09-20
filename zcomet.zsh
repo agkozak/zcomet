@@ -13,9 +13,10 @@ typeset -gA ZCOMET
 
 ZCOMET[SCRIPT]=$0
 
-# Add zcomet functions to FPATH and autoload
+# Add zcomet functions to FPATH and autoload some things
 fpath=( "${ZCOMET[SCRIPT]:A:h}/functions" "${fpath[@]}" )
-autoload -Uz zcomet_{unload,update,list,self-update,help}
+autoload -Uz add-zsh-hook \
+             zcomet_{unload,update,list,self-update,help,named_dirs}
 
 # Global Parameter holding the plugin-manager’s capabilities
 # https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#9-global-parameter-holding-the-plugin-managers-capabilities
@@ -93,16 +94,12 @@ _zcomet_snippet_shorthand() {
   fi
 }
 
-############################################################
-# Create named directories for plugins. Will not create one
-# if the name is already taken.
-#
-# Arguments
-#   $1  The name
-#   $2  The directory
-############################################################
-_zcomet_named_dir() {
-  [[ -z ${nameddirs[$1]} ]] && hash -d $1=$2
+_zcomet_named_dirs() {
+  local -a existing_names
+  existing_names=( "${ZCOMET_NAMED_DIRS:t}" )
+  if (( ! ${existing_names[(Ie)${1:t}]} )); then
+    ZCOMET_NAMED_DIRS+=( "$1" )
+  fi
 }
 
 ############################################################
@@ -201,7 +198,7 @@ _zcomet_load() {
     fi
   fi
 
-  _zcomet_named_dir "${plugin_path:t}" "${plugin_path}"
+  _zcomet_named_dirs "$plugin_path"
 }
 
 ############################################################
@@ -331,7 +328,7 @@ _zcomet_fpath_command() {
     _zcomet_add_list "$cmd" "$repo_branch${@:+ $@}"
   fi
 
-  _zcomet_named_dir "${plugin_path:t}" "${plugin_path}"
+  zcomet_named_dirs "$plugin_path"
 }
 
 ############################################################
@@ -455,9 +452,9 @@ _zcomet_trigger_command() {
   _zcomet_repo_shorthand $1
   1=$REPLY
   if [[ -n $2 && -d ${ZCOMET[REPOS_DIR]}/$1/$2 ]]; then
-   _zcomet_named_dir "${2:t}" "${ZCOMET[REPOS_DIR]}/${1%@*}/$2"
+    _zcomet_named_dirs "${ZCOMET[REPOS_DIR]}/${1%@*}/$2"
   else
-    _zcomet_named_dir "${${1%@*}:t}" "${ZCOMET[REPOS_DIR]}/${1%@*}"
+    _zcomet_named_dirs "${ZCOMET[REPOS_DIR]}/${1%@*}"
   fi
 }
 
@@ -486,7 +483,8 @@ zcomet() {
   local MATCH REPLY; integer MBEGIN MEND
   local -a match mbegin mend reply
 
-  typeset -gUa zsh_loaded_plugins ZCOMET_FPATH ZCOMET_SNIPPETS ZCOMET_TRIGGERS
+  typeset -gUa zsh_loaded_plugins ZCOMET_FPATH ZCOMET_SNIPPETS ZCOMET_TRIGGERS \
+    ZCOMET_NAMED_DIRS
 
   # Allow the user to specify custom directories
   local home_dir repos_dir snippets_dir
@@ -572,5 +570,5 @@ zcomet() {
                   "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
 }
 
-# zcomet.zsh's directory is ~zcomet
-_zcomet_named_dir zcomet "${ZCOMET[SCRIPT]:A:h}"
+hash -d zcomet=${ZCOMET[SCRIPT]:A:h}
+add-zsh-hook zsh_directory_name zcomet_named_dirs
