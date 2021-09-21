@@ -13,10 +13,12 @@ typeset -gA ZCOMET
 
 ZCOMET[SCRIPT]=$0
 
+autoload -Uz is-at-least
+! is-at-least 4.3.11 && >&2 print 'zcomet only supports Zsh v4.3.11+.'
+
 # Add zcomet functions to FPATH and autoload some things
 fpath=( "${ZCOMET[SCRIPT]:A:h}/functions" "${fpath[@]}" )
-autoload -Uz is-at-least \
-             add-zsh-hook \
+autoload -Uz add-zsh-hook \
              zcomet_{unload,update,list,self-update,help}
 
 # Global Parameter holding the plugin-manager’s capabilities
