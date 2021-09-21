@@ -14,7 +14,13 @@ typeset -gA ZCOMET
 ZCOMET[SCRIPT]=$0
 
 autoload -Uz is-at-least
-! is-at-least 4.3.11 && >&2 print 'zcomet only supports Zsh v4.3.11+.'
+if ! is-at-least 4.3.11; then
+  zcomet() {
+    >&2 print 'zcomet only supports Zsh v4.3.11+.'
+    return 1
+  }
+  zcomet; return 1
+fi
 
 # Add zcomet functions to FPATH and autoload some things
 fpath=( "${ZCOMET[SCRIPT]:A:h}/functions" "${fpath[@]}" )
