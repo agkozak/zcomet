@@ -16,7 +16,7 @@ ZCOMET[SCRIPT]=$0
 # Add zcomet functions to FPATH and autoload some things
 fpath=( "${ZCOMET[SCRIPT]:A:h}/functions" "${fpath[@]}" )
 autoload -Uz add-zsh-hook \
-             zcomet_{unload,update,list,self-update,help,named_dirs}
+             zcomet_{unload,update,list,self-update,help}
 
 # Global Parameter holding the plugin-manager’s capabilities
 # https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#9-global-parameter-holding-the-plugin-managers-capabilities
@@ -101,7 +101,7 @@ _zcomet_snippet_shorthand() {
 # Arguments:
 #   $1 The path
 ############################################################
-_zcomet_named_dirs() {
+_zcomet_add_named_dir() {
   local -a existing_names
   existing_names=( "${ZCOMET_NAMED_DIRS:t}" )
   if (( ! ${existing_names[(Ie)${1:t}]} )); then
@@ -205,7 +205,7 @@ _zcomet_load() {
     fi
   fi
 
-  _zcomet_named_dirs "$plugin_path"
+  _zcomet_add_named_dir "$plugin_path"
 }
 
 ############################################################
@@ -459,9 +459,9 @@ _zcomet_trigger_command() {
   _zcomet_repo_shorthand $1
   1=$REPLY
   if [[ -n $2 && -d ${ZCOMET[REPOS_DIR]}/$1/$2 ]]; then
-    _zcomet_named_dirs "${ZCOMET[REPOS_DIR]}/${1%@*}/$2"
+    _zcomet_add_named_dir "${ZCOMET[REPOS_DIR]}/${1%@*}/$2"
   else
-    _zcomet_named_dirs "${ZCOMET[REPOS_DIR]}/${1%@*}"
+    _zcomet_add_named_dir "${ZCOMET[REPOS_DIR]}/${1%@*}"
   fi
 }
 
@@ -577,4 +577,53 @@ zcomet() {
                   "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
 }
 
-add-zsh-hook zsh_directory_name zcomet_named_dirs
+############################################################
+# zcomet's plugin directories are dynamic named
+# directories - an idea inspired by Marlon Richert's Znap.
+#
+# But zcomet's named directories are not necessarily the
+# root directory of the Git repository -- they are often a
+# subdirectory.
+#
+# For example, running
+#
+#   zcomet load ohmyzsh plugins/extract
+#
+# gives you an ~[extract] named directory that points to
+#
+#   /path/to/ohmyzsh/ohmyzsh/plugins/extract
+#
+# not to the root of the Oh-My-Zsh repository. That way you
+# can have more than one named directory in repositories
+# that contain multiple plugins.
+############################################################
+_zcomet_named_dirs() {
+  emulate -L zsh
+
+  typeset -ga reply
+  local -a dirs
+  local expl
+
+  if [[ $1 == 'n' ]]; then
+    [[ $2 == 'zcomet-bin' ]] && reply=( ${ZCOMET[SCRIPT]:A:h} ) && return 0
+    dirs=( ${(M)ZCOMET_NAMED_DIRS:#*/$2} )
+    [[ -d ${dirs[1]} ]] && reply=( ${dirs[1]} ) && return 0
+    return 1
+  elif [[ $1 == 'd' ]]; then
+    if [[ $2 == ${ZCOMET[SCRIPT]:A:h} ]]; then
+      reply=( 'zcomet-bin' ${#2} )
+      return 0
+    elif (( ${ZCOMET_NAMED_DIRS[(Ie)$2]} )); then
+      reply=( ${2:t} ${#2} )
+      return 0
+    fi
+    return 1
+  elif [[ $1 == 'c' ]]; then
+    _tags named-directories
+    _tags && _requested named-directories expl 'dynamic named directories' &&
+      compadd ${expl} -S\] -- ${ZCOMET_NAMED_DIRS:t} 'zcomet-bin'
+    return 1
+  fi
+}
+
+add-zsh-hook zsh_directory_name _zcomet_named_dirs
