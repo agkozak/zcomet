@@ -38,16 +38,18 @@
 
 ## News
 
+- September 21, 2021
+    + I have opted to have named directories assigned only at the repository level. Also, if there is more than one repository with the same name (e.g., `author1/zsh-tool` and `author2/zsh-tool`), neither directory is given a name (to prevent mistakes from happening).
 - September 20, 2021
-    + `zcomet` plugins are now assigned dynamic named directories; e.g., `zcomet load ohmyzsh plugins/extract` will make a named directory called `~[extract]` that is identical to `/path/to/ohmyzsh/ohmyzsh/plugins/extract`. This feature was inspired by Marlon Richert's [Znap](https://github.com/marlonrichert/zsh-snap), although the implementation is a bit different.
+    + `zcomet` plugins are now assigned [dynamic named directories](#dynamic-named-directories). This feature was inspired by Marlon Richert's [Znap](https://github.com/marlonrichert/zsh-snap).
 - September 18, 2021
     + `zcomet` directories are now specified using `zstyle`; [see below](#directory-customization).
     + The `load` command will now add a plugin's `bin/` subdirectory, if it has one, to the `PATH`.
-- September 17, 2021
-    + `zcommet trigger` now always makes sure that the repository it needs has already been cloned, meaning that you will never have to wait for files to be downloaded when you use a defined trigger.
 <details>
     <summary>Older news</summary>
 
+- September 17, 2021
+    + `zcommet trigger` now always makes sure that the repository it needs has already been cloned, meaning that you will never have to wait for files to be downloaded when you use a defined trigger.
 - September 16, 2021
     + `zcomet list` now reflects `FPATH` elements added using the `fpath` command.
     + New command: `zcomet compinit` runs `compinit` and compiles its cache for you.
@@ -106,15 +108,16 @@ I recommend cloning the `agkozak/zcomet` repository to a `/bin` subdirectory in 
 If you `load`, `fpath`, or `trigger` a number of plugins, `zcomet` will give them dynamic directory names. For the [example `.zshrc`](https://github.com/agkozak/zcomet/tree/develop#example-zshrc) above, the following named directories would be created:
 
     ~[agkozak-zsh-prompt]
-    ~[extract]
-    ~[gitfast]
+    ~[ohmyzsh]
     ~[zhooks]
     ~[zsh-prompt-benchmark]
     ~[zsh-z]
 
-Note that `~[extract]` and `~[gitfast]` point to different directories within the same Oh-My-Zsh repository. You will also have `~[zcomet-bin]`, the directory in which the `zcomet.zsh` script resides.
+You will also have `~[zcomet-bin]`, the directory in which the `zcomet.zsh` script resides.
 
 Try typing `cd ~[` and press `<TAB>` to see a list of dynamic directories. This new feature should be particularly useful to people who write plugins and prompts -- it makes it very easy to get to the code.
+
+This feature was inspired by Marlon Richert's [Znap](https://github.com/marlonrichert/zsh-snap).
 
 ## Commands and Arguments
 
