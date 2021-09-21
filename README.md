@@ -112,7 +112,7 @@ If you `load`, `fpath`, or `trigger` a number of plugins, `zcomet` will give the
     ~[zsh-prompt-benchmark]
     ~[zsh-z]
 
-Note that `~[extract]` and `[gitfast]` point to different directories within the same Oh-My-Zsh repository. You will also have `~[zcomet-bin]`, the directory in which the `zcomet.zsh` script resides.
+Note that `~[extract]` and `~[gitfast]` point to different directories within the same Oh-My-Zsh repository. You will also have `~[zcomet-bin]`, the directory in which the `zcomet.zsh` script resides.
 
 Try typing `cd ~[` and press `<TAB>` to see a list of dynamic directories. This new feature should be particularly useful to people who write plugins and prompts -- it makes it very easy to get to the code.
 
