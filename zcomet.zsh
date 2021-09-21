@@ -335,7 +335,7 @@ _zcomet_fpath_command() {
     _zcomet_add_list "$cmd" "$repo_branch${@:+ $@}"
   fi
 
-  zcomet_named_dirs "$plugin_path"
+  _zcomet_add_named_dir "$plugin_path"
 }
 
 ############################################################

@@ -7,13 +7,11 @@
 () {
 local -r home_dir=${1}
 
-if [[ -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
-  cp ${HOME}/.zcomet/bin/zcomet.zsh ${home_dir}
-else
-# download the repository
-  command curl -Ss -L https://raw.githubusercontent.com/agkozak/zcomet/master/zcomet.zsh \
-    > ${home_dir}/zcomet.zsh
-fi
+setopt EXTENDED_GLOB
+
+[[ ! -d ${home_dir}/functions ]] && mkdir -p ${home_dir}/functions
+cp ${HOME}/.zcomet/bin/zcomet.zsh $home_dir
+cp ${HOME}/.zcomet/bin/functions/*~*.zwc ${home_dir}/functions
 
 # add modules to .zshrc
 print 'source ${HOME}/zcomet.zsh
