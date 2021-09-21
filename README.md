@@ -39,7 +39,7 @@
 ## News
 
 - September 20, 2021
-    + `zcomet` plugins now reside in dynamic named directories; e.g `zcomet load ohmyzsh plugins/extract` will make a named directory called `~[extract]` that is identical to `/path/to/ohmyzsh/ohmyzsh/plugins/extract`. This feature was inspired by Marlon Richert's [Znap](https://github.com/marlonrichert/zsh-snap), although the implementation is a bit different.
+    + `zcomet` plugins are now assigned dynamic named directories; e.g., `zcomet load ohmyzsh plugins/extract` will make a named directory called `~[extract]` that is identical to `/path/to/ohmyzsh/ohmyzsh/plugins/extract`. This feature was inspired by Marlon Richert's [Znap](https://github.com/marlonrichert/zsh-snap), although the implementation is a bit different.
 - September 18, 2021
     + `zcomet` directories are now specified using `zstyle`; [see below](#directory-customization).
     + The `load` command will now add a plugin's `bin/` subdirectory, if it has one, to the `PATH`.
@@ -103,7 +103,7 @@ I recommend cloning the `agkozak/zcomet` repository to a `/bin` subdirectory in 
 
 ## Dynamic Named Directories
 
-If you `load`, `fpath`, or `trigger` a number of plugins, `zcomet` will give them dynamic directory names. For the [example `.zshrc`] above, the following named directories would be created:
+If you `load`, `fpath`, or `trigger` a number of plugins, `zcomet` will give them dynamic directory names. For the [example `.zshrc`](https://github.com/agkozak/zcomet/tree/develop#example-zshrc) above, the following named directories would be created:
 
     ~[agkozak-zsh-prompt]
     ~[extract]
@@ -114,7 +114,7 @@ If you `load`, `fpath`, or `trigger` a number of plugins, `zcomet` will give the
 
 Note that `~[extract]` and `[gitfast]` point to different directories within the same Oh-My-Zsh repository. You will also have `~[zcomet-bin]`, the directory in which the `zcomet.zsh` script resides.
 
-Try typing `cd ~[` and start pressing `<TAB`. You will get a nice overview of your current configuration. This feature should be particularly useful to people who write plugins and prompts -- it makes it very easy to get to the code.
+Try typing `cd ~[` and press `<TAB>` to see a list of dynamic directories. This new feature should be particularly useful to people who write plugins and prompts -- it makes it very easy to get to the code.
 
 ## Commands and Arguments
 
@@ -200,7 +200,7 @@ For snippets that are not hosted by GitHub, you will want to make sure that the 
 
 ### `compinit`
 
-Runs Zsh's `compinit` command, which is necessary if you want to use command line completions. `compinit`'s cache is then stored in a file in the `$HOME` directory (or in `$ZDOTDIR`, if you have defined it) starting with `.zcompdump_` and ending with the version number of the `zsh` you are using, e.g. `.zcompdump_5.8`. `zcomet` compiles the cache for you.
+Runs Zsh's `compinit` command, which is necessary if you want to use command line completions. `compinit`'s cache is then stored in a file in the `$HOME` directory (or in `$ZDOTDIR`, if you have defined it) starting with `.zcompdump_` and ending with the version number of the `zsh` you are using, e.g., `.zcompdump_5.8`. `zcomet` compiles the cache for you.
 
 ### `compile`
 
