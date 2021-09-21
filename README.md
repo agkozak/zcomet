@@ -20,6 +20,7 @@
 
 - [News](#news)
 - [Example `.zshrc`](#example-zshrc)
+- [Dynamic Named Directories](#dynamic-named-directories)
 - [Directory Customization](#directory-customization)
 - [Commands and Arguments](#commands-and-arguments)
   + [`load`](#load-repository-name-subdirectory-file1-file2-)
@@ -37,6 +38,8 @@
 
 ## News
 
+- September 20, 2021
+    + `zcomet` plugins now reside in dynamic named directories; e.g `zcomet load ohmyzsh plugins/extract` will make a named directory called `~[extract]` that is identical to `/path/to/ohmyzsh/ohmyzsh/plugins/extract`. This feature was inspired by Marlon Richert's [Znap](https://github.com/marlonrichert/zsh-snap), although the implementation is a bit different.
 - September 18, 2021
     + `zcomet` directories are now specified using `zstyle`; [see below](#directory-customization).
     + The `load` command will now add a plugin's `bin/` subdirectory, if it has one, to the `PATH`.
@@ -97,6 +100,21 @@ In the home directory there will usually be a `/repos` subdirectory for plugins 
     zstyle ':zcomet:*' snippets-dir ~/path/to/snippets_dir
 
 I recommend cloning the `agkozak/zcomet` repository to a `/bin` subdirectory in your `zcomet` home directory (e.g., `~/.zcomet/bin`), as in the [example `.zshrc`](#example-zshrc) above.
+
+## Dynamic Named Directories
+
+If you `load`, `fpath`, or `trigger` a number of plugins, `zcomet` will give them dynamic directory names. For the [example `.zshrc`] above, the following named directories would be created:
+
+    ~[agkozak-zsh-prompt]
+    ~[extract]
+    ~[gitfast]
+    ~[zhooks]
+    ~[zsh-prompt-benchmark]
+    ~[zsh-z]
+
+Note that `~[extract]` and `[gitfast]` point to different directories within the same Oh-My-Zsh repository. You will also have `~[zcomet-bin]`, the directory in which the `zcomet.zsh` script resides.
+
+Try typing `cd ~[` and start pressing `<TAB`. You will get a nice overview of your current configuration. This feature should be particularly useful to people who write plugins and prompts -- it makes it very easy to get to the code.
 
 ## Commands and Arguments
 
