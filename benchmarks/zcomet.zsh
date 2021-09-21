@@ -9,9 +9,9 @@ local -r home_dir=${1}
 
 setopt EXTENDED_GLOB
 
-[[ ! -d ${home_dir}/functions ]] && mkdir -p ${home_dir}/functions
 cp ${HOME}/.zcomet/bin/zcomet.zsh $home_dir
-cp ${HOME}/.zcomet/bin/functions/*~*.zwc ${home_dir}/functions
+mkdir ${home_dir}/functions
+cp -r ${HOME}/.zcomet/bin/functions/*~*.zwc ${home_dir}/functions
 
 # add modules to .zshrc
 print 'source ${HOME}/zcomet.zsh
