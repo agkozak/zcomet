@@ -15,7 +15,8 @@ ZCOMET[SCRIPT]=$0
 
 # Add zcomet functions to FPATH and autoload some things
 fpath=( "${ZCOMET[SCRIPT]:A:h}/functions" "${fpath[@]}" )
-autoload -Uz add-zsh-hook \
+autoload -Uz is-at-least \
+             add-zsh-hook \
              zcomet_{unload,update,list,self-update,help}
 
 # Global Parameter holding the plugin-manager’s capabilities
@@ -628,4 +629,12 @@ _zcomet_named_dirs() {
   fi
 }
 
-add-zsh-hook zsh_directory_name _zcomet_named_dirs
+# The zsh_directory_name hook did not appear till Zsh v4.3.12, so for v4.3.11
+# we'll just have to use the zsh_directory_name function directly
+if is-at-least 4.3.12; then
+  add-zsh-hook zsh_directory_name _zcomet_named_dirs
+else
+  zsh_directory_name() {
+    _zcomet_named_dirs $@
+  }
+fi
