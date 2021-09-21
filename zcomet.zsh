@@ -581,47 +581,49 @@ zcomet() {
 # zcomet's plugin directories are dynamic named
 # directories - an idea inspired by Marlon Richert's Znap.
 #
-# But zcomet's named directories are not necessarily the
-# root directory of the Git repository -- they are often a
-# subdirectory.
-#
-# For example, running
-#
-#   zcomet load ohmyzsh plugins/extract
-#
-# gives you an ~[extract] named directory that points to
-#
-#   /path/to/ohmyzsh/ohmyzsh/plugins/extract
-#
-# not to the root of the Oh-My-Zsh repository. That way you
-# can have more than one named directory in repositories
-# that contain multiple plugins.
+# Note that if two repos of the same name appear under the
+# ${ZCOMET[REPOS_DIR]} directory, neither will be assigned a
+# name -- the idea being to prevent terrible mistakes.
 ############################################################
 _zcomet_named_dirs() {
   emulate -L zsh
 
   typeset -ga reply
-  local -a dirs
+  local -a dirs names
   local expl
 
   if [[ $1 == 'n' ]]; then
     [[ $2 == 'zcomet-bin' ]] && reply=( ${ZCOMET[SCRIPT]:A:h} ) && return 0
-    dirs=( ${(M)ZCOMET_NAMED_DIRS:#*/$2} )
-    [[ -d ${dirs[1]} ]] && reply=( ${dirs[1]} ) && return 0
-    return 1
+    dirs=( ${ZCOMET[REPOS_DIR]}/*/$2(N/) )
+    (( ${#dirs} != 1 )) && return 1
+    reply=( ${dirs[1]} ) && return 0
   elif [[ $1 == 'd' ]]; then
     if [[ $2 == ${ZCOMET[SCRIPT]:A:h} ]]; then
       reply=( 'zcomet-bin' ${#2} )
       return 0
-    elif (( ${ZCOMET_NAMED_DIRS[(Ie)$2]} )); then
+    elif [[ ${${2:h}:h} == ${ZCOMET[REPOS_DIR]} ]]; then
+      dirs=( ${ZCOMET[REPOS_DIR]}/*/${2:t}(N/) )
+      (( ${#dirs} != 1 )) && return 1
       reply=( ${2:t} ${#2} )
       return 0
     fi
     return 1
   elif [[ $1 == 'c' ]]; then
+    dirs=( ${ZCOMET[REPOS_DIR]}/*/*(N/) )
+    names=( ${dirs:t} )
+    local -A names_tally
+    local name
+    for name in $names; do
+      (( names_tally[$name]++ ))
+    done
+    name=''
+    names=()
+    for name in ${(k)names_tally}; do
+      (( names_tally[$name] == 1 )) && names+=( $name )
+    done
     _tags named-directories
     _tags && _requested named-directories expl 'dynamic named directories' &&
-      compadd ${expl} -S\] -- ${ZCOMET_NAMED_DIRS:t} 'zcomet-bin'
+      compadd $expl -S\] -- $names 'zcomet-bin'
     return 1
   fi
 }
