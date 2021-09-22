@@ -175,6 +175,8 @@ or save time by listing a number of triggers before the repository name:
 
 `trigger` always checks to make sure that the repository it needs has been already cloned; if not, it clones it. The goal is for triggers to take almost no time to load when they are actually run.
 
+This feature was inspired by [Zinit](https://github.com/zdharma/zinit)'s `trigger-load` command.
+
 ### `snippet` snippet
 
 `snippet` downloads a script (when necessary) and sources it:
