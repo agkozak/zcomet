@@ -262,13 +262,13 @@ _zcomet_clone_repo() {
   [[ -d ${repo_dir} ]] && return
 
   print -P "%B%F{yellow}Cloning ${repo}:%f%b"
-  if ! command git clone "https://github.com/${repo}" "${repo_dir}"; then
+  if ! command git clone "https://github.com/${repo}" "$repo_dir"; then
     ret=$?
     >&2 print "Could not clone repository ${repo}."
     return $ret
   fi
   if [[ -n $branch ]] && ! command git --git-dir="${repo_dir}/.git" \
-    --work-tree="${repo_dir}" checkout -q "$branch"; then
+    --work-tree="$repo_dir" checkout -q "$branch"; then
     ret=$?
     >&2 print "Could not checkout branch ${branch}."
     return $ret
@@ -388,11 +388,11 @@ _zcomet_snippet_command() {
     print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
     if (( ${+commands[curl]} )); then
       method='curl'
-      curl "${url}" > "/tmp/${snippet_dir}/${snippet_file}"
+      curl "$url" > "/tmp/${snippet_dir}/${snippet_file}"
       ret=$?
     elif (( ${+commands[wget]} )); then
       method='wget'
-      wget "${url}" \
+      wget "$url" \
            -O "/tmp/${snippet_dir}/${snippet_file}"
       ret=$?
     else
