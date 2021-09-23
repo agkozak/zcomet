@@ -123,7 +123,7 @@ This feature was inspired by Marlon Richert's [Znap](https://github.com/marlonri
 
 ### `load` repository-name \[subdirectory\] \[file1\] \[file2\] ...
 
-`load` is the most commonly used command; it clones a GitHub repository (if it has not already been downloaded), adds its root directory (or `/functions/` subdirectory, if it exists) to `FPATH`, adds any `bin/` subdirectory to `PATH`, and sources a file or files. The simplest example is:
+`load` is the most commonly used command; it clones a GitHub repository (if it has not already been downloaded), adds its root directory (or `functions/` subdirectory, if it exists) to `FPATH`, adds any `bin/` subdirectory to `PATH`, and sources a file or files. The simplest example is:
 
     zcomet load agkozak/zsh-z
 
