@@ -7,7 +7,7 @@
 # update it and source it afresh.
 #
 # Outputs:
-#   Error message
+#   Git output; error message
 ############################################################
 
 print -Pn '%B%F{yellow}zcomet:%f%b '
