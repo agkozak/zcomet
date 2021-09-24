@@ -12,7 +12,8 @@
 # Arguments:
 #   None
 # Outputs:
-#   Informative messages and raw Git, curl, and wget output
+#   Informative messages and raw Git, curl, and wget output;
+#     error message
 ############################################################
 
 local i file
