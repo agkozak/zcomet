@@ -1,7 +1,7 @@
 #autoload
 
 ############################################################
-# The `update` command
+# The `update' command
 #
 # For the time being, updates all plugins and snippets that
 # have been downloaded, recompiles their scripts (if

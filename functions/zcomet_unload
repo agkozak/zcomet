@@ -1,7 +1,7 @@
 #autoload
 
 ############################################################
-# The `unload` command - an attempt at implementing part of
+# The `unload' command - an attempt at implementing part of
 # Sebastian Gniazdowski's Zsh Plugin Standard
 # (https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#4-unload-function)
 #
