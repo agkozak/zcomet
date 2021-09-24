@@ -1,7 +1,7 @@
 #autoload
 
 ############################################################
-# The `list` command
+# The `list' command
 #
 # Displays loaded plugins, added FPATH elements, sourced
 # snippets, and defined triggers
