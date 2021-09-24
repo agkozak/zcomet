@@ -548,11 +548,9 @@ zcomet() {
     compinit)
       autoload -Uz compinit
 
-      if [[ $TERM != 'dumb' ]] &&
-        compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"; then
-        _zcomet_compile "$_comp_dumpfile"
-      else
-        >&2 print "Could not load Zsh completions."
+      if [[ $TERM != 'dumb' ]]; then 
+        compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"
+        ( _zcomet_compile "$_comp_dumpfile" ) &!
       fi
       ;;
     compile)
