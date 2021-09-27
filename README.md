@@ -34,6 +34,7 @@
   + [`help`](#help)
   + [`self-update`](#self-update)
   + [`unload`](#unload-repository-name)
+- [Standards Compliance](#standards-compliance)
 - [TODO](#todo)
 
 ## News
@@ -222,6 +223,18 @@ Updates `zcomet` itself. Note that `zcomet` must have been installed as a cloned
 ### `unload` \[repository-name\]
 
 Unloads a plugin that has an [unload function](https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#4-unload-function). The implementation is still very basic.
+
+## Standards Compliance
+
+I am a great admirer of [Sebastian Gniazdowski's principles for plugin development](https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc), and I have incorporated most of his suggestions into `zcomet`:
+
+* Standardized `$0` handling
+* Support for `functions/` directories
+* Support for `bin/` directories
+* Support for `unload` functions
+* `zsh_loaded_plugins`: a plugin manager activity indicator
+* `ZPFX`: global parameter with PREFIX for `make`, `configure`, etc.
+* `PMSPEC`: global parameter holding the plugin manager’s capabilities
 
 ## TODO
 
