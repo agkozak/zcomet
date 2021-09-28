@@ -39,6 +39,8 @@
 
 ## News
 
+- September 27, 2021
+    + `zcomet` now looks for the `bin/` subdirectory in the root directory of the repository, not in the directory where the sources plugin files reside.
 - September 21, 2021
     + I have opted to have named directories assigned only at the repository level. Also, if there is more than one repository with the same name (e.g., `author1/zsh-tool` and `author2/zsh-tool`), neither directory is given a name (to prevent mistakes from happening).
 - September 20, 2021
