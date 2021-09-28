@@ -43,6 +43,9 @@
     + `zcomet` now autoloads functions in a `functions/` directory before sourcing a Prezto-style module.
 - September 27, 2021
     + `zcomet` now looks for the `bin/` subdirectory in the root directory of the repository, not in the directory where the sources plugin files reside.
+<details>
+    <summary>Older news</summary>
+
 - September 21, 2021
     + I have opted to have named directories assigned only at the repository level. Also, if there is more than one repository with the same name (e.g., `author1/zsh-tool` and `author2/zsh-tool`), neither directory is given a name (to prevent mistakes from happening).
 - September 20, 2021
@@ -50,9 +53,6 @@
 - September 18, 2021
     + `zcomet` directories are now specified using `zstyle`; [see below](#directory-customization).
     + The `load` command will now add a plugin's `bin/` subdirectory, if it has one, to the `PATH`.
-<details>
-    <summary>Older news</summary>
-
 - September 17, 2021
     + `zcommet trigger` now always makes sure that the repository it needs has already been cloned, meaning that you will never have to wait for files to be downloaded when you use a defined trigger.
 - September 16, 2021
