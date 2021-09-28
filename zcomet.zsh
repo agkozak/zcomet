@@ -206,9 +206,9 @@ _zcomet_load() {
   fi
 
   # Add the bin/ subdirectory, if it exists, to PATH
-  if [[ -d ${plugin_path}/bin ]]; then
-    if (( ! ${path[(Ie)${plugin_path}/bin]} )); then
-      path=( "${plugin_path}/bin" "${path[@]}" )
+  if [[ -d ${ZCOMET[REPOS_DIR]}/${repo}/bin ]]; then
+    if (( ! ${path[(Ie)${ZCOMET[REPOS_DIR]}/${repo}/bin]} )); then
+      path=( "${ZCOMET[REPOS_DIR]}/${repo}/bin" "${path[@]}" )
       (( ! plugin_added  && ! fpath_added )) &&
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
     fi
