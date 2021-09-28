@@ -149,11 +149,42 @@ _zcomet_load() {
   fi
   plugin_path=${ZCOMET[REPOS_DIR]}/${repo}${subdir:+/${subdir}}
 
+  # Add repo dir or the functions/ subdirectory to FPATH
+  local dir fpath_added prezto_style
+  if [[ -d ${plugin_path}/functions ]]; then
+    dir="${plugin_path}/functions"
+    prezto_style=1
+  elif [[ -d ${plugin_path} ]]; then
+    dir=${plugin_path}
+  else
+    >&2 print "Cannot add plugin directory to FPATH."
+    return 1
+  fi
+
+  if (( ! ${fpath[(Ie)${dir}]} )); then
+    fpath=( "$dir" "${fpath[@]}" )
+      _zcomet_add_list load "${repo}${subdir:+ ${subdir}}" && fpath_added=1
+  fi
+
+  # Autoload prezto-style functions
+  if (( prezto_style )); then
+    () {
+      setopt LOCAL_OPTIONS EXTENDED_GLOB
+
+      local zfunction
+
+      for zfunction in "${dir}"/^(*~|*.zwc(|.old)|_*|prompt_*_setup)(N-.:t); do
+        autoload -Uz ${zfunction}
+      done
+    }
+  fi
+
   if (( ${#files} )); then
     for file in "${files[@]}"; do
       if source "${plugin_path}/${file}"; then
-        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" &&
-        plugin_loaded=1
+        (( ! fpath_added )) &&
+          _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" &&
+          plugin_loaded=1
       else
         return $?
       fi
@@ -184,24 +215,6 @@ _zcomet_load() {
         >&2 print "Cannot source ${file}."
         return 1
       fi
-    fi
-  fi
-
-  # Add repo dir or the functions/ subdirectory to FPATH
-  local dir fpath_added
-  if [[ -d ${plugin_path}/functions ]]; then
-    dir="${plugin_path}/functions"
-  elif [[ -d ${plugin_path} ]]; then
-    dir=${plugin_path}
-  else
-    >&2 print "Cannot add plugin directory to FPATH."
-    return 1
-  fi
-  
-  if (( ! ${fpath[(Ie)${dir}]} )); then
-    fpath=( "$dir" "${fpath[@]}" )
-    if (( ! plugin_loaded )); then
-      _zcomet_add_list load "${repo}${subdir:+ ${subdir}}" && fpath_added=1
     fi
   fi
 

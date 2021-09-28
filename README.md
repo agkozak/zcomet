@@ -39,6 +39,8 @@
 
 ## News
 
+- September 28, 2021
+    + `zcomet` now autoloads functions in a `functions/` directory before sourcing a Prezto-style module.
 - September 27, 2021
     + `zcomet` now looks for the `bin/` subdirectory in the root directory of the repository, not in the directory where the sources plugin files reside.
 - September 21, 2021

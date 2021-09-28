@@ -20,7 +20,7 @@ zcomet load zimfw/git
 zcomet snippet https://github.com/zimfw/input/blob/master/init.zsh
 zcomet snippet https://github.com/zimfw/termtitle/blob/master/init.zsh
 zcomet load zimfw/utility
-zcomet fpath zimfw/git-info functions
+zcomet load zimfw/git-info
 zcomet snippet https://github.com/zimfw/asciiship/blob/master/asciiship.zsh-theme
 zcomet fpath zsh-users/zsh-completions src
 zcomet load zsh-users/zsh-autosuggestions
