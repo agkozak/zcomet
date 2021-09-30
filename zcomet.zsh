@@ -53,10 +53,10 @@ _zcomet_compile() {
       if [[ $1 == ${ZCOMET[SCRIPT]:A:h}/functions/zcomet_* ||
             $1 == prompt_*_setup ||
             $1 == _* ]]; then
-        zcompile -Uz "$1"
+        builtin zcompile -Uz "$1"
       # Scripts to be sourced
       else
-        zcompile -UzR "$1"
+        builtin zcompile -UzR "$1"
       fi
     fi
     shift
