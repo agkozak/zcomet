@@ -16,14 +16,14 @@
 #     error message
 ############################################################
 
-local i file
+local git_dir file
 local -a snippets
 
-for i in "${ZCOMET[REPOS_DIR]}"/**/.git(N/); do
-  print -P "%B%F{yellow}${${i:h}#${ZCOMET[REPOS_DIR]}/}:%f%b "
-  command git --git-dir="${i}" --work-tree="${i:h}" pull
-  for file in "${i:h}"/**/*.zsh(|-theme)(N.) \
-              "${i:h}"/**/prompt_*_setup(N.); do
+for git_dir in $(find ${ZCOMET[REPOS_DIR]} -name .git -type d); do
+  print -P "%B%F{yellow}${${git_dir:h}#${ZCOMET[REPOS_DIR]}/}:%f%b "
+  command git --git-dir="${git_dir}" --work-tree="${git_dir:h}" pull
+  for file in "${git_dir:h}"/**/*.zsh(|-theme)(N.) \
+              "${git_dir:h}"/**/prompt_*_setup(N.); do
     _zcomet_compile "$file"
   done
   (( ${ZCOMET_PLUGINS[(Ie)$i]} )) && zcomet load "$i"
