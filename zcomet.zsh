@@ -119,6 +119,15 @@ _zcomet_add_named_dir() {
 }
 
 ############################################################
+# Captures `compdef' calls that will actually be run
+# after `zcomet compinit' is run.
+############################################################
+typeset -gUa ZCOMET_COMPDEFS
+compdef() {
+  ZCOMET_COMPDEFS+=( "$*" )
+}
+
+############################################################
 # This function loads plugins that have already been
 # cloned. Loading consists of sourcing a main file or
 # adding the root directory or a /functions/ subdirectory
@@ -514,7 +523,7 @@ zcomet() {
   local -a match mbegin mend reply
 
   typeset -gUa zsh_loaded_plugins ZCOMET_FPATH ZCOMET_SNIPPETS ZCOMET_TRIGGERS \
-    ZCOMET_NAMED_DIRS
+      ZCOMET_NAMED_DIRS
 
   # Allow the user to specify custom directories
   local home_dir repos_dir snippets_dir
@@ -564,6 +573,18 @@ zcomet() {
 
       if [[ $TERM != 'dumb' ]]; then 
         compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"
+
+        # Run compdef calls that were deferred earlier
+        () {
+          setopt LOCAL_OPTIONS EQUALS
+          local def
+          for def in "${ZCOMET_COMPDEFS[@]}"; do
+            compdef ${=def}
+          done
+          unset ZCOMET_COMPDEFS
+        }
+
+        # Compile the dumpfile
         ( _zcomet_compile "$_comp_dumpfile" ) &!
       fi
       ;;
