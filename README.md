@@ -39,6 +39,8 @@
 
 ## News
 
+- September 30, 2021
+    + `zcomet` now defers running `compdef` calls until after `zcomet compinit` has been run.
 - September 28, 2021
     + `zcomet` now autoloads functions in a `functions/` directory before sourcing a Prezto-style module.
 - September 27, 2021
@@ -212,13 +214,15 @@ For snippets that are not hosted by GitHub, you will want to make sure that the 
 
 Runs Zsh's `compinit` command, which is necessary if you want to use command line completions. `compinit`'s cache is then stored in a file in the `$HOME` directory (or in `$ZDOTDIR`, if you have defined it) starting with `.zcompdump_` and ending with the version number of the `zsh` you are using, e.g., `.zcompdump_5.8`. `zcomet` compiles the cache for you.
 
+Like other plugin managers and frameworks, `zcomet` defers running `compdef` calls until `zcomet compinit` runs, which means that you can load a plugin full of `compdefs` (e.g., `zcomet load ohmyzsh plugins git`) even before `zcomet compinit` and its completions will still work.
+
 ### `compile`
 
-`zcompile`s a script or scripts if there is no corresponding wordcode (`.zwc`) file or if a script is newer than its `.zwc`.
+Compiles a script or scripts if there is no corresponding wordcode (`.zwc`) file or if a script is newer than its `.zwc`.
 
 ### `help`
 
-Displays a simple help screen.
+Displays a help screen.
 
 ### `self-update`
 
