@@ -16,7 +16,9 @@
 #     error message
 ############################################################
 
-local git_dir file
+setopt EQUALS
+
+local git_dir file plugin
 local -a snippets
 
 for git_dir in $(find ${ZCOMET[REPOS_DIR]} -name .git -type d); do
@@ -26,7 +28,11 @@ for git_dir in $(find ${ZCOMET[REPOS_DIR]} -name .git -type d); do
               "${git_dir:h}"/**/prompt_*_setup(N.); do
     _zcomet_compile "$file"
   done
-  (( ${ZCOMET_PLUGINS[(Ie)$i]} )) && zcomet load "$i"
+done
+
+# Reload loaded plugins
+for plugin in ${zsh_loaded_plugins[@]}; do
+  zcomet load ${=plugin}
 done
 
 snippets=( "${ZCOMET[SNIPPETS_DIR]}"/**/*(N.) )
