@@ -21,7 +21,7 @@ setopt EQUALS
 local git_dir file plugin
 local -a snippets
 
-for git_dir in $(find ${ZCOMET[REPOS_DIR]} -name .git -type d); do
+for git_dir in ${ZCOMET[REPOS_DIR]}/**/.git(N/); do
   print -P "%B%F{yellow}${${git_dir:h}#${ZCOMET[REPOS_DIR]}/}:%f%b "
   command git --git-dir="${git_dir}" --work-tree="${git_dir:h}" pull
   for file in "${git_dir:h}"/**/*.zsh(|-theme)(N.) \
