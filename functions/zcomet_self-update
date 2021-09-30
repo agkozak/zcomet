@@ -10,7 +10,7 @@
 #   Git output; error message
 ############################################################
 
-print -Pn '%B%F{yellow}zcomet:%f%b '
+print -P '%B%F{yellow}zcomet:%f%b '
 
 if ! command git --git-dir="${${ZCOMET[SCRIPT]}:A:h}/.git" \
   --work-tree="${ZCOMET[SCRIPT]:A:h}" pull &&
