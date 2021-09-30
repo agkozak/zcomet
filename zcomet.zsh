@@ -494,6 +494,7 @@ _zcomet_trigger_command() {
 #   zsh_loaded_plugins
 #   ZCOMET_SNIPPETS
 #   ZCOMET_TRIGGERS
+#   ZCOMET_NAMED_DIRS
 # Arguments:
 #   load <repo> [...]
 #   fpath <repo> [...]
