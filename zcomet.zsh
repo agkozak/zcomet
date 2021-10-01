@@ -150,11 +150,15 @@ _zcomet_load() {
   _zcomet_repo_shorthand "$1"
   repo=$REPLY
   shift
-  if [[ -n $1 && -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
-    files=( "$@" )
-  else
-    (( ${+1} )) && subdir=$1 && shift
-    (( $# )) && files=( "$@" )
+  if [[ -n $1 ]]; then
+    if [[ -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
+      files=( "$@" )
+    elif [[ -d ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
+      subdir=$1 && shift
+      (( $# )) && files=( "$@" )
+    else
+      >&2 print "zcomet: ${repo}: invalid arguments." && return 1
+    fi
   fi
   plugin_path=${ZCOMET[REPOS_DIR]}/${repo}${subdir:+/${subdir}}
 
