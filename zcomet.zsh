@@ -176,7 +176,9 @@ _zcomet_load() {
 
   if (( ! ${fpath[(Ie)${dir}]} )); then
     fpath=( "$dir" "${fpath[@]}" )
+    if (( ! ${#files} )); then
       _zcomet_add_list load "${repo}${subdir:+ ${subdir}}" && fpath_added=1
+    fi
   fi
 
   # Autoload prezto-style functions
@@ -195,9 +197,8 @@ _zcomet_load() {
   if (( ${#files} )); then
     for file in "${files[@]}"; do
       if source "${plugin_path}/${file}"; then
-        (( ! fpath_added )) &&
-          _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" &&
-          plugin_loaded=1
+        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" &&
+        plugin_loaded=1
       else
         return $?
       fi
