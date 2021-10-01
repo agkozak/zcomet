@@ -29,8 +29,8 @@ local success
 (( ${#ZCOMET_TRIGGERS} )) &&
   success=1 &&
   print -P '%B%F{yellow}Triggers:%f%b' &&
-  print "  ${(o)ZCOMET_TRIGGERS[@]}"
+  print -l -f '  %s\n' "${(o)ZCOMET_TRIGGERS[@]}"
 
 (( success )) && return 0 || return 1
 
-# vim: ft=zsh
+# vim: ft=zsh:ts=2:sts=2:sw=2

@@ -19,3 +19,5 @@ zcomet trigger hist marlonrichert/zsh-hist
 zcomet load zsh-users/zsh-completions
 
 zcomet load ohmyzsh lib git.zsh
+
+zcomet load prezto modules/archive
