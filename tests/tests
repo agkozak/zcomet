@@ -9,7 +9,7 @@ zcomet load zdharma/fast-syntax-highlighting
 	zcomet unload agkozak/agkozak-zsh-prompt
 	zcomet load sindresorhus/pure async.zsh pure.zsh
 
-	zcomet load zsh-users/zsh-autosuggestions
+	# zcomet load zsh-users/zsh-autosuggestions
 }
 
 zcomet load oldratlee/hacker-quotes

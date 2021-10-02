@@ -21,9 +21,18 @@ setopt EQUALS
 local git_dir file plugin
 local -a snippets
 
+# TODO: Consider having zcomet check to see if the branch has been changed
+# in .zshrc or the equivalent.
+
 for git_dir in ${ZCOMET[REPOS_DIR]}/**/.git(N/); do
   print -P "%B%F{yellow}${${git_dir:h}#${ZCOMET[REPOS_DIR]}/}:%f%b "
-  command git --git-dir="${git_dir}" --work-tree="${git_dir:h}" pull
+  command git --git-dir=${git_dir} --work-tree=${git_dir:h} pull
+  if [[ -f ${git_dir:h}/.gitmodules ]]; then
+		(
+			cd ${git_dir:h} || exit 1
+			command git submodule update --init --recursive
+	  )
+  fi
   for file in "${git_dir:h}"/**/*.zsh(|-theme)(N.) \
               "${git_dir:h}"/**/prompt_*_setup(N.); do
     _zcomet_compile "$file"
@@ -59,4 +68,4 @@ if (( ${#ZCOMET_SNIPPETS} )); then
   done
 fi
 
-# vim: ft=zsh
+# vim: ft=zsh:ts=2:sts=2:sw=2

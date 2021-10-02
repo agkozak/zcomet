@@ -289,15 +289,16 @@ _zcomet_clone_repo() {
   [[ -d ${repo_dir} ]] && return
 
   print -P "%B%F{yellow}Cloning ${repo}:%f%b"
-  if ! command git clone "https://github.com/${repo}" "$repo_dir"; then
+  # TODO: Provide the user with a way not to get submodules.
+  if ! command git clone --recursive "https://github.com/${repo}" "$repo_dir"; then
     ret=$?
     >&2 print "Could not clone repository ${repo}."
     return $ret
   fi
   if [[ -n $branch ]] && ! command git --git-dir="${repo_dir}/.git" \
-    --work-tree="$repo_dir" checkout -q "$branch"; then
+      --work-tree=$repo_dir checkout -q "$branch"; then
     ret=$?
-    >&2 print "Could not checkout branch ${branch}."
+    >&2 print "Could not checkout \`${branch}'."
     return $ret
   fi
   for file in "${repo_dir}"/**/*.zsh(|-theme)(N.) \
