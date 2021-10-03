@@ -30,7 +30,7 @@ for git_dir in ${ZCOMET[REPOS_DIR]}/**/.git(N/); do
   if [[ -f ${git_dir:h}/.gitmodules ]]; then
 		(
 			cd ${git_dir:h} || exit 1
-			command git submodule update --init --recursive
+			command git submodule update --recursive
 	  )
   fi
   for file in "${git_dir:h}"/**/*.zsh(|-theme)(N.) \

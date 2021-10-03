@@ -273,12 +273,17 @@ _zcomet_add_list() {
 # Globals:
 #   ZCOMET
 # Arguments:
-#   $1 The repository and branch/tag/commit
-#
-# TODO: At present, this function will compile every
-# script in ohmyzsh/ohmyzsh! Rein it in.
+#   --no-submodules [Optional] Do not clone submodules
+#                   The repository and branch/tag/commit
 ############################################################
 _zcomet_clone_repo() {
+  local clone_options
+  if [[ $1 != '--no-submodules' ]]; then
+    clone_options='--recursive'
+  else
+    shift
+  fi
+
   [[ $1 == ?*/?* || $1 == 'ohmyzsh' || $1 == 'prezto' ]] || return 1
   local repo branch repo_dir ret file
   _zcomet_repo_shorthand "${1%@*}"
@@ -289,8 +294,7 @@ _zcomet_clone_repo() {
   [[ -d ${repo_dir} ]] && return
 
   print -P "%B%F{yellow}Cloning ${repo}:%f%b"
-  # TODO: Provide the user with a way not to get submodules.
-  if ! command git clone --recursive "https://github.com/${repo}" "$repo_dir"; then
+  if ! command git clone ${clone_options} "https://github.com/${repo}" "$repo_dir"; then
     ret=$?
     >&2 print "Could not clone repository ${repo}."
     return $ret
@@ -314,17 +318,22 @@ _zcomet_clone_repo() {
 # one of its directories to FPATH or both.
 #
 # Arguments:
-#   The repo      A GitHub repository, in the format
-#                 user/repo@branch, where @branch could also
-#                 be a tag or a commit.
-#   Subdirectory  [Optional] A subdirectory of a larger repo
-#   Script(s)     [Optional] A list of specific scripts to
-#                 source
+#   --no-submodules [Optional] Do not clone submodules
+#   The repo        A GitHub repository, in the format
+#                   user/repo@branch, where @branch could
+#                   also be a tag or a commit.
+#   Subdirectory    [Optional] A subdirectory of a larger
+#                   repo
+#   Script(s)       [Optional] A list of specific scripts to
+#                   source
 # Outputs:
 #   Confirmation and error messages, plus raw Git output
 #   (for the time being)
 ############################################################
 _zcomet_load_command() {
+  local clone_options
+  [[ $1 == '--no-submodules' ]] && clone_options=$1 && shift
+
   if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; then
     >&2 print 'You need to specify a valid repository.' && return 1
   fi
@@ -333,7 +342,7 @@ _zcomet_load_command() {
   repo_branch=$1
   shift
 
-  _zcomet_clone_repo "$repo_branch" || return $?
+  _zcomet_clone_repo ${clone_options} "$repo_branch" || return $?
   _zcomet_load "${repo_branch%@*}" "$@"
 }
 
@@ -345,15 +354,19 @@ _zcomet_load_command() {
 # guess which directory to add; it must be made explicit.
 #
 # Arguments:
-#   The repo       A Git repository
-#                  (username/repo@branch/tag/commit), as
-#                  with `load'.
-#   A subdirectory [Optional] A subdirectory within the
-#                  repo to add to FPATH
+#   --no-submodules  Do not clone submodules
+#   The repo         A Git repository
+#                    (username/repo@branch/tag/commit), as
+#                    with `load'.
+#   A subdirectory   [Optional] A subdirectory within the
+#                    repo to add to FPATH
 # Output:
 #   Raw Git output and error messages
 ############################################################
 _zcomet_fpath_command() {
+  local clone_options
+  [[ $1 == '--no-submodules' ]] && clone_options=$1 && shift
+
   if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; then
     >&2 print 'You need to specify a valid repository.' && return 1
   fi
@@ -361,7 +374,7 @@ _zcomet_fpath_command() {
   local repo_branch plugin_path
   repo_branch=$1 && shift
 
-  _zcomet_clone_repo "$repo_branch" || return $?
+  _zcomet_clone_repo ${clone_options} "$repo_branch" || return $?
   _zcomet_repo_shorthand "${repo_branch%@*}"
   repo_branch=$REPLY
   plugin_path="${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}"
@@ -460,16 +473,21 @@ _zcomet_snippet_command() {
 # is needed, precious shell startup time can be conserved.
 #
 # Arguments:
-#   Trigger(s)  Commands that will load a plugin and then
-#               run plugin commands of the same name
-#   Repo        A GitHub repository; uses the same format
-#               as `load` and `fpath`
+#   --no-submodules [Optional] Do not clone submodules
+#   Trigger(s)      Commands that will load a plugin and
+#                   then run plugin commands of the same
+#                   name
+#   Repo            A GitHub repository; uses the same
+#                   format as `load` and `fpath`
 #
 # TODO: Add some way to pre-clone repos to be triggered in
 # the future so that the cloning process doesn't slow the
 # user down.
 ############################################################
 _zcomet_trigger_command() {
+  local clone_options
+  [[ $1 == '--no-submodules' ]] && clone_options=$1 && shift
+
   [[ -z $1 ]] && >&2 print 'You need to name a trigger.' && return 1
 
   local -Ua triggers
@@ -480,7 +498,7 @@ _zcomet_trigger_command() {
     shift
   done
 
-  _zcomet_clone_repo "$@"
+  _zcomet_clone_repo ${clone_options} "$@"
 
   for trigger in "${triggers[@]}"; do
     functions[$trigger]="local i;
@@ -489,7 +507,7 @@ _zcomet_trigger_command() {
         ZCOMET_TRIGGERS=( "\${ZCOMET_TRIGGERS[@]:#\${trigger}}" );
       done
       unfunction ${triggers[@]};
-      zcomet load $@;
+      zcomet load $clone_options $@;
       eval $trigger \$@" && _zcomet_add_list "$cmd" "$trigger"
   done
 
