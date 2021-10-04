@@ -500,7 +500,7 @@ _zcomet_trigger_command() {
   _zcomet_clone_repo ${clone_options} "$@"
 
   for trigger in "${triggers[@]}"; do
-    functions[$trigger]="local i;
+    functions[$trigger]="local trigger;
       for trigger in ${triggers[@]};
       do
         ZCOMET_TRIGGERS=( "\${ZCOMET_TRIGGERS[@]:#\${trigger}}" );
