@@ -206,7 +206,6 @@ _zcomet_load() {
   else
     plugin_name=${${subdir:+${subdir##*/}}:-${repo##*/}}
     files=(
-            "${plugin_path}/prompt_${plugin_name}_setup"(N.)
             "${plugin_path}/${plugin_name}.zsh-theme"(N.)
             "${plugin_path}/${plugin_name}.plugin.zsh"(N.)
             "${plugin_path}/${plugin_name}.zsh"(N.)
