@@ -34,11 +34,15 @@
   + [`help`](#help)
   + [`self-update`](#self-update)
   + [`unload`](#unload-repository-name)
+- [Options](#options)
+  + [`--no-submodules`](#--no-submodules)
 - [Standards Compliance](#standards-compliance)
 - [TODO](#todo)
 
 ## News
 
+- October 4, 2021
+    + `zcomet` now fetches Git submodules by default. If you do not need them, be sure to save yourself time by using the [`--no-submodules`](#--no-submodules) option with `load`, `fpath`, or `trigger`.
 - September 30, 2021
     + `zcomet` now defers running `compdef` calls until after `zcomet compinit` has been run.
 - September 28, 2021
@@ -155,6 +159,8 @@ A specific branch, tag, or commit of a repository can be checked out using the f
 
 `load` is the command used for loading prompts.
 
+*NOTE: If the repository that `load` is cloning has submodules, consider whether or not you really need them. Using the [`--no-submodules`](#--no-submodules) option after `load` can save a lot of time during installation and updating.*
+
 ### `fpath` repository-name \[subdirectory\]
 
 `fpath` will clone a repository and add one of its directories to `FPATH`. Unlike `load`, it does not source any files. Also, you must be very specific about which subdirectory is to be added to `FPATH`; `zcomet fpath` does not try to guess. If you wanted to use the agkozak-zsh-prompt with `promptinit`, you could run
@@ -164,6 +170,8 @@ A specific branch, tag, or commit of a repository can be checked out using the f
     prompt agkozak-zsh-prompt
 
 (But if you are not intending to switch prompts, it is much easier just to use `zcomet load agkozak/agkozak-zsh-prompt`.)
+
+*NOTE: If the repository that `fpath` is cloning has submodules, consider whether or not you really need them. Using the [`--no-submodules`](#--no-submodules) option after `fpath` can save a lot of time during installation and updating.*
 
 ### `trigger` trigger-name \[arguments\]
 
@@ -181,6 +189,8 @@ or save time by listing a number of triggers before the repository name:
     zcomet trigger extract x ohmyzsh plugins/extract
 
 `trigger` always checks to make sure that the repository it needs has been already cloned; if not, it clones it. The goal is for triggers to take almost no time to load when they are actually run.
+
+*NOTE: If the repository that `trigger` is cloning has submodules, consider whether or not you really need them. Using the [`--no-submodules`](#--no-submodules) option after `trigger` can save a lot of time during installation and updating.*
 
 This feature was inspired by [Zinit](https://github.com/zdharma/zinit)'s `trigger-load` command.
 
@@ -231,6 +241,16 @@ Updates `zcomet` itself. Note that `zcomet` must have been installed as a cloned
 ### `unload` \[repository-name\]
 
 Unloads a plugin that has an [unload function](https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#4-unload-function). The implementation is still very basic.
+
+## Options
+
+### `--no-submodules`
+
+By default, if a repository has submodules, `zcomet` will fetch them whenever the `load`, `fpath`, `trigger`, or `update` commands are issued. For example, I use [Prezto's `archive` module](https://github.com/sorin-ionescu/prezto/tree/master/modules/archive), but I don't need all of the external prompts in the `prompt` module, so I use `zcomet`'s [`--no-submodules`](#--no-submodules) option:
+
+    zcomet load --no-submodules sorin-ionescu/prezto modules/archive
+
+Not fetching the submodules saves a good deal of time when cloning the repository.
 
 ## Standards Compliance
 
