@@ -10,11 +10,11 @@
 
 `zcomet` is a Zsh plugin manager that gets you to the prompt quickly without having to use a cache. It is backwards-compatible with Zsh v4.3.11. It began as a series of routines that I used in [my dotfiles](https://github.com/agkozak/dotfiles) to source plugins and snippets whenever I was using a version of Zsh that was too old for [Zinit](https://github.com/zdharma/zinit). I was pleasantly surprised to find that `zcomet` performs impressively in [Zim's framework benchmark test](https://github.com/zimfw/zsh-framework-benchmark).
 
-![Benchmarks](img/benchmarks.png)
+![Benchmarks](https://github.com/agkozak/zcomet-media/raw/main/benchmarks.png)
 
 *\*100 iterations on a four-core Ubuntu laptop. The separate "`zcomet`-snippet" benchmark shows that use of the `snippet` command can make your startup time even faster.*
 
-`zcomet` is still in the initial phases of its development. I have to implement prettier and more informative messages (you will see some raw Git output), and error handling is very basic at present. If I make any changes early on that are likely to break your configuration, I will explain them in the [News](#news) section.
+`zcomet` is still in the initial phases of its development. As I make changes and add features, I will explain them in the [News](#news) section.
 
 ## Table of Contents
 
@@ -90,10 +90,14 @@ zcomet load ohmyzsh plugins/gitfast
 # Load a code snippet
 zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
 
-# Lazyload some plugins
+# Lazy-load some plugins
 zcomet trigger zhooks agkozak/zhooks
-zcomet trigger extract x ohmyzsh plugins/extract
 zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
+
+# Lazy-load Prezto's archive module without downloading all of Prezto's
+# submodules
+zcomet trigger --no-submodules archive unarchive lsarchive \
+    sorin-ionescu/prezto modules/archive
 
 # Run compinit and compile its cache
 zcomet compinit
@@ -246,7 +250,7 @@ Unloads a plugin that has an [unload function](https://github.com/zdharma/Zsh-10
 
 ### `--no-submodules`
 
-By default, if a repository has submodules, `zcomet` will fetch them whenever the `load`, `fpath`, `trigger`, or `update` commands are issued. For example, I use [Prezto's `archive` module](https://github.com/sorin-ionescu/prezto/tree/master/modules/archive), but I don't need all of the external prompts in the `prompt` module, so I use `zcomet`'s [`--no-submodules`](#--no-submodules) option:
+By default, if a repository has submodules, `zcomet` will fetch them whenever the `load`, `fpath`, `trigger`, or `update` commands are issued. For example, I use [Prezto's `archive` module](https://github.com/sorin-ionescu/prezto/tree/master/modules/archive), but I don't need all of the external prompts in the `prompt` module, so I use `zcomet`'s `--no-submodules` option:
 
     zcomet load --no-submodules sorin-ionescu/prezto modules/archive
 

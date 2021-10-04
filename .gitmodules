@@ -3,3 +3,8 @@
 	url = https://github.com/agkozak/zsh-framework-benchmark
 	ignore = dirty
 	branch = master
+[submodule "zcomet-media"]
+	path = zcomet-media
+	url = https://github.com/agkozak/zcomet-media
+	ignore = dirty
+	branch = main
