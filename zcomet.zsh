@@ -409,10 +409,21 @@ _zcomet_fpath_command() {
 _zcomet_snippet_command() {
   [[ -z $1 ]] && print 'You need to specify a snippet.' && return 1
 
-  local update snippet url method snippet_file snippet_dir
+  local update snippet url method snippet_file snippet_dir ret
 
   [[ $1 == '--update' ]] && update=1 && shift
   snippet=$1 && shift
+
+  # Local snippets
+  if [[ $snippet != http(|s)://* && $snippet != OMZ::* ]]; then
+    if [[ -r $snippet ]] && source $snippet; then
+      _zcomet_add_list "$cmd" "${${snippet:a}/${HOME}/~}"
+      return
+    fi
+    ret=$?
+    >&2 print "Could not source snippet ${snippet}."
+    return $ret
+  fi
 
   _zcomet_snippet_shorthand "$snippet"
   url=$REPLY
