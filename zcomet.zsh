@@ -420,11 +420,11 @@ _zcomet_snippet_command() {
       _zcomet_add_list "$cmd" "${${snippet:a}/${HOME}/~}"
       return
     fi
-    ret=$?
     >&2 print "Could not source snippet ${snippet}."
-    return $ret
+    return 1
   fi
 
+  # Remote snippets
   _zcomet_snippet_shorthand "$snippet"
   url=$REPLY
   snippet_file=${snippet##*/}
@@ -466,7 +466,9 @@ _zcomet_snippet_command() {
   if source "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"; then
     _zcomet_add_list "$cmd" "$snippet"
   else
+    ret=$?
     >&2 print "Could not source snippet ${snippet}."
+    return $ret
   fi
 }
 
