@@ -51,11 +51,11 @@ _zcomet_compile() {
           $1 != */test-data/* ]]; then
       # Autoloadable functions
       if [[ $1 == ${ZCOMET[SCRIPT]:A:h}/functions/zcomet_* ||
-            $1 == prompt_*_setup ||
-            $1 == _* ]]; then
+            ${1:t} == prompt_*_setup ||
+            ${1:t} == _* ]]; then
         builtin zcompile -Uz "$1"
       # Scripts to be sourced
-      else
+      elif [[ ${1:t} != zsh-autocomplete.plugin.zsh ]]; then
         builtin zcompile -UzR "$1"
       fi
     fi
