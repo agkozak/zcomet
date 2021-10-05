@@ -53,10 +53,10 @@ _zcomet_compile() {
       if [[ $1 == ${ZCOMET[SCRIPT]:A:h}/functions/zcomet_* ||
             $1 == prompt_*_setup ||
             $1 == _* ]]; then
-        builtin zcompile -Uz "$1"
+        emulate zsh -c 'builtin zcompile -Uz "$1"'
       # Scripts to be sourced
       else
-        builtin zcompile -UzR "$1"
+        emulate zsh -c 'builtin zcompile -UzR "$1"'
       fi
     fi
     shift
@@ -594,7 +594,7 @@ zcomet() {
     compinit)
       autoload -Uz compinit
 
-      if [[ $TERM != 'dumb' ]]; then 
+      if [[ $TERM != 'dumb' ]]; then
         compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"
 
         # Run compdef calls that were deferred earlier
