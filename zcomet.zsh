@@ -67,6 +67,8 @@ _zcomet_compile() {
 # Allows the user to employ the shorthand `ohmyzsh' for the
 # ohmyzsh/ohmyzsh repo and `prezto' for
 # sorin-ionescu/prezto
+# Globals:
+#   REPLY
 # Arguments:
 #   $1 A repo or its shorthand
 # Outputs:
@@ -74,11 +76,11 @@ _zcomet_compile() {
 ############################################################
 _zcomet_repo_shorthand() {
   if [[ $1 == 'ohmyzsh' ]]; then
-    REPLY='ohmyzsh/ohmyzsh'
+    typeset -g REPLY='ohmyzsh/ohmyzsh'
   elif [[ $1 == 'prezto' ]]; then
-    REPLY='sorin-ionescu/prezto'
+    typeset -g REPLY='sorin-ionescu/prezto'
   else
-    REPLY=$1
+    typeset -g REPLY=$1
   fi
 }
 
@@ -87,6 +89,8 @@ _zcomet_repo_shorthand() {
 # snippets or an https://github.com address that gets
 # translated into https://raw.githubuser.com; otherwise, a
 # simple URL of raw shell code.
+# Globals:
+#   REPLY
 # Arguments:
 #   $1 A URL to raw code, a normative github.com URL, or
 #      shorthand
@@ -95,11 +99,11 @@ _zcomet_repo_shorthand() {
 ############################################################
 _zcomet_snippet_shorthand() {
   if [[ $1 == OMZ::* ]]; then
-    REPLY="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${1#OMZ::}"
+    typeset -g REPLY="https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${1#OMZ::}"
   elif [[ $1 == https://github.com/* ]]; then
-    REPLY=${${1/github/raw.githubusercontent}/\/blob/}
+    typeset -g REPLY=${${1/github/raw.githubusercontent}/\/blob/}
   else
-    REPLY=$1
+    typeset -g REPLY=$1
   fi
 }
 
@@ -107,6 +111,8 @@ _zcomet_snippet_shorthand() {
 # Checks to see if a dynamic directory name has already been
 # reserved; if not, adds it to the ZCOMET_NAMED_DIRS array.
 #
+# Globals:
+#   ZCOMET_NAMED_DIRS
 # Arguments:
 #   $1 The path
 ############################################################
@@ -114,17 +120,20 @@ _zcomet_add_named_dir() {
   local -a existing_names
   existing_names=( "${ZCOMET_NAMED_DIRS:t}" )
   if (( ! ${existing_names[(Ie)${1:t}]} )); then
-    ZCOMET_NAMED_DIRS+=( "$1" )
+    typeset -gUa ZCOMET_NAMED_DIRS
+    ZCOMET_NAMED_DIRS=( "${ZCOMET_NAMED_DIRS[@]}" "$1" )
   fi
 }
 
 ############################################################
 # Captures `compdef' calls that will actually be run
 # after `zcomet compinit' is run.
+# Globals:
+#   ZCOMET_COMPDEFS
 ############################################################
-typeset -gUa ZCOMET_COMPDEFS
 compdef() {
-  ZCOMET_COMPDEFS+=( "$*" )
+  typeset -gUa ZCOMET_COMPDEFS
+  ZCOMET_COMPDEFS=( "${ZCOMET_COMPDEFS[@]}" "$*" )
 }
 
 ############################################################
@@ -247,6 +256,7 @@ _zcomet_load() {
 # Manage the arrays used when running `zcomet list'
 # Globals:
 #   zsh_loaded_plugins
+#   ZCOMET_FPATH
 #   ZCOMET_SNIPPETS
 #   ZCOMET_TRIGGERS
 # Arguments:
@@ -256,13 +266,17 @@ _zcomet_load() {
 ############################################################
 _zcomet_add_list() {
   if [[ $1 == 'load' ]]; then
-    zsh_loaded_plugins+=( "$2" )
+    typeset -gUa zsh_loaded_plugins
+    zsh_loaded_plugins=( "${zsh_loaded_plugins[@]}" "$2" )
   elif [[ $1 == 'fpath' ]]; then
-    ZCOMET_FPATH+=( "$2" )
+    typeset -gUa ZCOMET_FPATH
+    ZCOMET_FPATH=( "${ZCOMET_FPATH[@]}" "$2" )
   elif [[ $1 == 'snippet' ]]; then
-    ZCOMET_SNIPPETS+=( "$2" )
+    typeset -gUa ZCOMET_SNIPPETS
+    ZCOMET_SNIPPETS=( "${ZCOMET_SNIPPETS[@]}" "$2" )
   elif [[ $1 == 'trigger' ]]; then
-    ZCOMET_TRIGGERS+=( "$2" )
+    typeset -gUa ZCOMET_TRIGGERS
+    ZCOMET_TRIGGERS=( "${ZCOMET_TRIGGERS[@]}" "$2" )
   fi
 }
 
@@ -541,11 +555,10 @@ _zcomet_trigger_command() {
 #   Status updates
 ############################################################
 zcomet() {
-  local MATCH REPLY; integer MBEGIN MEND
-  local -a match mbegin mend reply
-
   typeset -gUa zsh_loaded_plugins ZCOMET_FPATH ZCOMET_SNIPPETS ZCOMET_TRIGGERS \
       ZCOMET_NAMED_DIRS
+
+  typeset -g REPLY
 
   # Allow the user to specify custom directories
   local home_dir repos_dir snippets_dir
@@ -601,7 +614,7 @@ zcomet() {
           setopt LOCAL_OPTIONS EQUALS
           local def
           for def in "${ZCOMET_COMPDEFS[@]}"; do
-            compdef ${=def}
+            [[ -n $def ]] && compdef ${=def}
           done
           unset ZCOMET_COMPDEFS
         }
