@@ -55,7 +55,7 @@ _zcomet_compile() {
             ${1:t} == _* ]]; then
         builtin zcompile -Uz "$1"
       # Scripts to be sourced
-      elif [[ ${1:t} != zsh-autocomplete.plugin.zsh ]]; then
+      else
         builtin zcompile -UzR "$1"
       fi
     fi
