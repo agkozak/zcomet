@@ -107,6 +107,8 @@ _zcomet_snippet_shorthand() {
   fi
 }
 
+typeset -gUa ZCOMET_NAMED_DIRS
+
 ############################################################
 # Checks to see if a dynamic directory name has already been
 # reserved; if not, adds it to the ZCOMET_NAMED_DIRS array.
@@ -117,10 +119,11 @@ _zcomet_snippet_shorthand() {
 #   $1 The path
 ############################################################
 _zcomet_add_named_dir() {
+  setopt NO_WARN_NESTED_VAR 2> /dev/null
+
   local -a existing_names
   existing_names=( "${ZCOMET_NAMED_DIRS:t}" )
   if (( ! ${existing_names[(Ie)${1:t}]} )); then
-    typeset -gUa ZCOMET_NAMED_DIRS
     ZCOMET_NAMED_DIRS=( "${ZCOMET_NAMED_DIRS[@]}" "$1" )
   fi
 }
@@ -132,6 +135,8 @@ _zcomet_add_named_dir() {
 #   ZCOMET_COMPDEFS
 ############################################################
 compdef() {
+  setopt NO_WARN_NESTED_VAR 2> /dev/null
+
   typeset -gUa ZCOMET_COMPDEFS
   ZCOMET_COMPDEFS=( "${ZCOMET_COMPDEFS[@]}" "$*" )
 }
@@ -206,6 +211,7 @@ _zcomet_load() {
   if (( ${#files} )); then
     for file in "${files[@]}"; do
       if source "${plugin_path}/${file}"; then
+        (( ZCOMET[DEBUG] )) && >&2 print "Sourced ${file}."
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" &&
         plugin_loaded=1
       else
@@ -232,6 +238,7 @@ _zcomet_load() {
 
     if [[ -n $file ]]; then
       if source "$file"; then
+        (( ZCOMET[DEBUG] )) && >&2 print "Sourced ${file:t}."
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}" && plugin_loaded=1
       else
         >&2 print "Cannot source ${file}."
@@ -265,17 +272,15 @@ _zcomet_load() {
 #     ohmyzsh/ohmyzsh plugins/extract
 ############################################################
 _zcomet_add_list() {
+  setopt NO_WARN_NESTED_VAR 2> /dev/null
+
   if [[ $1 == 'load' ]]; then
-    typeset -gUa zsh_loaded_plugins
     zsh_loaded_plugins=( "${zsh_loaded_plugins[@]}" "$2" )
   elif [[ $1 == 'fpath' ]]; then
-    typeset -gUa ZCOMET_FPATH
     ZCOMET_FPATH=( "${ZCOMET_FPATH[@]}" "$2" )
   elif [[ $1 == 'snippet' ]]; then
-    typeset -gUa ZCOMET_SNIPPETS
     ZCOMET_SNIPPETS=( "${ZCOMET_SNIPPETS[@]}" "$2" )
   elif [[ $1 == 'trigger' ]]; then
-    typeset -gUa ZCOMET_TRIGGERS
     ZCOMET_TRIGGERS=( "${ZCOMET_TRIGGERS[@]}" "$2" )
   fi
 }
@@ -568,8 +573,7 @@ _zcomet_trigger_command() {
 #   Status updates
 ############################################################
 zcomet() {
-  typeset -gUa zsh_loaded_plugins ZCOMET_FPATH ZCOMET_SNIPPETS ZCOMET_TRIGGERS \
-      ZCOMET_NAMED_DIRS
+  typeset -gUa zsh_loaded_plugins ZCOMET_FPATH ZCOMET_SNIPPETS ZCOMET_TRIGGERS
 
   typeset -g REPLY
 
@@ -620,20 +624,28 @@ zcomet() {
       autoload -Uz compinit
 
       if [[ $TERM != 'dumb' ]]; then 
-        compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"
-
-        # Run compdef calls that were deferred earlier
         () {
-          setopt LOCAL_OPTIONS EQUALS
+          setopt LOCAL_OPTIONS EQUALS EXTENDED_GLOB
+
+          # The Prezto method for regenerating the cache every day
+          typeset -g _comp_dumpfile="${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"
+          if [[ -n ${_comp_dumpfile}(#qNmh-20) ]]; then
+            compinit -C -d "$_comp_dumpfile"
+          else
+            compinit -i -d "$_comp_dumpfile"
+            touch "$_comp_dumpfile"
+          fi
+
+          # Run compdef calls that were deferred earlier
           local def
           for def in "${ZCOMET_COMPDEFS[@]}"; do
             [[ -n $def ]] && compdef ${=def}
           done
-          unset ZCOMET_COMPDEFS
-        }
+          (( ${+ZCOMET_COMPDEFS} )) && unset ZCOMET_COMPDEFS
 
-        # Compile the dumpfile
-        ( _zcomet_compile "$_comp_dumpfile" ) &!
+          # Compile the dumpfile
+          ( _zcomet_compile "$_comp_dumpfile" ) &!
+        }
       fi
       ;;
     compile)
