@@ -609,20 +609,29 @@ zcomet() {
       autoload -Uz compinit
 
       if [[ $TERM != 'dumb' ]]; then 
-        compinit -C -d "${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"
-
-        # Run compdef calls that were deferred earlier
         () {
-          setopt LOCAL_OPTIONS EQUALS
+          setopt LOCAL_OPTIONS EQUALS EXTENDED_GLOB
+
+          # The Prezto method for regenerating the cache every day
+          typeset -g _comp_dumpfile
+          _comp_dumpfile="${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"
+          if [[ -n ${_comp_dumpfile}(#qNmh-20) ]]; then
+            compinit -C -d "$_comp_dumpfile"
+          else
+            compinit -i -d "$_comp_dumpfile"
+            touch "$_comp_dumpfile"
+          fi
+
+          # Run compdef calls that were deferred earlier
           local def
           for def in "${ZCOMET_COMPDEFS[@]}"; do
             [[ -n $def ]] && compdef ${=def}
           done
           unset ZCOMET_COMPDEFS
-        }
 
-        # Compile the dumpfile
-        ( _zcomet_compile "$_comp_dumpfile" ) &!
+          # Compile the dumpfile
+          ( _zcomet_compile "$_comp_dumpfile" ) &!
+        }
       fi
       ;;
     compile)
