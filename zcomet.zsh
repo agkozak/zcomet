@@ -206,6 +206,7 @@ _zcomet_load() {
   if (( ${#files} )); then
     for file in "${files[@]}"; do
       if source "${plugin_path}/${file}"; then
+        (( ZCOMET[DEBUG] )) && >&2 print "Sourced ${file}."
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" &&
         plugin_loaded=1
       else
@@ -232,6 +233,7 @@ _zcomet_load() {
 
     if [[ -n $file ]]; then
       if source "$file"; then
+        (( ZCOMET[DEBUG] )) && >&2 print "Sourced ${file:t}."
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}" && plugin_loaded=1
       else
         >&2 print "Cannot source ${file}."
