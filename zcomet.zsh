@@ -181,8 +181,8 @@ _zcomet_load() {
   if [[ -d ${plugin_path}/functions ]]; then
     dir="${plugin_path}/functions"
     prezto_style=1
-  elif [[ -d ${plugin_path} ]]; then
-    dir=${plugin_path}
+  elif [[ -d $plugin_path ]]; then
+    dir=$plugin_path
   else
     >&2 print "Cannot add plugin directory to FPATH."
     return 1
@@ -309,7 +309,7 @@ _zcomet_clone_repo() {
   repo_dir="${ZCOMET[REPOS_DIR]}/${repo}"
   [[ $1 == *@* ]] && branch=${1#*@}
 
-  [[ -d ${repo_dir} ]] && return
+  [[ -d $repo_dir ]] && return
 
   print -P "%B%F{yellow}Cloning ${repo}:%f%b"
   if ! command git clone ${clone_options} "https://github.com/${repo}" "$repo_dir"; then
