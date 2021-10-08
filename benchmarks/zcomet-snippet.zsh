@@ -1,13 +1,13 @@
 () {
   local -r home_dir=${1}
 
-  # git clone https://github.com/agkozak/zcomet.git $home_dir
+  # git clone https://github.com/agkozak/zcomet.git ${home_dir}
   () {
     setopt LOCAL_OPTIONS EXTENDED_GLOB
 
-    cp ~[zcomet-bin]/zcomet.zsh $home_dir
+    cp ../zcomet.zsh $home_dir
     mkdir ${home_dir}/functions
-    cp -r ~[zcomet-bin]/functions ${home_dir}/functions
+    cp ../functions/*~*.zwc ${home_dir}/functions
   }
 
   # add modules to .zshrc
