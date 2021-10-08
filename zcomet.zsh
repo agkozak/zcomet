@@ -634,6 +634,7 @@ zcomet() {
           else
             compinit -i -d "$_comp_dumpfile"
             touch "$_comp_dumpfile"
+            touch "${_comp_dumpfile}.zwc"
           fi
 
           # Run compdef calls that were deferred earlier
