@@ -4,7 +4,7 @@
 # Displays help
 ############################################################
 
-print "usage: $0 command [...]
+print "usage: zcomet command [...]
 
 compile         (re)compile script(s) (only when necessary)
 compinit        run compinit and compile its cache
