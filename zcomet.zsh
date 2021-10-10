@@ -645,7 +645,7 @@ zcomet() {
       ;;
     -h|--help|help) zcomet_help ;;
     *)
-      zcomet_help
+      zcomet_help "$@"
       return 1
       ;;
   esac
