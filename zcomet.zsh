@@ -656,7 +656,7 @@ zcomet() {
       fi
       _zcomet_compile "$@"
       ;;
-    -h|--help|help) zcomet_help ;;
+    -h|--help|help) zcomet_help "$@" ;;
     *)
       zcomet_help
       return 1
