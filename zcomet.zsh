@@ -615,14 +615,14 @@ zcomet() {
           setopt LOCAL_OPTIONS EQUALS EXTENDED_GLOB
 
           # The Prezto method for regenerating the cache every day
-          typeset -g _comp_dumpfile="${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"
-          if [[ -n ${_comp_dumpfile}(#qNmh-20) ]]; then
-            compinit -C -d "$_comp_dumpfile"
-          else
+          # typeset -g _comp_dumpfile="${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"
+          # if [[ -n ${_comp_dumpfile}(#qNmh-20) ]]; then
+          #   compinit -C -d "$_comp_dumpfile"
+          # else
             compinit -i -d "$_comp_dumpfile"
-            touch "$_comp_dumpfile"
-            touch "${_comp_dumpfile}.zwc"
-          fi
+            # touch "$_comp_dumpfile"
+            # touch "${_comp_dumpfile}.zwc"
+          # fi
 
           # Run compdef calls that were deferred earlier
           local def
@@ -655,7 +655,7 @@ zcomet() {
   setopt LOCAL_OPTIONS EXTENDED_GLOB
 
   _zcomet_compile "${ZCOMET[SCRIPT]}" \
-                  "${ZCOMET[SCRIPT]:A:h}"/functions/zcomet_*~*.zwc(N.) \
+                  "${ZCOMET[SCRIPT]:A:h}"/functions/zcomet_*~*.zwc(N.) # \
                   # "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
 }
 
