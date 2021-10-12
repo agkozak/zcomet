@@ -619,7 +619,7 @@ zcomet() {
           # if [[ -n ${_comp_dumpfile}(#qNmh-20) ]]; then
           #   compinit -C -d "$_comp_dumpfile"
           # else
-            compinit -i -d "$_comp_dumpfile"
+            compinit -u -d "$_comp_dumpfile"
             # touch "$_comp_dumpfile"
             # touch "${_comp_dumpfile}.zwc"
           # fi
