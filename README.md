@@ -153,7 +153,7 @@ loads Oh-My-Zsh's useful `gitfast` plugin. If a specific file or files in a subd
     zcomet load ohmyzsh lib git.zsh
     zcomet load sindresorhus/pure async.zsh pure.zsh
 
-Note that autoloadable functions are not automatically autoloaded yet; you will have to do that explicitly for now.
+If there are autoloadable functions in a Prezto-style `functions/` directory, they will be automatically autoloaded.
 
 A specific branch, tag, or commit of a repository can be checked out using the following syntax:
 
@@ -179,7 +179,7 @@ A specific branch, tag, or commit of a repository can be checked out using the f
 
 ### `trigger` trigger-name \[arguments\]
 
-`trigger` lazyloads plugins, saving time when you start the shell. If you specify a command name, a Git repository, and other optional arguments (the same arguments that get used for `load`), the plugin will be loaded and the command run only when the command is first used:
+`trigger` lazy-loads plugins, saving time when you start the shell. If you specify a command name, a Git repository, and other optional arguments (the same arguments that get used for `load`), the plugin will be loaded and the command run only when the command is first used:
 
     zcomet trigger zhooks agkozak/zhooks
 
