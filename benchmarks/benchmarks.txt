@@ -1,0 +1,23 @@
+==> setting up a container for benchmarking ...
+==> benchmarking diy++ ...
+creates_tty=1
+has_compsys=1
+has_syntax_highlighting=1
+has_autosuggestions=1
+has_git_prompt=1
+first_prompt_lag_ms=15.294
+first_command_lag_ms=126.862
+command_lag_ms=4.678
+input_lag_ms=32.477
+exit_time_ms=38.180
+==> benchmarking zcomet ...
+creates_tty=1
+has_compsys=1
+has_syntax_highlighting=1
+has_autosuggestions=1
+has_git_prompt=1
+first_prompt_lag_ms=15.061
+first_command_lag_ms=133.686
+command_lag_ms=4.810
+input_lag_ms=30.897
+exit_time_ms=42.996

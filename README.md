@@ -8,11 +8,11 @@
 ![ZSH version 4.3.11 and higher](img/zsh_4.3.11_plus.svg)
 [![GitHub stars](https://img.shields.io/github/stars/agkozak/zcomet.svg)](https://github.com/agkozak/zcomet/stargazers)
 
-`zcomet` is a Zsh plugin manager that gets you to the prompt quickly without having to use a cache. It is backwards-compatible with Zsh v4.3.11. It began as a series of routines that I used in [my dotfiles](https://github.com/agkozak/dotfiles) to source plugins and snippets whenever I was using a version of Zsh that was too old for [Zinit](https://github.com/zdharma/zinit). I was pleasantly surprised to find that `zcomet` performs impressively in [Zim's framework benchmark test](https://github.com/zimfw/zsh-framework-benchmark).
+`zcomet` is a Zsh plugin manager that gets you to the prompt quickly without having to use a cache. Its goal is to be simple and convenient without slowing you down. It succeeds in keeping latencies down to the levels you would expect if you were not even using a plugin manager:
 
-![Benchmarks](https://github.com/agkozak/zcomet-media/raw/main/benchmarks.png)
+![Latencies in Milliseconds](https://raw.githubusercontent.com/agkozak/zcomet-media/main/latencies.png)
 
-*\*100 iterations on a four-core Ubuntu laptop.*
+*See [Notes on Benchmarks](#notes-on-benchmarks) below.*
 
 `zcomet` is still in the initial phases of its development. As I make changes and add features, I will explain them in the [News](#news) section.
 
@@ -37,9 +37,17 @@
 - [Options](#options)
   + [`--no-submodules`](#--no-submodules)
 - [Standards Compliance](#standards-compliance)
+- [Notes on Benchmarks]
 - [TODO](#todo)
 
 ## News
+
+- October 13, 2021
+    + I have adopted [@romkatv](https://github.com/romkatv)'s [zsh-bench](https://github.com/romkatv/zsh-bench) benchmarks as a standard for measuring success.
+    + `zcomet` no longer `zcompiles` rc files, and the default behavior of `zcomet compinit` is merely to run `compinit` while specifying a sensibly named cache file (again, props to **@romkatv** for suggesting these changes).
+
+<details>
+    <summary>Older news</summary>
 
 - October 4, 2021
     + `zcomet` now fetches Git submodules by default. If you do not need them, be sure to save yourself time by using the [`--no-submodules`](#--no-submodules) option with `load`, `fpath`, or `trigger`.
@@ -49,9 +57,6 @@
     + `zcomet` now autoloads functions in a `functions/` directory before sourcing a Prezto-style module.
 - September 27, 2021
     + `zcomet` now looks for the `bin/` subdirectory in the root directory of the repository, not in the directory where the sources plugin files reside.
-<details>
-    <summary>Older news</summary>
-
 - September 21, 2021
     + I have opted to have named directories assigned only at the repository level. Also, if there is more than one repository with the same name (e.g., `author1/zsh-tool` and `author2/zsh-tool`), neither directory is given a name (to prevent mistakes from happening).
 - September 20, 2021
@@ -230,6 +235,16 @@ Runs Zsh's `compinit` command, which is necessary if you want to use command lin
 
 Like other plugin managers and frameworks, `zcomet` defers running `compdef` calls until `zcomet compinit` runs, which means that you can load a plugin full of `compdefs` (e.g., `zcomet load ohmyzsh plugins/git`) even before `zcomet compinit` and its completions will still work.
 
+A simple `zcomet compinit` should always get the job done, but if you need to rename the cache file ("dump file"), you can do so thus:
+
+    zstyle ':zcomet:compinit' dump-file /path/to/dump_file
+
+If you need to specify other options to `compinit`, you can do it this way:
+
+    zstyle 'zcomet:compinit' arguments -i   # I.e., run `compinit -i'
+
+But it is safest to stick to the default behavior. An incorrectly configured `compinit` can lead to your completions being broken or unsafe code being loaded.
+
 ### `compile`
 
 Compiles a script or scripts if there is no corresponding wordcode (`.zwc`) file or if a script is newer than its `.zwc`.
@@ -267,6 +282,10 @@ I am a great admirer of [Sebastian Gniazdowski's principles for plugin developme
 * `zsh_loaded_plugins`: a plugin manager activity indicator
 * `ZPFX`: global parameter with PREFIX for `make`, `configure`, etc.
 * `PMSPEC`: global parameter holding the plugin manager’s capabilities
+
+## Notes on Benchmarks
+
+When I started this project, I was happy to discover that I scored well on benchmarks that measure `zsh -lic "exit"`. Roman Perepelitsa [has argued eloquently](https://github.com/romkatv/zsh-bench) that such benchmarks are misleading, and that we should instead pay attention to comparative latencies that affect user experience. The graph above compares the performance of [a well constructed `.zshrc` with no plugin manager](https://github.com/agkozak/zsh-bench/blob/master/configs/diy%2B%2B/skel/.zshrc) against [an easy-to-make `zcomet .zshrc`](https://github.com/agkozak/zsh-bench/blob/master/configs/diy%2B%2B/skel/.zshrc).
 
 ## TODO
 
