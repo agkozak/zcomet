@@ -285,7 +285,7 @@ I am a great admirer of [Sebastian Gniazdowski's principles for plugin developme
 
 ## Notes on Benchmarks
 
-When I started this project, I was happy to discover that I scored well on benchmarks that measure `zsh -lic "exit"`. Roman Perepelitsa [has argued eloquently](https://github.com/romkatv/zsh-bench) that such benchmarks are misleading, and that we should instead pay attention to comparative latencies that affect user experience. The graph above compares the performance of [a well constructed `.zshrc` with no plugin manager](https://github.com/agkozak/zsh-bench/blob/master/configs/diy%2B%2B/skel/.zshrc) against [an easy-to-make `zcomet .zshrc`](https://github.com/agkozak/zsh-bench/blob/master/configs/diy%2B%2B/skel/.zshrc).
+When I started this project, I was happy to discover that I scored well on benchmarks that measure `zsh -lic "exit"`. Roman Perepelitsa [has argued eloquently](https://github.com/romkatv/zsh-bench) that such benchmarks are misleading, and that we should instead pay attention to comparative latencies that affect user experience. The graph above compares the performance of [a well constructed `.zshrc` with no plugin manager](https://github.com/romkatv/zsh-bench/blob/master/configs/diy%2B%2B/skel/.zshrc) against [an easy-to-make `zcomet .zshrc`](https://github.com/romkatv/zsh-bench/blob/master/configs/zcomet/skel/.zshrc).
 
 ## TODO
 
