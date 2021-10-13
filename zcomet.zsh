@@ -655,8 +655,7 @@ zcomet() {
   setopt LOCAL_OPTIONS EXTENDED_GLOB
 
   _zcomet_compile "${ZCOMET[SCRIPT]}" \
-                  "${ZCOMET[SCRIPT]:A:h}"/functions/zcomet_*~*.zwc(N.) \
-                  "${ZDOTDIR:-${HOME}}"/.z(shenv|profile|shrc|login|logout)(N.)
+                  "${ZCOMET[SCRIPT]:A:h}"/functions/zcomet_*~*.zwc(N.)
 }
 
 ############################################################
