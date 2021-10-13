@@ -1,23 +1,33 @@
-==> setting up a container for benchmarking ...
-==> benchmarking diy++ ...
+==> benchmarking zplug ...
 creates_tty=1
 has_compsys=1
 has_syntax_highlighting=1
 has_autosuggestions=1
 has_git_prompt=1
-first_prompt_lag_ms=15.294
-first_command_lag_ms=126.862
-command_lag_ms=4.678
-input_lag_ms=32.477
-exit_time_ms=38.180
+first_prompt_lag_ms=103.316
+first_command_lag_ms=289.683
+command_lag_ms=4.768
+input_lag_ms=31.034
+exit_time_ms=199.023
 ==> benchmarking zcomet ...
 creates_tty=1
 has_compsys=1
 has_syntax_highlighting=1
 has_autosuggestions=1
 has_git_prompt=1
-first_prompt_lag_ms=15.061
-first_command_lag_ms=133.686
-command_lag_ms=4.810
-input_lag_ms=30.897
-exit_time_ms=42.996
+first_prompt_lag_ms=15.212
+first_command_lag_ms=133.719
+command_lag_ms=4.856
+input_lag_ms=30.286
+exit_time_ms=43.418
+==> benchmarking diy++ ...
+creates_tty=1
+has_compsys=1
+has_syntax_highlighting=1
+has_autosuggestions=1
+has_git_prompt=1
+first_prompt_lag_ms=15.298
+first_command_lag_ms=127.654
+command_lag_ms=4.699
+input_lag_ms=28.487
+exit_time_ms=38.749

@@ -43,7 +43,7 @@
 ## News
 
 - October 13, 2021
-    + I have adopted [@romkatv](https://github.com/romkatv)'s [zsh-bench](https://github.com/romkatv/zsh-bench) benchmarks as a standard for measuring success.
+    + I have adopted [@romkatv](https://github.com/romkatv)'s [zsh-bench](https://github.com/romkatv/zsh-bench) benchmarks as a standard for measuring performance.
     + `zcomet` no longer `zcompiles` rc files, and the default behavior of `zcomet compinit` is merely to run `compinit` while specifying a sensibly named cache file (again, props to **@romkatv** for suggesting these changes).
 
 <details>
