@@ -88,7 +88,7 @@ Those lines will clone repos, source scripts, update your `FPATH` and `PATH`, an
     + The `snippet` command now supports any URL that points to raw Zsh code (not HTML) via HTTP or HTTPS. It will translate `github.com` addresses into their `raw.githubusercontent.com` equivalents. You may still use the `OMZ::` shorthand for Oh-My-Zsh code.
 </details>
 
-## Example `.zshrc`
+## Sample `.zshrc`
 
 ```sh
 # Clone zcomet if necessary
