@@ -8,20 +8,30 @@
 ![ZSH version 4.3.11 and higher](img/zsh_4.3.11_plus.svg)
 [![GitHub stars](https://img.shields.io/github/stars/agkozak/zcomet.svg)](https://github.com/agkozak/zcomet/stargazers)
 
-`zcomet` is a Zsh plugin manager that gets you to the prompt quickly without having to use a cache. Its goal is to be simple and convenient without slowing you down. It succeeds in keeping latencies down to the levels you would expect if you were not even using a plugin manager:
+`zcomet` is a Zsh plugin manager that gets you to the prompt quickly. Its goal is to be simple and convenient without slowing you down. It succeeds in keeping latencies down to the level you would expect if you were not even using a plugin manager:
 
 ![Latencies in Milliseconds](https://raw.githubusercontent.com/agkozak/zcomet-media/main/latencies.png)
 
-*See [Notes on Benchmarks](#notes-on-benchmarks) below.*
+*Many thanks to Roman Perepelitsa for sharing his [`zsh-bench`](https://github.com/romkatv/zsh-bench) benchmarking utility (see ["Notes on Benchmarks"](#notes-on-benchmarks)).*
 
-`zcomet` is still in the initial phases of its development. As I make changes and add features, I will explain them in the [News](#news) section.
+The speed difference can be undetectable, but the improved convenience is noteworthy. A `zcomet` configuration can be as simple as:
+
+```sh
+source /path/to/zcomet.zsh
+
+zcomet load author1/plugin1
+zcomet load author2/plugin2
+zcomet load author3/plugin3
+
+zcomet compinit
+```
+
+Those lines will clone repos, source scripts, update your `FPATH` and `PATH`, and load the Zsh completion system.
 
 ## Table of Contents
 
 - [News](#news)
-- [Example `.zshrc`](#example-zshrc)
-- [Dynamic Named Directories](#dynamic-named-directories)
-- [Directory Customization](#directory-customization)
+- [Sample `.zshrc`](#sample-zshrc)
 - [Commands and Arguments](#commands-and-arguments)
   + [`load`](#load-repository-name-subdirectory-file1-file2-)
   + [`fpath`](#fpath-repository-name-subdirectory)
@@ -36,19 +46,22 @@
   + [`unload`](#unload-repository-name)
 - [Options](#options)
   + [`--no-submodules`](#--no-submodules)
+- [Directory Customization](#directory-customization)
+- [Dynamic Named Directories](#dynamic-named-directories)
+- [FAQ](#faq)
+  + [How do I install `fzf`?](#how-do-i-install-fzf)
 - [Standards Compliance](#standards-compliance)
 - [Notes on Benchmarks]
 - [TODO](#todo)
 
 ## News
 
-- October 13, 2021
-    + I have adopted [@romkatv](https://github.com/romkatv)'s [zsh-bench](https://github.com/romkatv/zsh-bench) benchmarks as a standard for measuring performance.
-    + `zcomet` no longer `zcompiles` rc files, and the default behavior of `zcomet compinit` is merely to run `compinit` while specifying a sensibly named cache file (again, props to **@romkatv** for suggesting these changes).
-
 <details>
     <summary>Older news</summary>
 
+- October 13, 2021
+    + I have adopted [@romkatv](https://github.com/romkatv)'s [zsh-bench](https://github.com/romkatv/zsh-bench) benchmarks as a standard for measuring performance.
+    + `zcomet` no longer `zcompiles` rc files, and the default behavior of `zcomet compinit` is merely to run `compinit` while specifying a sensibly named cache file (again, props to **@romkatv** for suggesting these changes).
 - October 4, 2021
     + `zcomet` now fetches Git submodules by default. If you do not need them, be sure to save yourself time by using the [`--no-submodules`](#--no-submodules) option with `load`, `fpath`, or `trigger`.
 - September 30, 2021
@@ -75,7 +88,7 @@
     + The `snippet` command now supports any URL that points to raw Zsh code (not HTML) via HTTP or HTTPS. It will translate `github.com` addresses into their `raw.githubusercontent.com` equivalents. You may still use the `OMZ::` shorthand for Oh-My-Zsh code.
 </details>
 
-## Example `.zshrc`
+## Sample `.zshrc`
 
 ```sh
 # Clone zcomet if necessary
@@ -92,7 +105,7 @@ zcomet load agkozak/agkozak-zsh-prompt
 zcomet load agkozak/zsh-z
 zcomet load ohmyzsh plugins/gitfast
 
-# Load a code snippet
+# Load a code snippet - no need to download an entire repo
 zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
 
 # Lazy-load some plugins
@@ -107,37 +120,6 @@ zcomet trigger --no-submodules archive unarchive lsarchive \
 # Run compinit and compile its cache
 zcomet compinit
 ```
-
-## Directory Customization
-
-`zcomet` will store plugins, snippets, and the like in `~/.zcomet` by default. If you have set `$ZDOTDIR`, then `zcomet` will use `${ZDOTDIR}/.zcomet` instead. You can also specify a custom home directory for `zcomet` thus:
-
-    zstyle ':zcomet:*' home-dir ~/path/to/home_dir
-
-Make sure to do that before you start loading code.
-
-In the home directory there will usually be a `/repos` subdirectory for plugins and a `/snippets` subdirectory for snippets, but you may name your own locations:
-
-    zstyle ':zcomet:*' repos-dir ~/path/to/repos_dir
-    zstyle ':zcomet:*' snippets-dir ~/path/to/snippets_dir
-
-I recommend cloning the `agkozak/zcomet` repository to a `/bin` subdirectory in your `zcomet` home directory (e.g., `~/.zcomet/bin`), as in the [example `.zshrc`](#example-zshrc) above.
-
-## Dynamic Named Directories
-
-If you `load`, `fpath`, or `trigger` a number of plugins, `zcomet` will give them dynamic directory names. For the [example `.zshrc`](https://github.com/agkozak/zcomet/tree/develop#example-zshrc) above, the following named directories would be created:
-
-    ~[agkozak-zsh-prompt]
-    ~[ohmyzsh]
-    ~[zhooks]
-    ~[zsh-prompt-benchmark]
-    ~[zsh-z]
-
-You will also have `~[zcomet-bin]`, the directory in which the `zcomet.zsh` script resides.
-
-Try typing `cd ~[` and press `<TAB>` to see a list of dynamic directories. This new feature should be particularly useful to people who write plugins and prompts -- it makes it very easy to get to the code.
-
-This feature was inspired by Marlon Richert's [Znap](https://github.com/marlonrichert/zsh-snap).
 
 ## Commands and Arguments
 
@@ -271,6 +253,48 @@ By default, if a repository has submodules, `zcomet` will fetch them whenever th
 
 Not fetching the submodules saves a good deal of time when cloning the repository.
 
+## Directory Customization
+
+`zcomet` will store plugins, snippets, and the like in `~/.zcomet` by default. If you have set `$ZDOTDIR`, then `zcomet` will use `${ZDOTDIR}/.zcomet` instead. You can also specify a custom home directory for `zcomet` thus:
+
+    zstyle ':zcomet:*' home-dir ~/path/to/home_dir
+
+Make sure to do that before you start loading code.
+
+In the home directory there will usually be a `/repos` subdirectory for plugins and a `/snippets` subdirectory for snippets, but you may name your own locations:
+
+    zstyle ':zcomet:*' repos-dir ~/path/to/repos_dir
+    zstyle ':zcomet:*' snippets-dir ~/path/to/snippets_dir
+
+I recommend cloning the `agkozak/zcomet` repository to a `/bin` subdirectory in your `zcomet` home directory (e.g., `~/.zcomet/bin`), as in the [example `.zshrc`](#example-zshrc) above.
+
+## Dynamic Named Directories
+
+If you `load`, `fpath`, or `trigger` a number of plugins, `zcomet` will give them dynamic directory names. For the [example `.zshrc`](https://github.com/agkozak/zcomet/tree/develop#example-zshrc) above, the following named directories would be created:
+
+    ~[agkozak-zsh-prompt]
+    ~[ohmyzsh]
+    ~[zhooks]
+    ~[zsh-prompt-benchmark]
+    ~[zsh-z]
+
+You will also have `~[zcomet-bin]`, the directory in which the `zcomet.zsh` script resides.
+
+Try typing `cd ~[` and press `<TAB>` to see a list of dynamic directories. This new feature should be particularly useful to people who write plugins and prompts -- it makes it very easy to get to the code.
+
+This feature is based on Marlon Richert's [Znap](https://github.com/marlonrichert/zsh-snap).
+
+## FAQ
+
+### How do I install `fzf`?
+
+`fzf` is not structured like a normal Zsh plugin, but you can install it like this:
+
+    zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
+    (( ${+commands[fzf]} )) || ~[fzf]/install --bin
+
+The first line makes sure the `fzf` repo gets cloned, its `bin/` subdirectory is added to `PATH`, and the relevant scripts get sourced. The second line checks to make sure that the `fzf` binary is actually available and installs it if it is not (note that `fzf` does not work on all systems and that its install script relies on `bash`'s being installed).
+
 ## Standards Compliance
 
 I am a great admirer of [Sebastian Gniazdowski's principles for plugin development](https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc), and I have incorporated most of his suggestions into `zcomet`:
@@ -285,7 +309,7 @@ I am a great admirer of [Sebastian Gniazdowski's principles for plugin developme
 
 ## Notes on Benchmarks
 
-When I started this project, I was happy to discover that `zcomet` scored well on benchmarks that measure `zsh -lic "exit"`. Roman Perepelitsa [has argued eloquently](https://github.com/romkatv/zsh-bench), however, that such benchmarks are misleading, and that we should instead pay attention to comparative latencies that affect user experience. The graph above compares the performance of [a well constructed `.zshrc` with no plugin manager](https://github.com/romkatv/zsh-bench/blob/3bdd47bece687ec532f19f79c4e4b996e22b2226/configs/diy%2B%2B/skel/.zshrc) to that of configurations using [`zcomet`](https://github.com/romkatv/zsh-bench/blob/3bdd47bece687ec532f19f79c4e4b996e22b2226/configs/zcomet/skel/.zshrc) and [`zplug`](https://github.com/romkatv/zsh-bench/blob/3bdd47bece687ec532f19f79c4e4b996e22b2226/configs/zplug/skel/.zshrc).
+When I started this project, I was happy to discover that `zcomet` scored rather well on benchmarks that measure `zsh -lic "exit"`. Roman Perepelitsa [has argued eloquently](https://github.com/romkatv/zsh-bench), however, that such benchmarks are misleading, and that we should instead pay attention to comparative latencies that affect user experience. The graph above compares the performance of [a well constructed `.zshrc` with no plugin manager](https://github.com/romkatv/zsh-bench/blob/3bdd47bece687ec532f19f79c4e4b996e22b2226/configs/diy%2B%2B/skel/.zshrc) to that of a comparable configuration using [`zcomet`](https://github.com/romkatv/zsh-bench/blob/3bdd47bece687ec532f19f79c4e4b996e22b2226/configs/zcomet/skel/.zshrc).
 
 ## TODO
 
