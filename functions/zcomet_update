@@ -18,7 +18,7 @@
 
 setopt EQUALS
 
-local git_dir file plugin
+local git_dir file plugin snippet
 local -a snippets
 
 # TODO: Consider having zcomet check to see if the branch has been changed
@@ -61,10 +61,10 @@ for file in "${snippets[@]}"; do
   zcomet snippet --update "${snippet}"
   _zcomet_compile "$file"
 done
-i=
+snippet=''
 if (( ${#ZCOMET_SNIPPETS} )); then
-  for i in "${ZCOMET_SNIPPETS[@]}"; do
-    [[ $i == ${ZCOMET[SNIPPETS_DIR]}* ]] && zcomet snippet "$i"
+  for snippet in "${ZCOMET_SNIPPETS[@]}"; do
+    zcomet snippet "$snippet"
   done
 fi
 
