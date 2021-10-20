@@ -171,6 +171,7 @@ _zcomet_load() {
     elif [[ -d ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
       subdir=$1 && shift
       (( $# )) && files=( "$@" )
+      set --
     else
       >&2 print "zcomet: ${repo}: invalid arguments." && return 1
     fi
