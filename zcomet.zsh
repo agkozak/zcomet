@@ -159,22 +159,29 @@ compdef() {
 #   Error messages
 ############################################################
 _zcomet_load() {
-  typeset repo subdir file plugin_path plugin_name plugin_loaded
+  typeset repo base_path subdir file plugin_path plugin_name plugin_loaded
   typeset -a files
   _zcomet_repo_shorthand "$1"
   repo=$REPLY
   shift
+
+  if [[ $repo == /* ]]; then
+    base_path=$repo
+  else
+    base_path="${ZCOMET[REPOS_DIR]}/${repo}"
+  fi
+
   if [[ -n $1 ]]; then
-    if [[ -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
+    if [[ -f ${base_path}/$1 ]]; then
       files=( "$@" )
-    elif [[ -d ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
+    elif [[ -d ${base_path}/$1 ]]; then
       subdir=$1 && shift
       (( $# )) && files=( "$@" )
     else
       >&2 print "zcomet: ${repo}: invalid arguments." && return 1
     fi
   fi
-  plugin_path=${ZCOMET[REPOS_DIR]}/${repo}${subdir:+/${subdir}}
+  plugin_path=${base_path}${subdir:+/${subdir}}
 
   # Add repo dir or the functions/ subdirectory to FPATH
   local dir fpath_added prezto_style
@@ -248,9 +255,9 @@ _zcomet_load() {
   fi
 
   # Add the bin/ subdirectory, if it exists, to PATH
-  if [[ -d ${ZCOMET[REPOS_DIR]}/${repo}/bin ]]; then
-    if (( ! ${path[(Ie)${ZCOMET[REPOS_DIR]}/${repo}/bin]} )); then
-      path=( "${ZCOMET[REPOS_DIR]}/${repo}/bin" "${path[@]}" )
+  if [[ -d ${base_path}/bin ]]; then
+    if (( ! ${path[(Ie)${base_path}/bin]} )); then
+      path=( "${base_path}/bin" "${path[@]}" )
       (( ! plugin_added  && ! fpath_added )) &&
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
     fi
@@ -352,7 +359,10 @@ _zcomet_load_command() {
   local clone_options
   [[ $1 == '--no-submodules' ]] && clone_options=$1 && shift
 
-  if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; then
+  if [[ $1 != ?*/?*     &&
+        $1 != 'ohmyzsh' &&
+        $1 != 'prezto'  &&
+        $1 != /* ]]; then
     >&2 print 'You need to specify a valid repository.' && return 1
   fi
 
@@ -360,7 +370,10 @@ _zcomet_load_command() {
   repo_branch=$1
   shift
 
-  _zcomet_clone_repo ${clone_options} "$repo_branch" || return $?
+  # Don't try to clone local plugins
+  if [[ $repo_branch != /* ]]; then
+    _zcomet_clone_repo ${clone_options} "$repo_branch" || return $?
+  fi
   _zcomet_load "${repo_branch%@*}" "$@"
 }
 
@@ -385,17 +398,30 @@ _zcomet_fpath_command() {
   local clone_options
   [[ $1 == '--no-submodules' ]] && clone_options=$1 && shift
 
-  if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; then
+  if [[ $1 != ?*/?*     &&
+        $1 != 'ohmyzsh' &&
+        $1 != 'prezto'  &&
+        $1 != /* ]]; then
     >&2 print 'You need to specify a valid repository.' && return 1
   fi
 
   local repo_branch plugin_path
   repo_branch=$1 && shift
 
-  _zcomet_clone_repo ${clone_options} "$repo_branch" || return $?
+  # Don't clone local plugins
+  if [[ $repo_branch != /* ]]; then
+    _zcomet_clone_repo ${clone_options} "$repo_branch" || return $?
+  fi
+
   _zcomet_repo_shorthand "${repo_branch%@*}"
   repo_branch=$REPLY
-  plugin_path="${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}"
+
+  if [[ $repo_branch == /* ]]; then
+    plugin_path="${repo_branch}${1:+/${1}}"
+  else
+    plugin_path="${ZCOMET[REPOS_DIR]}/${repo_branch}${1:+/${1}}"
+  fi
+
   [[ ! -d $plugin_path ]] && local ret=$? && >&2 print 'Invalid directory.' &&
     return $ret
   if (( ! ${fpath[(Ie)${plugin_path}]} )); then
@@ -523,12 +549,20 @@ _zcomet_trigger_command() {
   local -Ua triggers
   local trigger
 
-  while [[ -n $1 && $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]]; do
+  while [[ -n $1           &&
+           $1 != ?*/?*     &&
+           $1 != 'ohmyzsh' &&
+           $1 != 'prezto'  &&
+           $1 != /* ]]; do
     triggers+=( "$1" )
     shift
   done
 
-  _zcomet_clone_repo ${clone_options} "$@"
+  # Don't clone local plugins
+  # TODO: Check to make sure local plugins exist?
+  if [[ $1 != /* ]]; then
+    _zcomet_clone_repo ${clone_options} "$@"
+  fi
 
   for trigger in "${triggers[@]}"; do
     functions[$trigger]="local trigger;

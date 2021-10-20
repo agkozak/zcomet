@@ -3,13 +3,9 @@ zcomet snippet https://github.com/willghatch/zsh-saneopt/blob/master/saneopt.plu
 zcomet unload agkozak/zsh-z
 zcomet snippet https://github.com/rupa/z/blob/master/z.sh
 
-zcomet load zdharma/fast-syntax-highlighting
-
 [[ ! -o ksharrays && ! -o shwordsplit ]] && {
 	zcomet unload agkozak/agkozak-zsh-prompt
 	zcomet load sindresorhus/pure async.zsh pure.zsh
-
-	# zcomet load zsh-users/zsh-autosuggestions
 }
 
 zcomet load oldratlee/hacker-quotes
