@@ -649,7 +649,7 @@ zcomet() {
           if [[ -n $dump_file ]]; then
             typeset -g _comp_dumpfile=$dump_file
           else
-            typeset -g _comp_dumpfile="${ZDOTDIR:-${HOME}}/.zcompdump_${ZSH_VERSION}"
+            typeset -g _comp_dumpfile="${ZDOTDIR:-${HOME}}/.zcompdump_${EUID}_${OSTYPE}_${ZSH_VERSION}"
           fi
 
           local -a compinit_opts
