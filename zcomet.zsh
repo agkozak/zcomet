@@ -153,6 +153,7 @@ _zcomet_load() {
   if [[ -n $1 ]]; then
     if [[ -f ${base_path}/$1 ]]; then
       files=( "$@" )
+      set --
     elif [[ -d ${base_path}/$1 ]]; then
       subdir=$1 && shift
       (( $# )) && files=( "$@" )
