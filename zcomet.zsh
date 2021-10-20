@@ -107,27 +107,6 @@ _zcomet_snippet_shorthand() {
   fi
 }
 
-typeset -gUa ZCOMET_NAMED_DIRS
-
-############################################################
-# Checks to see if a dynamic directory name has already been
-# reserved; if not, adds it to the ZCOMET_NAMED_DIRS array.
-#
-# Globals:
-#   ZCOMET_NAMED_DIRS
-# Arguments:
-#   $1 The path
-############################################################
-_zcomet_add_named_dir() {
-  setopt NO_WARN_NESTED_VAR 2> /dev/null
-
-  local -a existing_names
-  existing_names=( "${ZCOMET_NAMED_DIRS:t}" )
-  if (( ! ${existing_names[(Ie)${1:t}]} )); then
-    ZCOMET_NAMED_DIRS=( "${ZCOMET_NAMED_DIRS[@]}" "$1" )
-  fi
-}
-
 ############################################################
 # Captures `compdef' calls that will actually be run
 # after `zcomet compinit' is run.
@@ -262,8 +241,6 @@ _zcomet_load() {
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
     fi
   fi
-
-  _zcomet_add_named_dir "$plugin_path"
 }
 
 ############################################################
@@ -436,8 +413,6 @@ _zcomet_fpath_command() {
     fpath=( "${plugin_path}" "${fpath[@]}" )
     _zcomet_add_list "$cmd" "$repo_branch${@:+ $@}"
   fi
-
-  _zcomet_add_named_dir "$plugin_path"
 }
 
 ############################################################
@@ -587,12 +562,6 @@ _zcomet_trigger_command() {
     base_dir=$1
   else
     base_dir="${ZCOMET[REPOS_DIR]}/${1%@*}"
-  fi
-
-  if [[ -n $2 && -d ${base_dir}/$2 ]]; then
-    _zcomet_add_named_dir "${base_dir}/$2"
-  else
-    _zcomet_add_named_dir "${base_dir}"
   fi
 }
 
