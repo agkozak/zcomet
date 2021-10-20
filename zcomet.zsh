@@ -293,6 +293,20 @@ _zcomet_add_list() {
 }
 
 ############################################################
+# Checks to make sure that the user has provided a valid
+# plugin name
+#
+# Arguments:
+#   The supposed plugin
+############################################################
+_zcomet_is_valid_plugin() {
+  [[ $1 == ?*/?*     ||
+     $1 == 'ohmyzsh' ||
+     $1 == 'prezto'  ||
+     $1 == /* ]]
+}
+
+############################################################
 # Clone a repository, switch to a branch/tag/commit if
 # requested, and compile the scripts
 # Globals:
@@ -359,11 +373,8 @@ _zcomet_load_command() {
   local clone_options
   [[ $1 == '--no-submodules' ]] && clone_options=$1 && shift
 
-  if [[ $1 != ?*/?*     &&
-        $1 != 'ohmyzsh' &&
-        $1 != 'prezto'  &&
-        $1 != /* ]]; then
-    >&2 print 'You need to specify a valid repository.' && return 1
+  if ! _zcomet_is_valid_plugin "$1"; then
+    >&2 print 'You need to specify a valid plugin name.' && return 1
   fi
 
   local repo_branch
@@ -398,11 +409,8 @@ _zcomet_fpath_command() {
   local clone_options
   [[ $1 == '--no-submodules' ]] && clone_options=$1 && shift
 
-  if [[ $1 != ?*/?*     &&
-        $1 != 'ohmyzsh' &&
-        $1 != 'prezto'  &&
-        $1 != /* ]]; then
-    >&2 print 'You need to specify a valid repository.' && return 1
+  if ! _zcomet_is_valid_plugin "$1"; then
+    >&2 print 'You need to specify a valid plugin name.' && return 1
   fi
 
   local repo_branch plugin_path
@@ -549,11 +557,7 @@ _zcomet_trigger_command() {
   local -Ua triggers
   local trigger
 
-  while [[ -n $1           &&
-           $1 != ?*/?*     &&
-           $1 != 'ohmyzsh' &&
-           $1 != 'prezto'  &&
-           $1 != /* ]]; do
+  while [[ -n $1 ]] && ! _zcomet_is_valid_plugin "$1"; do
     triggers+=( "$1" )
     shift
   done
@@ -577,10 +581,18 @@ _zcomet_trigger_command() {
 
   _zcomet_repo_shorthand $1
   1=$REPLY
-  if [[ -n $2 && -d ${ZCOMET[REPOS_DIR]}/$1/$2 ]]; then
-    _zcomet_add_named_dir "${ZCOMET[REPOS_DIR]}/${1%@*}/$2"
+
+  local base_dir
+  if [[ $1 == /* ]]; then
+    base_dir=$1
   else
-    _zcomet_add_named_dir "${ZCOMET[REPOS_DIR]}/${1%@*}"
+    base_dir="${ZCOMET[REPOS_DIR]}/${1%@*}"
+  fi
+
+  if [[ -n $2 && -d ${base_dir}/$2 ]]; then
+    _zcomet_add_named_dir "${base_dir}/$2"
+  else
+    _zcomet_add_named_dir "${base_dir}"
   fi
 }
 
