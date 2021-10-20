@@ -213,7 +213,7 @@ For snippets that are not hosted by GitHub, you will want to make sure that the 
 
 ### `compinit`
 
-Runs Zsh's `compinit` command, which is necessary if you want to use command line completions. `compinit`'s cache is then stored in a file in the `$HOME` directory (or in `$ZDOTDIR`, if you have defined it) starting with `.zcompdump_` and ending with the version number of the `zsh` you are using, e.g., `.zcompdump_5.8`. `zcomet` compiles the cache for you.
+Runs Zsh's `compinit` command, which is necessary if you want to use command line completions. `compinit`'s cache is then stored in a file in the `$HOME` directory (or in `$ZDOTDIR`, if you have defined it) starting with `.zcompdump_`, followed by the effective user ID (`EUID`), the operating system type (`OSTYPE`), and ending with the version number of the `zsh` you are using, e.g., `.zcompdump_1000_linux-gnu_5.8`. `zcomet` compiles the cache for you.
 
 Like other plugin managers and frameworks, `zcomet` defers running `compdef` calls until `zcomet compinit` runs, which means that you can load a plugin full of `compdefs` (e.g., `zcomet load ohmyzsh plugins/git`) even before `zcomet compinit` and its completions will still work.
 
