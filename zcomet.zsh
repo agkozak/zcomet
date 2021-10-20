@@ -167,6 +167,7 @@ _zcomet_load() {
   if [[ -n $1 ]]; then
     if [[ -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
       files=( "$@" )
+      set --
     elif [[ -d ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
       subdir=$1 && shift
       (( $# )) && files=( "$@" )
