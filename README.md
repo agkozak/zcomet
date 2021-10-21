@@ -56,6 +56,9 @@ Those lines will clone repos, source scripts, update your `FPATH` and `PATH`, an
 
 ## News
 
+- October 21, 2021
+    + `zcomet` now supports local plugins and snippets.
+
 <details>
     <summary>Older news</summary>
 
@@ -150,6 +153,14 @@ A specific branch, tag, or commit of a repository can be checked out using the f
 
 `load` is the command used for loading prompts.
 
+`load` also supports local plugins that do not need to be cloned. Just make sure that the plugin name starts with a slash or something that will expand to a slash, e.g.
+
+    zcomet load /path/to/plugin1
+    zcomet load ~/path/to/plugin2
+    zcomet load ${HOME}/path/to/plugin3
+
+Relative directories cannot be used.
+
 *NOTE: If the repository that `load` is cloning has submodules, consider whether or not you really need them. Using the [`--no-submodules`](#--no-submodules) option after `load` can save a lot of time during installation and updating.*
 
 ### `fpath` repository-name \[subdirectory\]
@@ -202,6 +213,10 @@ really executes
     zcomet snippet https://raw.githubusercontent.com/jreese/zsh-titles/master/titles.plugin.zsh
 
 For snippets that are not hosted by GitHub, you will want to make sure that the URL you use points towards raw code, not a pretty HTML display of it.
+
+`zcomet` will also allow you to load local snippets that do not need to be downloaded, e.g.
+
+   zcomet snippet /path/to/my/code.zsh
 
 ### `update`
 
