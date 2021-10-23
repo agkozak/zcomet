@@ -446,7 +446,7 @@ _zcomet_snippet_command() {
 
   # Local snippets
   if [[ $snippet != http(|s)://* && $snippet != OMZ::* ]]; then
-    if [[ -r $snippet ]] && source $snippet; then
+    if [[ -f $snippet ]] && source $snippet; then
       _zcomet_add_list "$cmd" "${${snippet:a}/${HOME}/~}"
       return
     fi
