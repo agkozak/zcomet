@@ -172,7 +172,7 @@ _zcomet_load() {
   elif [[ -d $plugin_path ]]; then
     dir=$plugin_path
   else
-    >&2 print "Cannot add plugin directory to FPATH."
+    >&2 print "zcomet: ${plugin_path} does not appear to be a directory."
     return 1
   fi
 
