@@ -64,7 +64,7 @@ done
 snippet=''
 if (( ${#ZCOMET_SNIPPETS} )); then
   for snippet in "${ZCOMET_SNIPPETS[@]}"; do
-    [[ $snippet == ${ZCOMET[SNIPPETS_DIR]}/* ]] && zcomet snippet "$snippet"
+    zcomet snippet "$snippet"
   done
 fi
 
