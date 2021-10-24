@@ -363,6 +363,12 @@ _zcomet_load_command() {
   # Don't try to clone local plugins
   if [[ $repo_branch != /* ]]; then
     _zcomet_clone_repo ${clone_options} "$repo_branch" || return $?
+  # Do keep local plugins zcompiled
+  else
+    for file in "${repo_branch}"/**/*.zsh(|-theme)(N.) \
+                "${repo_branch}"/**/prompt_*_setup(N.); do
+      _zcomet_compile "$file"
+    done
   fi
   _zcomet_load "${repo_branch%@*}" "$@"
 }
