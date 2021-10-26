@@ -698,63 +698,63 @@ zcomet() {
                   "${ZCOMET[SCRIPT]:A:h}"/functions/zcomet_*~*.zwc(N.)
 }
 
-############################################################
-# zcomet's plugin directories are dynamic named
-# directories - an idea inspired by Marlon Richert's Znap.
-#
-# Note that if two repos of the same name appear under the
-# ${ZCOMET[REPOS_DIR]} directory, neither will be assigned a
-# name -- the idea being to prevent terrible mistakes.
-############################################################
-_zcomet_named_dirs() {
-  emulate -L zsh
+#############################################################
+## zcomet's plugin directories are dynamic named
+## directories - an idea inspired by Marlon Richert's Znap.
+##
+## Note that if two repos of the same name appear under the
+## ${ZCOMET[REPOS_DIR]} directory, neither will be assigned a
+## name -- the idea being to prevent terrible mistakes.
+#############################################################
+#_zcomet_named_dirs() {
+#  emulate -L zsh
 
-  typeset -ga reply
-  local -a dirs names
-  local expl
+#  typeset -ga reply
+#  local -a dirs names
+#  local expl
 
-  if [[ $1 == 'n' ]]; then
-    [[ $2 == 'zcomet-bin' ]] && reply=( ${ZCOMET[SCRIPT]:A:h} ) && return 0
-    dirs=( ${ZCOMET[REPOS_DIR]}/*/$2(N/) )
-    (( ${#dirs} != 1 )) && return 1
-    reply=( ${dirs[1]} ) && return 0
-  elif [[ $1 == 'd' ]]; then
-    if [[ $2 == ${ZCOMET[SCRIPT]:A:h} ]]; then
-      reply=( 'zcomet-bin' ${#2} )
-      return 0
-    elif [[ ${${2:h}:h} == ${ZCOMET[REPOS_DIR]} ]]; then
-      dirs=( ${ZCOMET[REPOS_DIR]}/*/${2:t}(N/) )
-      (( ${#dirs} != 1 )) && return 1
-      reply=( ${2:t} ${#2} )
-      return 0
-    fi
-    return 1
-  elif [[ $1 == 'c' ]]; then
-    dirs=( ${ZCOMET[REPOS_DIR]}/*/*(N/) )
-    names=( ${dirs:t} )
-    local -A names_tally
-    local name
-    for name in $names; do
-      (( names_tally[$name]++ ))
-    done
-    name=''
-    names=()
-    for name in ${(k)names_tally}; do
-      (( names_tally[$name] == 1 )) && names+=( $name )
-    done
-    _tags named-directories
-    _tags && _requested named-directories expl 'dynamic named directories' &&
-      compadd $expl -S\] -- $names 'zcomet-bin'
-    return 1
-  fi
-}
+#  if [[ $1 == 'n' ]]; then
+#    [[ $2 == 'zcomet-bin' ]] && reply=( ${ZCOMET[SCRIPT]:A:h} ) && return 0
+#    dirs=( ${ZCOMET[REPOS_DIR]}/*/$2(N/) )
+#    (( ${#dirs} != 1 )) && return 1
+#    reply=( ${dirs[1]} ) && return 0
+#  elif [[ $1 == 'd' ]]; then
+#    if [[ $2 == ${ZCOMET[SCRIPT]:A:h} ]]; then
+#      reply=( 'zcomet-bin' ${#2} )
+#      return 0
+#    elif [[ ${${2:h}:h} == ${ZCOMET[REPOS_DIR]} ]]; then
+#      dirs=( ${ZCOMET[REPOS_DIR]}/*/${2:t}(N/) )
+#      (( ${#dirs} != 1 )) && return 1
+#      reply=( ${2:t} ${#2} )
+#      return 0
+#    fi
+#    return 1
+#  elif [[ $1 == 'c' ]]; then
+#    dirs=( ${ZCOMET[REPOS_DIR]}/*/*(N/) )
+#    names=( ${dirs:t} )
+#    local -A names_tally
+#    local name
+#    for name in $names; do
+#      (( names_tally[$name]++ ))
+#    done
+#    name=''
+#    names=()
+#    for name in ${(k)names_tally}; do
+#      (( names_tally[$name] == 1 )) && names+=( $name )
+#    done
+#    _tags named-directories
+#    _tags && _requested named-directories expl 'dynamic named directories' &&
+#      compadd $expl -S\] -- $names 'zcomet-bin'
+#    return 1
+#  fi
+#}
 
-# The zsh_directory_name hook did not appear till Zsh v4.3.12, so for v4.3.11
-# we'll just have to use the zsh_directory_name function directly
-if is-at-least 4.3.12; then
-  add-zsh-hook zsh_directory_name _zcomet_named_dirs
-else
-  zsh_directory_name() {
-    _zcomet_named_dirs $@
-  }
-fi
+## The zsh_directory_name hook did not appear till Zsh v4.3.12, so for v4.3.11
+## we'll just have to use the zsh_directory_name function directly
+#if is-at-least 4.3.12; then
+#  add-zsh-hook zsh_directory_name _zcomet_named_dirs
+#else
+#  zsh_directory_name() {
+#    _zcomet_named_dirs $@
+#  }
+#fi
