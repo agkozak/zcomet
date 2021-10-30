@@ -7,7 +7,7 @@
 typeset -gA ZCOMET
 
 # Standardized $0 Handling
-# https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#zero-handling
+# https://github.com/agkozak/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#zero-handling
 0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
 0=${${(M)0:#/*}:-${PWD}/$0}
 
@@ -28,7 +28,7 @@ autoload -Uz add-zsh-hook \
              zcomet_{unload,update,list,self-update,help}
 
 # Global Parameter holding the plugin-manager’s capabilities
-# https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#9-global-parameter-holding-the-plugin-managers-capabilities
+# https://github.com/agkozak/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#9-global-parameter-holding-the-plugin-managers-capabilities
 typeset -g PMSPEC
 PMSPEC='0fbuiPs'
 
@@ -625,7 +625,7 @@ zcomet() {
   fi
 
   # Global parameter with PREFIX for make, configure, etc.
-  # https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#8-global-parameter-with-prefix-for-make-configure-etc
+  # https://github.com/agkozak/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#8-global-parameter-with-prefix-for-make-configure-etc
   [[ -z $ZPFX ]] && {
     typeset -gx ZPFX
     : ${ZPFX:=${ZCOMET[HOME_DIR]}/polaris}
