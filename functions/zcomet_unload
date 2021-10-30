@@ -27,7 +27,7 @@ if (( ${+functions[${1#*/}_plugin_unload]} )) &&
   fpath=( "${fpath[@]:#${ZCOMET[REPOS_DIR]}/${1}/functions}" )
   path=( "${path[@]:#${ZCOMET[REPOS_DIR]}/${1}/bin}" )
 else
-  >&2 print "I cannot unload ${1}."
+  >&2 print "${1} cannot be unloaded."
   return 1
 fi
 
