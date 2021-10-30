@@ -194,7 +194,7 @@ or save time by listing a number of triggers before the repository name:
 
 *NOTE: If the repository that `trigger` is cloning has submodules, consider whether or not you really need them. Using the [`--no-submodules`](#--no-submodules) option after `trigger` can save a lot of time during installation and updating.*
 
-This feature was inspired by [Zinit](https://github.com/zdharma/zinit)'s `trigger-load` command.
+This feature was inspired by [Zinit](https://github.com/agkozak/zinit)'s `trigger-load` command.
 
 ### `snippet` snippet
 
@@ -244,7 +244,7 @@ But it is safest to stick to the default behavior. An incorrectly configured `co
 
 ### `compile`
 
-Compiles a script or scripts if there is no corresponding wordcode (`.zwc`) file or if a script is newer than its `.zwc`.
+Compiles a script or scripts if there is no corresponding wordcode (`.zwc`) file or if a script is newer than its `.zwc`. Note that `zcomet` always compiles scripts after cloning repositories or running `update`, so you should generally never need to invoke `zcomet compile` yourself.
 
 ### `help`
 
@@ -256,7 +256,7 @@ Updates `zcomet` itself. Note that `zcomet` must have been installed as a cloned
 
 ### `unload` \[repository-name\]
 
-Unloads a plugin that has an [unload function](https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#4-unload-function). The implementation is still very basic.
+Unloads a plugin that has an [unload function](https://github.com/agkozak/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#4-unload-function). The implementation is still very basic.
 
 ## Options
 
@@ -312,7 +312,7 @@ The first line makes sure the `fzf` repo gets cloned, its `bin/` subdirectory is
 
 ## Standards Compliance
 
-I am a great admirer of [Sebastian Gniazdowski's principles for plugin development](https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc), and I have incorporated most of his suggestions into `zcomet`:
+I am a great admirer of [Sebastian Gniazdowski's principles for plugin development](https://github.com/agkozak/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc), and I have incorporated most of his suggestions into `zcomet`:
 
 * Standardized `$0` handling
 * Support for `functions/` directories
