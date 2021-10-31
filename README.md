@@ -238,7 +238,7 @@ A simple `zcomet compinit` should always get the job done, but if you need to re
 
 If you need to specify other options to `compinit`, you can do it this way:
 
-    zstyle 'zcomet:compinit' arguments -i   # I.e., run `compinit -i'
+    zstyle ':zcomet:compinit' arguments -i   # I.e., run `compinit -i'
 
 But it is safest to stick to the default behavior. An incorrectly configured `compinit` can lead to your completions being broken or unsafe code being loaded.
 
