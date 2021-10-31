@@ -51,7 +51,7 @@ Those lines will clone repos, source scripts, update your `FPATH` and `PATH`, an
 - [FAQ](#faq)
   + [How do I install `fzf`?](#how-do-i-install-fzf)
 - [Standards Compliance](#standards-compliance)
-- [Notes on Benchmarks]
+- [Notes on Benchmarks](#notes-on-benchmarks)
 - [TODO](#todo)
 
 ## News
