@@ -6,11 +6,6 @@
 
 typeset -gA ZCOMET
 
-# Standardized $0 Handling
-# https://github.com/agkozak/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#zero-handling
-0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
-0=${${(M)0:#/*}:-${PWD}/$0}
-
 ZCOMET[SCRIPT]=$0
 
 autoload -Uz is-at-least
@@ -198,7 +193,7 @@ _zcomet_load() {
 
   if (( ${#files} )); then
     for file in "${files[@]}"; do
-      if source "${plugin_path}/${file}"; then
+      if ZERO="${plugin_path}/${file}" source "${plugin_path}/${file}"; then
         (( ZCOMET[DEBUG] )) && >&2 print "Sourced ${file}."
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" &&
         plugin_loaded=1
@@ -225,7 +220,7 @@ _zcomet_load() {
     file=${files[@]:0:1}
 
     if [[ -n $file ]]; then
-      if source "$file"; then
+      if ZERO=$file source "$file"; then
         (( ZCOMET[DEBUG] )) && >&2 print "Sourced ${file:t}."
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}" && plugin_loaded=1
       else
@@ -454,7 +449,7 @@ _zcomet_snippet_command() {
   if [[ $snippet != http(|s)://* && $snippet != OMZ::* ]]; then
     snippet=${snippet/\~/${HOME}}
     _zcomet_compile "$snippet"
-    if [[ -f $snippet ]] && source $snippet; then
+    if [[ -f $snippet ]] && ZERO=$snippet source $snippet; then
       _zcomet_add_list "$cmd" "${${snippet:a}/${HOME}/~}"
       return
     fi
@@ -501,7 +496,8 @@ _zcomet_snippet_command() {
 
   (( update )) && return
 
-  if source "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"; then
+  if ZERO="${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}" \
+      source "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"; then
     _zcomet_add_list "$cmd" "$snippet"
   else
     ret=$?
