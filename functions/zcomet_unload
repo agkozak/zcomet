@@ -18,14 +18,16 @@
   >&2 print 'Specify a plugin to unload.' &&
   return 1
 
-if (( ${+functions[${1#*/}_plugin_unload]} )) &&
-   ${1#*/}_plugin_unload; then
+local base_dir
+[[ $1 == /* ]] || base_dir="${ZCOMET[REPOS_DIR]}/"
+
+if (( ${+functions[${1##*/}_plugin_unload]} )) &&
+   ${1##*/}_plugin_unload; then
   typeset -gUa zsh_loaded_plugins
   zsh_loaded_plugins=( "${zsh_loaded_plugins[@]:#${1}}" )
-  zsh_loaded_plugins=( "${zsh_loaded_plugins[@]:#${1} *}" )
-  fpath=( "${fpath[@]:#${ZCOMET[REPOS_DIR]}/${1}}" )
-  fpath=( "${fpath[@]:#${ZCOMET[REPOS_DIR]}/${1}/functions}" )
-  path=( "${path[@]:#${ZCOMET[REPOS_DIR]}/${1}/bin}" )
+  fpath=( "${fpath[@]:#${base_dir}${1}}" )
+  fpath=( "${fpath[@]:#${base_dir}/${1}/functions}" )
+  path=( "${path[@]:#${base_dir}/${1}/bin}" )
 else
   >&2 print "${1} cannot be unloaded."
   return 1

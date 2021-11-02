@@ -18,11 +18,15 @@ if (( ${#zsh_loaded_plugins} )); then
   success=1
   print -P '%B%F{yellow}Plugins:%f%b'
   for plugin in ${(o)zsh_loaded_plugins[@]}; do
-    print -n '  '
-    print -n -- "${plugin%%/*}/${${plugin#*/}%%/*}"
-    plugin=${plugin#${plugin%%/*}/${${plugin#*/}%%/*}}
-    [[ -n $plugin ]] && print -n -- " ${plugin#/}"
-    print
+		if [[ $plugin == /* ]]; then
+			print -- "  ${plugin}"
+		else
+			print -n '  '
+			print -n -- "${plugin%%/*}/${${plugin#*/}%%/*}"
+			plugin=${plugin#${plugin%%/*}/${${plugin#*/}%%/*}}
+			[[ -n $plugin ]] && print -n -- " ${plugin#/}"
+			print
+		fi
   done
 fi
 (( ${#ZCOMET_FPATH} )) &&
