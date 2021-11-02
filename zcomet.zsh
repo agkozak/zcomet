@@ -197,7 +197,8 @@ _zcomet_load() {
           ZERO="${plugin_path}/${file}" \
           source "${plugin_path}/${file}"; then
         (( ZCOMET[DEBUG] )) && >&2 print "Sourced ${file}."
-        _zcomet_add_list load "${repo}${subdir:+/${subdir}}" && plugin_loaded=1
+        _zcomet_add_list load "${repo}${subdir:+/${subdir}}" "$file" &&
+            plugin_loaded=1
       else
         return $?
       fi
@@ -260,6 +261,7 @@ _zcomet_add_list() {
 
   if [[ $1 == 'load' ]]; then
     zsh_loaded_plugins=( "${zsh_loaded_plugins[@]}" "$2" )
+    [[ -n $3 ]] && ZCOMET_PLUGINS[$2]+=" $3"
   elif [[ $1 == 'fpath' ]]; then
     ZCOMET_FPATH=( "${ZCOMET_FPATH[@]}" "$2" )
   elif [[ $1 == 'snippet' ]]; then
@@ -579,6 +581,7 @@ _zcomet_trigger_command() {
 # Globals:
 #   ZCOMET
 #   zsh_loaded_plugins
+#   ZCOMET_PLUGINS
 #   ZCOMET_SNIPPETS
 #   ZCOMET_TRIGGERS
 #   ZCOMET_NAMED_DIRS
@@ -598,6 +601,7 @@ _zcomet_trigger_command() {
 ############################################################
 zcomet() {
   typeset -gUa zsh_loaded_plugins ZCOMET_FPATH ZCOMET_SNIPPETS ZCOMET_TRIGGERS
+  typeset -gUA ZCOMET_PLUGINS
 
   typeset -g REPLY
 

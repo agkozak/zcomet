@@ -12,21 +12,22 @@
 #   0 if there is anything to report, otherwise 1
 ############################################################
 
-local success plugin
+local success plugin abbr
 
 if (( ${#zsh_loaded_plugins} )); then
   success=1
   print -P '%B%F{yellow}Plugins:%f%b'
   for plugin in ${(o)zsh_loaded_plugins[@]}; do
 		if [[ $plugin == /* ]]; then
-			print -- "  ${plugin}"
+			print -n -- "  ${plugin}"
 		else
 			print -n '  '
 			print -n -- "${plugin%%/*}/${${plugin#*/}%%/*}"
-			plugin=${plugin#${plugin%%/*}/${${plugin#*/}%%/*}}
-			[[ -n $plugin ]] && print -n -- " ${plugin#/}"
-			print
+			abbr=${plugin#${plugin%%/*}/${${plugin#*/}%%/*}}
+			[[ -n $abbr ]] && print -n -- " ${abbr#/}"
 		fi
+		print -n -- "${ZCOMET_PLUGINS[$plugin]}"
+		print
   done
 fi
 (( ${#ZCOMET_FPATH} )) &&
