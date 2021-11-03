@@ -120,6 +120,10 @@ zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 zcomet trigger --no-submodules archive unarchive lsarchive \
     sorin-ionescu/prezto modules/archive
 
+# It is good to load these popular plugins last, and in this order:
+zcomet load zsh-users/zsh-syntax-highlighting
+zcomet load zsh-users/zsh-autosuggestions
+
 # Run compinit and compile its cache
 zcomet compinit
 ```
