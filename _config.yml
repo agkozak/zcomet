@@ -1,4 +1,4 @@
 remote_theme: hydecorp/hydejack@v9.1.4
 plugins:
   - jekyll-include-cache
-accent_image: https://upload.wikimedia.org/wikipedia/commons/1/1f/Iss030e015472_Edit.jpg
+accent_image: https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/C2014_Q2.jpg/2560px-C2014_Q2.jpg
