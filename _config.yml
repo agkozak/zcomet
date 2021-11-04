@@ -1,6 +1,10 @@
 remote_theme: hydecorp/hydejack@v9.1.4
 plugins:
   - jekyll-include-cache
+  - jekyll-avatar
 accent_image: https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometDonati.jpg
 favicon: /favicon.ico
 apple_touch_icon: /assets/img/logo.png
+url: https://zcomet.io
+baseurl: /zcomet
+github_username: agkozak
