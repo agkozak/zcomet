@@ -1,4 +1,4 @@
 remote_theme: hydecorp/hydejack@v9.1.4
 plugins:
   - jekyll-include-cache
-accent_image: https://en.m.wikipedia.org/wiki/File:CometDonati.jpg
+accent_image: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/CometDonati.jpg/1280px-CometDonati.jpg
