@@ -89,7 +89,7 @@ When you clone Prezto, though, it installs a great number of external plugins. I
 
     zcomet load --no-submodules prezto modules/archive
 
-`zcomet load` also supports local plugins. A local plugin is a directory that is structured exactly like a plugin you would clone from GitHub or elsewhere, but it does not have to be a Git repository. All you need to do is to specify where that directory is. Note that the path to your local plugin must start either with a `/` or with something that Zsh with expand to be a slash; that is how `zcomet` knows not to try to clone the plugin:
+`zcomet load` also supports local plugins. A local plugin is a directory that is structured exactly like a plugin you would clone from GitHub or elsewhere, but it does not have to be a Git repository. All you need to do is to specify where that directory is. Note that the path to your local plugin must start either with a `/` or with something that Zsh will expand to be a slash (i.e., no relative paths):
 
     zcomet load /path/to/local_plugin1
     zcomet load ~/path/to/local_plugin2
