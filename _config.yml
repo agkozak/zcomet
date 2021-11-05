@@ -10,3 +10,6 @@ url: https://zcomet.io
 title: zcomet
 description: Fast, Simple Zsh Plugin Manager
 github_username: agkozak
+menu:
+  - title: On GitHub
+    url: https://github.com/agkozak/zcomet
