@@ -7,3 +7,4 @@ favicon: /favicon.ico
 apple_touch_icon: /assets/img/logo.png
 url: https://zcomet.io
 title: zcomet - Fast, Simple Zsh Plugin Manager
+author: agkozak
