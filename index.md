@@ -3,7 +3,7 @@ layout: project
 image: https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometDonati.jpg
 ---
 
-## `zcomet1
+## `zcomet`
 
 You can use the [editor on GitHub](https://github.com/agkozak/zcomet/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
