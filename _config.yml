@@ -11,5 +11,7 @@ title: zcomet
 description: Fast, Simple Zsh Plugin Manager
 github_username: agkozak
 menu:
+  - title: Documentation
+    url: /documentation/
   - title: On GitHub
     url: https://github.com/agkozak/zcomet
