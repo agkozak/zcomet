@@ -6,8 +6,4 @@ accent_image: https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometD
 favicon: /favicon.ico
 apple_touch_icon: /assets/img/logo.png
 url: https://zcomet.io
-baseurl: /zcomet
-github_username: agkozak
-author:
-  social:
-    github: agkozak
+title: zcomet - Fast, Simple Zsh Plugin Manager
