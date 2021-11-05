@@ -6,14 +6,14 @@ image: https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometDonati.j
 
 Did you ever dream of having a clean-looking `.zshrc` and still getting to the first prompt quickly? Are you tired of tortured syntax and [deferred initialization voodoo](https://github.com/romkatv/zsh-bench/tree/874e3650489538bb14e1000370240520f61de346#deferred-initialization)? Whether you are new to Zsh or a seasoned user, `zcomet` can be a convenient and efficient way to manage plugins.
 
-A plugin manager has a few vital tasks:
+A plugin manager has a few basic requirements:
 
   * Cloning plugin repositories
   * Updating plugins
   * Sourcing plugin initialization scripts
   * Managing `FPATH`
 
-A good plugin manager should also handle completions intelligently (`compinit` and `compdef`) and compile scripts (especially the completions dump file). `zcomet` does all this and more. If you were to write a very careful `.zshrc` that did all of these things, it could potentially be very fast, but it would be long, complex, and hard to manage. In `zcomet`, it would be as simple as
+A good plugin manager should also handle completions intelligently (`compinit` and `compdef`) and compile scripts (especially the completions dump file). `zcomet` does all this and more. If you were to write a very careful `.zshrc` that did all of these things without using a plugin manager, it could potentially be very fast, but it would be long, complex, and hard to manage. In `zcomet`, it would be as simple as
 
 ```sh
 # Load zcomet
@@ -36,6 +36,7 @@ Surely there must be a lot of overhead from having `zcomet` do the work for you?
 
 ## TABLE OF CONTENTS
 
+- [A sample `.zshrc`](#a-sample-zshrc)
 - [The most basic subcommands](#the-most-basic-subcommands)
   + [`load`](#load)
   + [`compinit`](#compinit)
@@ -50,6 +51,44 @@ Surely there must be a lot of overhead from having `zcomet` do the work for you?
   + [`help`](#help)
   + [`unload`](#unload)
   + [`compile`](#compile)
+
+## A sample `.zshrc`
+
+```sh
+# Clone zcomet if necessary
+if [[ ! -f ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh ]]; then
+  git clone https://github.com/agkozak/zcomet.git ${ZDOTDIR:-${HOME}}/.zcomet/bin
+fi
+
+# Source zcomet.zsh
+source ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh
+
+# Load a prompt
+zcomet load agkozak/agkozak-zsh-prompt
+
+# Load some plugins
+zcomet load agkozak/zsh-z
+zcomet load ohmyzsh plugins/gitfast
+
+# Load a code snippet - no need to download an entire repo
+zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+
+# Lazy-load some plugins
+zcomet trigger zhooks agkozak/zhooks
+zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
+
+# Lazy-load Prezto's archive module without downloading all of Prezto's
+# submodules
+zcomet trigger --no-submodules archive unarchive lsarchive \
+    prezto modules/archive
+
+# It is good to load these popular plugins last, and in this order:
+zcomet load zsh-users/zsh-syntax-highlighting
+zcomet load zsh-users/zsh-autosuggestions
+
+# Run compinit and compile its cache
+zcomet compinit
+```
 
 ## The most basic subcommands
 
@@ -126,7 +165,7 @@ You can also specify local snippets:
 
 ### `trigger`
 
-`zcomet trigger` is a lazyloading command (written in imitation of Zinit's `trigger-load` subcommand) that saves time at shell startup by *not* loading plugins; they are initialized later when particular commands are run:
+`zcomet trigger` is a lazy-loading command (written in imitation of Zinit's `trigger-load` subcommand) that saves time at shell startup by *not* loading plugins; they are initialized later when particular commands are run:
 
     zcomet [--no-submodules] [trigger1] [trigger2] ... author/plugin[@branch|@tag|@commit] [directory] [script1] [script2] ...
 
