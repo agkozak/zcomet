@@ -58,3 +58,5 @@ zcomet load zsh-users/zsh-autosuggestions
 # Run compinit and compile its cache
 zcomet compinit
 ```
+
+*Copyright &copy; 2021 Alexandros Kozak*
