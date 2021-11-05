@@ -4,59 +4,34 @@ description: Fast, Simple Zsh Plugin Manager
 image: https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometDonati.jpg
 ---
 
-`zcomet` is a Zsh plugin manager that gets you to the prompt quickly. Its goal is to be simple and convenient without slowing you down. It succeeds in keeping latencies down to the level you would expect if you were not even using a plugin manager:
+Did you ever dream of having a clean-looking `.zshrc` and still getting to the first prompt quickly? Are you tired of tortured syntax and [deferred initialization voodoo](https://github.com/romkatv/zsh-bench/tree/874e3650489538bb14e1000370240520f61de346#deferred-initialization)? Whether you are new to Zsh or a seasoned user, `zcomet` can be a convenient and efficient way to manage plugins.
 
-![Latencies in Milliseconds](https://raw.githubusercontent.com/agkozak/zcomet-media/main/latencies.png)
+A plugin manager has a few vital tasks:
 
-The speed difference can be undetectable, but the improved convenience is noteworthy. A `zcomet` configuration can be as simple as:
+  * Cloning plugin repositories
+  * Updating plugins
+  * Sourcing plugin initialization scripts
+  * Managing `FPATH`
+
+A good plugin manager should also handle completions intelligently (`compinit` and `compdef`) and compile scripts (especially the completions dump file). `zcomet` does all this and more. If you were to write a very careful `.zshrc` that did all of these things, it could potentially be very fast, but it would be long, complex, and hard to manage. In `zcomet`, it would be as simple as
 
 ```sh
+# Load zcomet
 source /path/to/zcomet.zsh
 
+# Load some plugins
 zcomet load author1/plugin1
 zcomet load author2/plugin2
 zcomet load author3/plugin3
 
+# Load completions
 zcomet compinit
 ```
 
-Those lines will clone repositories, source scripts, update your `FPATH` and `PATH`, and load the Zsh completion system.
+Surely there must be a lot of overhead from having `zcomet` do the work for you? Actually, shell startup with `zcomet` is so efficient that it will feel as if you are not even using a plugin manager:
 
-## Sample `.zshrc`
+![Latencies in Milliseconds](https://raw.githubusercontent.com/agkozak/zcomet-media/main/latencies.png)
 
-```sh
-# Clone zcomet if necessary
-if [[ ! -f ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh ]]; then
-  command git clone https://github.com/agkozak/zcomet.git ${ZDOTDIR:-${HOME}}/.zcomet/bin
-fi
-
-source ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh
-
-# Load a prompt
-zcomet load agkozak/agkozak-zsh-prompt
-
-# Load some plugins
-zcomet load agkozak/zsh-z
-zcomet load ohmyzsh plugins/gitfast
-
-# Load a code snippet - no need to download an entire repo
-zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
-
-# Lazy-load some plugins
-zcomet trigger zhooks agkozak/zhooks
-zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
-
-# Lazy-load Prezto's archive module without downloading all of Prezto's
-# submodules
-zcomet trigger --no-submodules archive unarchive lsarchive \
-    sorin-ionescu/prezto modules/archive
-
-# It is good to load these popular plugins last, and in this order:
-zcomet load zsh-users/zsh-syntax-highlighting
-zcomet load zsh-users/zsh-autosuggestions
-
-# Run compinit and compile its cache
-zcomet compinit
-```
+*Many thanks to Roman Perepelitsa for sharing his [`zsh-bench`](https://github.com/romkatv/zsh-bench) benchmarking utility.*
 
 *Copyright &copy; 2021 Alexandros Kozak*
