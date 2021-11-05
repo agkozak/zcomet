@@ -276,6 +276,7 @@ DEPENDENCIES
   github-pages
   jekyll-avatar
   jekyll-include-cache
+  jekyll-seo-tag
 
 BUNDLED WITH
    2.2.30
