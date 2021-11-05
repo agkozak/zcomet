@@ -4,7 +4,6 @@ plugins:
   - jekyll-avatar
   - jekyll-seo-tag
 accent_image: https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometDonati.jpg
-image: https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometDonati.jpg
 favicon: /favicon.ico
 apple_touch_icon: /assets/img/logo.png
 url: https://zcomet.io
