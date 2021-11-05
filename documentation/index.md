@@ -8,6 +8,7 @@ permalink: /documentation/
 
 ## TABLE OF CONTENTS
 
+- [Installation](#installation)
 - [A sample `.zshrc`](#a-sample-zshrc)
 - [The most basic subcommands](#the-most-basic-subcommands)
   + [`load`](#load)
@@ -23,6 +24,22 @@ permalink: /documentation/
   + [`help`](#help)
   + [`unload`](#unload)
   + [`compile`](#compile)
+
+## Installation
+
+Installing `zcomet` is as easy as cloning the `zcomet` GitHub repository and sourcing `zcomet.zsh`. I recommend using the following code near the top of your `.zshrc`:
+
+```sh
+# Clone zcomet if necessary
+if [[ ! -f ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh ]]; then
+  git clone https://github.com/agkozak/zcomet.git ${ZDOTDIR:-${HOME}}/.zcomet/bin
+fi
+
+# Source zcomet.zsh
+source ${ZDOTDIR:-${HOME}}/.zcomet/bin/zcomet.zsh
+```
+
+For the purposes of illustrating how I personally use `zcomet`, I include a simplified excerpt from my own [`.zshrc`](https://github.com/agkozak/dotfiles/blob/master/.zshrc) below.
 
 ## A sample `.zshrc`
 
