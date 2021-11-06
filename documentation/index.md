@@ -180,7 +180,7 @@ Like `load` and `trigger`, `fpath` has a `--no-submodules` option.
 
 ## `zcomet` at the command line
 
-You can use any of the commands I have just described at the command line. I know I frequently load plugins on the fly. There are, however, some useful `zcomet` commands that you are unlikely to use in you `.zshrc` but which are helpful at the command line.
+You can use any of the commands I have just described at the command line. I frequently load plugins on the fly. There are, however, some useful `zcomet` commands that you are unlikely to use in your `.zshrc` but which are helpful at the command line.
 
 ### `update`
 
