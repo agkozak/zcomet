@@ -1,4 +1,5 @@
-remote_theme: hydecorp/hydejack@v9.1.4
+#remote_theme: hydecorp/hydejack@v9.1.4
+theme: minimal
 plugins:
   - jekyll-include-cache
   - jekyll-avatar
