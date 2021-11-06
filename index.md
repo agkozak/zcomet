@@ -5,9 +5,9 @@ hide_description: true
 image: https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometDonati.jpg
 ---
 
-Did you ever dream of having a clean-looking `.zshrc` and still getting to the first prompt quickly? Are you tired of tortured syntax and [deferred initialization voodoo](https://github.com/romkatv/zsh-bench/tree/874e3650489538bb14e1000370240520f61de346#deferred-initialization)? Whether you are new to Zsh or a seasoned user, `zcomet` can be a convenient and efficient way to manage plugins.
+Do you ever dream of having a clean-looking `.zshrc` and enjoying swift Zsh startup times? Are you tired of tortured syntax and the frustrations of deferred initialization voodoo? Whether you are new to Zsh or a seasoned user, `zcomet` can be a convenient and efficient way to manage plugins.
 
-A plugin manager has a few basic requirements:
+A plugin manager performs a few basic tasks:
 
   * Cloning plugin repositories
   * Updating plugins
