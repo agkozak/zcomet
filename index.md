@@ -1,5 +1,5 @@
 ---
-title: zcomet
+title: zcomet - Fast, Simple Zsh Plugin Manager
 description: Get to the prompt quickly with a clean-looking zcomet .zshrc!
 hide_description: true
 image: https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometDonati.jpg
