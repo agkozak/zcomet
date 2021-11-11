@@ -188,7 +188,7 @@ You can use any of the commands I have just described at the command line. I fre
 
 ### `self-update`
 
-`zcomet self-update` updates `zcomet` itself. You will have to have installed `zcomet` as a Git repository for this to work.
+`zcomet self-update` updates `zcomet` itself. You have to install `zcomet` with Git for this to work.
 
 ### `list`
 
