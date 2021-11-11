@@ -3,6 +3,7 @@ title: zcomet - Fast, Simple Zsh Plugin Manager
 description: Get to the prompt quickly with a clean-looking zcomet .zshrc!
 hide_description: true
 image: https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometDonati.jpg
+cover: true
 ---
 
 Do you ever dream of having a clean-looking `.zshrc` and enjoying swift Zsh startup times? Are you tired of tortured syntax and the frustrations of deferred initialization voodoo? Whether you are new to Zsh or a seasoned user, `zcomet` can be a convenient and efficient way to manage plugins.
