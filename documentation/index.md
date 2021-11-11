@@ -101,7 +101,7 @@ If you did need to specify a script or scripts -- if it would not be obvious to 
 
     zcomet load ohmyzsh lib clipboard.zsh git.zsh
 
-That command will clone Oh-My-Zsh if necessary, go to its `lib/` subdirectory, and clone the `clipboard.zsh` and `git.zsh` scripts. You can specify as many scripts as you like.
+That command will clone Oh-My-Zsh if necessary, go to its `lib/` subdirectory, and source the `clipboard.zsh` and `git.zsh` scripts. You can specify as many scripts as you like.
 
 If you need to clone a specific branch of a plugin repository, you may do so thus:
 
