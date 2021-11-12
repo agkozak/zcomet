@@ -277,6 +277,7 @@ DEPENDENCIES
   jekyll-avatar
   jekyll-include-cache
   jekyll-seo-tag
+  jekyll-sitemap
 
 BUNDLED WITH
    2.2.30
