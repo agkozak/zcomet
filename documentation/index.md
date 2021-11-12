@@ -27,7 +27,7 @@ permalink: /documentation/
 
 ## Installation
 
-Installing `zcomet` is as easy as cloning the `zcomet` GitHub repository and sourcing `zcomet.zsh`. I recommend using the following code near the top of your `.zshrc`:
+Installing `zcomet` is as easy as cloning the [`zcomet` GitHub repository](https://github.com/agkozak/zcomet) and sourcing `zcomet.zsh`. I recommend using the following code near the top of your `.zshrc`:
 
 ```sh
 # Clone zcomet if necessary
