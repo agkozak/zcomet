@@ -36,4 +36,6 @@ Surely there must be a lot of overhead from having `zcomet` do the work for you?
 
 *Many thanks to Roman Perepelitsa for sharing his [`zsh-bench`](https://github.com/romkatv/zsh-bench) benchmarking utility.*
 
+[Try `zcomet` now!](https://github.com/agkozak/zcomet)
+
 *Copyright &copy; 2021 Alexandros Kozak*
