@@ -70,7 +70,14 @@ _zcomet_compile() {
 #   The repo
 ############################################################
 _zcomet_repo_shorthand() {
-  if [[ $1 == 'ohmyzsh' ]]; then
+  if [[ $1 == http(|s)://github.com/* ]]; then
+    typeset -g REPLY=${1#http(|s):\/\/github.com/}
+    if [[ $REPLY == *.git ]]; then
+      typeset -g REPLY=${REPLY%.git}
+    elif [[ $REPLY == *.git@* ]]; then
+      typeset -g REPLY=${REPLY/.git@/@}
+    fi
+  elif [[ $1 == 'ohmyzsh' ]]; then
     typeset -g REPLY='ohmyzsh/ohmyzsh'
   elif [[ $1 == 'prezto' ]]; then
     typeset -g REPLY='sorin-ionescu/prezto'

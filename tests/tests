@@ -8,11 +8,11 @@ zcomet snippet https://github.com/rupa/z/blob/master/z.sh
 	zcomet load sindresorhus/pure async.zsh pure.zsh
 }
 
-zcomet load oldratlee/hacker-quotes
+zcomet load http://github.com/oldratlee/hacker-quotes.git
 
 zcomet trigger hist marlonrichert/zsh-hist
 
-zcomet load zsh-users/zsh-completions
+zcomet fpath https://github.com/zsh-users/zsh-completions
 
 zcomet load ohmyzsh lib git.zsh
 
