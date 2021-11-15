@@ -1,7 +1,7 @@
 # `zcomet` - Fast, Simple Zsh Plugin Manager
 
 <p align="center">
-    <img src="img/logo.png">
+    <img src="https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometDonati.jpg">
 </p>
 
 [![MIT License](img/mit_license.svg)](https://opensource.org/licenses/MIT)
