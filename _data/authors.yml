@@ -27,7 +27,7 @@ agkozak:
   # Rearrange to change the order in which they appear
   social:
     github:          https://github.com/agkozak/zcomet
-    # twitter:         agkozak
+    twitter:         agkozak
     # email:           <mail@domain.tld>
     # rss:             https://<url>/feed.xml
     # facebook:        <username>
@@ -48,7 +48,7 @@ agkozak:
     # ello:            <username>
     # twitch:          <username>
     # steam:           <number>
-    # reddit:          <username>
+    reddit:          agkozak
     # tumblr:          <username>
     # pinterest:       <username>
     # foursquare:      <number>
@@ -57,7 +57,7 @@ agkozak:
     # npm:             <username>
     # hackernews:      <username>
     # trello:          <firstnamelastname>
-    # linkedin:        <firstname-lastname-string>
+    linkedin:        agkozak
     # xing:            <firstname_lastname_counter>
     # blogger:         <number>
     # delicious:       <username>
