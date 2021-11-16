@@ -56,6 +56,9 @@ Those lines will clone repos, source scripts, update your `FPATH` and `PATH`, an
 
 ## News
 
+- November 16, 2021
+    + You can now refer to a GitHub repository by the full URL, if you prefer, e.g. `https://github.com/zsh-users/zsh-syntax-highlighting.git` instead of `zsh-users/zsh-syntax-highlighting`. Support for Git servers other than GitHub is coming soon.
+    + `zcomet list` now displays triggers in a more abbreviated fashion.
 - October 21, 2021
     + `zcomet` now supports local plugins and snippets.
 
