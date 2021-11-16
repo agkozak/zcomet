@@ -41,7 +41,9 @@ fi
 (( ${#ZCOMET_TRIGGERS} )) &&
   success=1 &&
   print -P '%B%F{yellow}Triggers:%f%b' &&
-  print -l -f '  %s\n' "${(o)ZCOMET_TRIGGERS[@]}"
+	print -n '  '
+	print -z -f '%s, ' "${(o)ZCOMET_TRIGGERS[@]}"
+	read -z && print "${REPLY%,}" | fold -s -w $COLUMNS
 
 (( success )) && return 0 || return 1
 
