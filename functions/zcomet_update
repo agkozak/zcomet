@@ -4,9 +4,8 @@
 # The `update' command
 #
 # For the time being, updates all plugins and snippets that
-# have been downloaded, recompiles their scripts (if
-# necessary), and re-sources any scripts that are already
-# loaded. Eventually this command will be able to update
+# have been downloaded and recompiles their scripts (if
+# necessary). Eventually this command will be able to update
 # individual plugins and snippets.
 #
 # Arguments:
@@ -39,11 +38,6 @@ for git_dir in ${ZCOMET[REPOS_DIR]}/**/.git(N/); do
   done
 done
 
-# Reload loaded plugins
-for plugin in ${zsh_loaded_plugins[@]}; do
-  zcomet load ${=plugin}
-done
-
 snippets=( "${ZCOMET[SNIPPETS_DIR]}"/**/*(N.) )
 for file in "${snippets[@]}"; do
   snippet=${file#${ZCOMET[SNIPPETS_DIR]}/}
@@ -61,11 +55,10 @@ for file in "${snippets[@]}"; do
   zcomet snippet --update "${snippet}"
   _zcomet_compile "$file"
 done
-snippet=''
-if (( ${#ZCOMET_SNIPPETS} )); then
-  for snippet in "${ZCOMET_SNIPPETS[@]}"; do
-    zcomet snippet "$snippet"
-  done
-fi
+
+>&2 print
+>&2 print -P '%B%F{yellow}zcomet: Update finished.'
+>&2 print "You may now run \`exec zsh' to refresh the system."
+>&2 print -P '%f%b'
 
 # vim: ft=zsh:ts=2:sts=2:sw=2

@@ -56,6 +56,8 @@ Those lines will clone repos, source scripts, update your `FPATH` and `PATH`, an
 
 ## News
 
+- November 17, 2021
+    + `zcomet update` no longer re-sources loaded plugins and snippets, as doing so can have undesired consequences. Instead, it reminds the user to `exec zsh` refresh the system.
 - November 16, 2021
     + You can now refer to a GitHub repository by the full URL, if you prefer, e.g. `https://github.com/zsh-users/zsh-syntax-highlighting.git` instead of `zsh-users/zsh-syntax-highlighting`. Support for Git servers other than GitHub is coming soon.
     + `zcomet list` now displays triggers in a more abbreviated fashion.
@@ -227,7 +229,7 @@ For snippets that are not hosted by GitHub, you will want to make sure that the 
 
 ### `update`
 
-`zcomet update` downloads updates for any plugins or snippets that have been downloaded in the past and re-`source`s any active plugins or snippets.
+`zcomet update` downloads updates for any plugins or snippets that have been downloaded in the past.
 
 ### `list`
 
