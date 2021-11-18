@@ -70,8 +70,8 @@ _zcomet_compile() {
 #   The repo
 ############################################################
 _zcomet_repo_shorthand() {
-  if [[ $1 == http(|s)://github.com/* ]]; then
-    typeset -g REPLY=${1#http(|s):\/\/github.com/}
+  if [[ $1 == http(|s)://${ZCOMET[GITSERVER]}/* ]]; then
+    typeset -g REPLY=${1#http(|s):\/\/${ZCOMET[GITSERVER]}/}
     if [[ $REPLY == *.git ]]; then
       typeset -g REPLY=${REPLY%.git}
     elif [[ $REPLY == *.git@* ]]; then
@@ -319,7 +319,7 @@ _zcomet_clone_repo() {
   [[ -d $repo_dir ]] && return
 
   print -P "%B%F{yellow}Cloning ${repo}:%f%b"
-  if ! command git clone ${clone_options} "https://github.com/${repo}" "$repo_dir"; then
+  if ! command git clone ${clone_options} "https://${ZCOMET[GITSERVER]}/${repo}" "$repo_dir"; then
     ret=$?
     >&2 print "Could not clone repository ${repo}."
     return $ret
@@ -632,6 +632,12 @@ zcomet() {
     ZCOMET[SNIPPETS_DIR]=$snippets_dir
   else
     : ${ZCOMET[SNIPPETS_DIR]:=${ZCOMET[HOME_DIR]}/snippets}
+  fi
+
+  if zstyle -s :zcomet: gitserver gitserver; then
+    ZCOMET[GITSERVER]=$gitserver
+  else
+    ZCOMET[GITSERVER]='github.com'
   fi
 
   # Global parameter with PREFIX for make, configure, etc.
