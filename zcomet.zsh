@@ -613,7 +613,7 @@ zcomet() {
   typeset -g REPLY
 
   # Allow the user to specify custom directories
-  local home_dir repos_dir snippets_dir
+  local home_dir repos_dir snippets_dir git_server
 
   # E.g., zstyle ':zcomet:*' home-dir ~/.my_dir
   if zstyle -s :zcomet: home-dir home_dir; then
@@ -634,7 +634,7 @@ zcomet() {
     : ${ZCOMET[SNIPPETS_DIR]:=${ZCOMET[HOME_DIR]}/snippets}
   fi
 
-  if zstyle -s :zcomet: gitserver gitserver; then
+  if zstyle -s :zcomet: gitserver git_server; then
     ZCOMET[GITSERVER]=$gitserver
   else
     ZCOMET[GITSERVER]='github.com'
