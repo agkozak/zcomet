@@ -1,5 +1,5 @@
 ---
-title: Documentation
+title: Documentation for the zcomet Zsh Plugin Manager
 description: zcomet subcommands and settings, along with a sample .zshrc
 hide_description: true
 image: https://raw.githubusercontent.com/agkozak/zcomet-media/main/CometDonati.jpg
@@ -27,7 +27,7 @@ permalink: /documentation/
 
 ## Installation
 
-Installing `zcomet` is as easy as cloning the [`zcomet` GitHub repository](https://github.com/agkozak/zcomet) and sourcing `zcomet.zsh`. I recommend using the following code near the top of your `.zshrc`:
+Installing the `zcomet` Zsh plugin manager is as easy as cloning the [`zcomet` GitHub repository](https://github.com/agkozak/zcomet) and sourcing `zcomet.zsh`. I recommend using the following code near the top of your `.zshrc`:
 
 ```sh
 # Clone zcomet if necessary
