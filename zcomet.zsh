@@ -452,7 +452,7 @@ _zcomet_fpath_command() {
 _zcomet_snippet_command() {
   [[ -z $1 ]] && print 'You need to specify a snippet.' && return 1
 
-  local update snippet url method snippet_file snippet_dir ret
+  local update snippet url method snippet_file snippet_dir ret temp_dir
 
   [[ $1 == '--update' ]] && update=1 && shift
   snippet=$1 && shift
@@ -474,34 +474,34 @@ _zcomet_snippet_command() {
   url=$REPLY
   snippet_file=${snippet##*/}
   snippet_dir=${snippet%/*}
-  snippet_dir=${snippet_dir/:\//}
+  snippet_dir="${ZCOMET[SNIPPETS_DIR]}/${snippet_dir/:\//}"
+  temp_dir="/tmp/zcomet/$$/${snippet_dir}"
 
-  if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file} ]] ||
+  if [[ ! -f ${snippet_dir}/${snippet_file} ]] ||
      (( update )); then
-    if [[ ! -d /tmp/${snippet_dir} ]]; then
-      command mkdir -p "/tmp/${snippet_dir}"
+    if [[ ! -d ${temp_dir} ]]; then
+      command mkdir -p "${temp_dir}"
     fi
     print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
     if (( ${+commands[curl]} )); then
       method='curl'
-      curl "$url" > "/tmp/${snippet_dir}/${snippet_file}"
+      curl "$url" > "${temp_dir}/${snippet_file}"
       ret=$?
     elif (( ${+commands[wget]} )); then
       method='wget'
-      wget "$url" -O "/tmp/${snippet_dir}/${snippet_file}"
+      wget "$url" -O "${temp_dir}/${snippet_file}"
       ret=$?
     else
       >&2 print "You need \`curl' or \`wget' to download snippets."
       return 1
     fi
     if (( ret == 0 )); then
-      [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet_dir} ]] &&
-        command mkdir -p "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}"
-      command mv "/tmp/${snippet_dir}/${snippet_file}" \
-        "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}" &&
-        _zcomet_compile \
-          "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"
-      command rm -rf "/tmp/${snippet_dir%%/*}"
+      if [[ ! -d ${snippet_dir} ]]; then
+        command mkdir -p "${snippet_dir}"
+      fi
+      command mv "${temp_dir}/${snippet_file}" "${snippet_dir}" &&
+          _zcomet_compile "${snippet_dir}/${snippet_file}"
+      command rm -rf "${temp_dir%%/*}"
     else
       >&2 print "Could not ${method} snippet ${snippet}."
     fi
@@ -509,8 +509,8 @@ _zcomet_snippet_command() {
 
   (( update )) && return
 
-  if ZERO="${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}" \
-      source "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"; then
+  if ZERO="${snippet_dir}/${snippet_file}" \
+      source "${snippet_dir}/${snippet_file}"; then
     _zcomet_add_list "$cmd" "$snippet"
   else
     ret=$?
