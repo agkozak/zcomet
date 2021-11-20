@@ -501,6 +501,7 @@ _zcomet_snippet_command() {
         "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}" &&
         _zcomet_compile \
           "${ZCOMET[SNIPPETS_DIR]}/${snippet_dir}/${snippet_file}"
+      command rm -rf "/tmp/${snippet_dir%%/*}"
     else
       >&2 print "Could not ${method} snippet ${snippet}."
     fi
