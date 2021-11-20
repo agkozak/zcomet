@@ -501,7 +501,7 @@ _zcomet_snippet_command() {
       fi
       command mv "${temp_dir}/${snippet_file}" "${snippet_dir}" &&
           _zcomet_compile "${snippet_dir}/${snippet_file}"
-      command rm -rf "${temp_dir%%/*}"
+      command rm -rf "/tmp/zcomet/$$"
     else
       >&2 print "Could not ${method} snippet ${snippet}."
     fi
