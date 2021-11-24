@@ -19,4 +19,9 @@ if ! command git --git-dir="${${ZCOMET[SCRIPT]}:A:h}/.git" \
   return 1
 fi
 
+>&2 print
+>&2 print -P '%B%F{yellow}zcomet: Self-update finished.'
+>&2 print "You may now run \`exec zsh' to refresh the system."
+>&2 print -P '%f%b'
+
 # vim: ft=zsh
