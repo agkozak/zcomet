@@ -193,7 +193,7 @@ _zcomet_load() {
       local zfunction
 
       for zfunction in "${dir}"/^(*~|*.zwc(|.old)|_*|prompt_*_setup)(N-.:t); do
-        autoload -Uz ${zfunction}
+        autoload -Uz - ${zfunction}
       done
     }
   fi
