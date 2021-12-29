@@ -344,4 +344,4 @@ When I started this project, I was happy to discover that `zcomet` scored rather
 * Allow the loading of repositories not on GitHub
 * Support for `ssh://` and `git://`
 
-*Copyright (C) 2021 Alexandros Kozak*
+*Copyright (C) 2021-2022 Alexandros Kozak*
