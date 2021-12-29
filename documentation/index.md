@@ -208,4 +208,4 @@ You will not normally have to use `zcomet compile`, as `zcomet` tries to compile
 
 **TO BE CONTINUED.**
 
-*Copyright &copy; 2021 Alexandros Kozak*
+*Copyright &copy; 2021-2022 Alexandros Kozak*

@@ -38,4 +38,4 @@ Surely there must be a lot of overhead from having `zcomet` do the work for you?
 
 [Try `zcomet` now!](https://github.com/agkozak/zcomet)
 
-*Copyright &copy; 2021 Alexandros Kozak*
+*Copyright &copy; 2021-2022 Alexandros Kozak*
