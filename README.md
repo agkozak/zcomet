@@ -203,7 +203,7 @@ or save time by listing a number of triggers before the repository name:
 
 *NOTE: If the repository that `trigger` is cloning has submodules, consider whether or not you really need them. Using the [`--no-submodules`](#--no-submodules) option after `trigger` can save a lot of time during installation and updating.*
 
-This feature was inspired by [Zinit](https://github.com/agkozak/zinit)'s `trigger-load` command.
+This feature was inspired by [Zinit](https://github.com/zdharma-continuum/zinit)'s `trigger-load` command.
 
 ### `snippet` snippet
 
