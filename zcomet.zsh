@@ -51,7 +51,7 @@ _zcomet_compile() {
         builtin zcompile -Uz "$1"
       # Scripts to be sourced
       else
-        builtin zcompile -R "$1"
+        builtin zcompile -UR "$1"
       fi
     fi
     shift
