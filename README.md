@@ -56,6 +56,8 @@ Those lines will clone repos, source scripts, update your `FPATH` and `PATH`, an
 
 ## News
 
+- August 24, 2023
+    + `zcomet compile` no longer expands aliases when compiling scripts.
 - November 17, 2021
     + `zcomet update` no longer re-sources loaded plugins and snippets, as doing so can have undesired consequences. Instead, it reminds the user to `exec zsh` refresh the system.
 - November 16, 2021
