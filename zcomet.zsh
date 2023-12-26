@@ -2,7 +2,7 @@
 #
 # https://github.com/agkozak/zcomet
 #
-# MIT License / Copyright (c) 2021 Alexandros Kozak
+# MIT License / Copyright (c) 2021-2024 Alexandros Kozak
 
 typeset -gA ZCOMET
 
