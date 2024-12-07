@@ -56,8 +56,14 @@ Those lines will clone repos, source scripts, update your `FPATH` and `PATH`, an
 
 ## News
 
+- December 7, 2024
+    + `zcomet load` now first chooses a branch and then initializes and updates submodules.
 - August 24, 2023
     + `zcomet compile` no longer expands aliases when compiling scripts.
+
+<details>
+    <summary>Older news</summary>
+
 - November 17, 2021
     + `zcomet update` no longer re-sources loaded plugins and snippets, as doing so can have undesired consequences. Instead, it reminds the user to `exec zsh` refresh the system.
 - November 16, 2021
@@ -65,13 +71,9 @@ Those lines will clone repos, source scripts, update your `FPATH` and `PATH`, an
     + `zcomet list` now displays triggers in a more abbreviated fashion.
 - October 21, 2021
     + `zcomet` now supports local plugins and snippets.
-
-<details>
-    <summary>Older news</summary>
-
 - October 13, 2021
     + I have adopted [@romkatv](https://github.com/romkatv)'s [zsh-bench](https://github.com/romkatv/zsh-bench) benchmarks as a standard for measuring performance.
-    + `zcomet` no longer `zcompiles` rc files, and the default behavior of `zcomet compinit` is merely to run `compinit` while specifying a sensibly named cache file (again, props to **@romkatv** for suggesting these changes).
+    + `zcomet` no longer `zcompile`s rc files, and the default behavior of `zcomet compinit` is merely to run `compinit` while specifying a sensibly named cache file (again, props to **@romkatv** for suggesting these changes).
 - October 4, 2021
     + `zcomet` now fetches Git submodules by default. If you do not need them, be sure to save yourself time by using the [`--no-submodules`](#--no-submodules) option with `load`, `fpath`, or `trigger`.
 - September 30, 2021
