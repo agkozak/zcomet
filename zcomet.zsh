@@ -302,10 +302,9 @@ _zcomet_is_valid_plugin() {
 #                   The repository and branch/tag/commit
 ############################################################
 _zcomet_clone_repo() {
-  local clone_options
-  if [[ $1 != '--no-submodules' ]]; then
-    clone_options='--recursive'
-  else
+  local submodules=1
+  if [[ $1 == '--no-submodules' ]]; then
+    submodules=0
     shift
   fi
 
@@ -319,7 +318,7 @@ _zcomet_clone_repo() {
   [[ -d $repo_dir ]] && return
 
   print -P "%B%F{yellow}Cloning ${repo}:%f%b"
-  if ! command git clone ${clone_options} "https://${ZCOMET[GITSERVER]}/${repo}" "$repo_dir"; then
+  if ! command git clone "https://${ZCOMET[GITSERVER]}/${repo}" "$repo_dir"; then
     ret=$?
     >&2 print "Could not clone repository ${repo}."
     return $ret
@@ -329,6 +328,16 @@ _zcomet_clone_repo() {
     ret=$?
     >&2 print "Could not checkout \`${branch}'."
     return $ret
+  fi
+  if (( submodules )) && [[ -e ${repo_dir}/.gitmodules ]]; then
+    (
+      if ! cd $repo_dir ||
+         ! git submodule update --init --recursive; then
+        ret=$?
+        >&2 print 'Could not initialize and update submodule(s).'
+        return $ret
+      fi
+    )
   fi
   for file in "${repo_dir}"/**/*.zsh(|-theme)(N.) \
               "${repo_dir}"/**/prompt_*_setup(N.); do
