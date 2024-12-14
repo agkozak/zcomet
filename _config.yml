@@ -1,4 +1,4 @@
-remote_theme: hydecorp/hydejack@v9.1.4
+remote_theme: hydecorp/hydejack@v9.2.1
 plugins:
   - jekyll-include-cache
   - jekyll-avatar
@@ -20,3 +20,8 @@ author:
   name: Alexandros Kozak
   social:
     github: agkozak
+hydejack:
+  dark_mode:
+    dynamic: true
+    icon:    true
+    always:  false
