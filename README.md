@@ -26,7 +26,7 @@ zcomet load author3/plugin3
 zcomet compinit
 ```
 
-Those lines will clone repos, source scripts, update your `FPATH` and `PATH`, and load the Zsh completion system.
+Those lines will clone repositories, source scripts, update your `FPATH` and `PATH`, and load the Zsh completion system.
 
 ## Table of Contents
 
@@ -65,7 +65,7 @@ Those lines will clone repos, source scripts, update your `FPATH` and `PATH`, an
     <summary>Older news</summary>
 
 - November 17, 2021
-    + `zcomet update` no longer re-sources loaded plugins and snippets, as doing so can have undesired consequences. Instead, it reminds the user to `exec zsh` refresh the system.
+    + `zcomet update` no longer re-sources loaded plugins and snippets, as doing so can have undesired consequences. Instead, it reminds the user to `exec zsh` to refresh the system.
 - November 16, 2021
     + You can now refer to a GitHub repository by the full URL, if you prefer, e.g. `https://github.com/zsh-users/zsh-syntax-highlighting.git` instead of `zsh-users/zsh-syntax-highlighting`. Support for Git servers other than GitHub is coming soon.
     + `zcomet list` now displays triggers in a more abbreviated fashion.
@@ -117,7 +117,7 @@ zcomet load agkozak/agkozak-zsh-prompt
 zcomet load agkozak/zsh-z
 zcomet load ohmyzsh plugins/gitfast
 
-# Load a code snippet - no need to download an entire repo
+# Load a code snippet - no need to download an entire repository
 zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
 
 # Lazy-load some plugins
@@ -275,7 +275,7 @@ Unloads a plugin that has an [unload function](https://github.com/agkozak/Zsh-10
 
 ### `--no-submodules`
 
-By default, if a repository has submodules, `zcomet` will fetch them whenever the `load`, `fpath`, `trigger`, or `update` commands are issued. For example, I use [Prezto's `archive` module](https://github.com/sorin-ionescu/prezto/tree/master/modules/archive), but I don't need all of the external prompts in the `prompt` module, so I use `zcomet`'s `--no-submodules` option:
+By default, if a repository has submodules, `zcomet` will fetch them whenever the `load`, `fpath`, `trigger`, or `update` commands are issued. For example, I use [Prezto's `archive` module](https://github.com/sorin-ionescu/prezto/tree/master/modules/archive), but I do not need all of the external prompts in the `prompt` module, so I use `zcomet`'s `--no-submodules` option:
 
     zcomet load --no-submodules sorin-ionescu/prezto modules/archive
 
@@ -321,7 +321,7 @@ This feature is based on Marlon Richert's [Znap](https://github.com/marlonricher
     zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
     (( ${+commands[fzf]} )) || ~[fzf]/install --bin
 
-The first line makes sure the `fzf` repo gets cloned, its `bin/` subdirectory is added to `PATH`, and the relevant scripts get sourced. The second line checks to make sure that the `fzf` binary is actually available and installs it if it is not (note that `fzf` does not work on all systems and that its install script relies on `bash`'s being installed).
+The first line makes sure the `fzf` repository gets cloned, its `bin/` subdirectory is added to `PATH`, and the relevant scripts get sourced. The second line checks to make sure that the `fzf` binary is actually available and installs it if it is not (note that `fzf` does not work on all systems and that its install script relies on `bash`'s being installed).
 
 ## Standards Compliance
 
@@ -343,7 +343,7 @@ When I started this project, I was happy to discover that `zcomet` scored rather
 
 * Supply prettier output
 * Provide more helpful error messages
-* Allow user to update just one repository or snippet
+* Allow users to update just one repository or snippet
 * Improve the `unload` command
 * Allow the loading of repositories not on GitHub
 * Support for `ssh://` and `git://`
