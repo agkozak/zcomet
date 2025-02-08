@@ -318,7 +318,7 @@ _zcomet_clone_repo() {
   [[ -d $repo_dir ]] && return
 
   print -P "%B%F{yellow}Cloning ${repo}:%f%b"
-  if ! command git clone "https://${ZCOMET[GITSERVER]}/${repo}" "$repo_dir"; then
+  if ! command git clone "https://${ZCOMET[GITSERVER]}/${repo}" --depth=1 "$repo_dir"; then
     ret=$?
     >&2 print "Could not clone repository ${repo}."
     return $ret
@@ -332,7 +332,7 @@ _zcomet_clone_repo() {
   if (( submodules )) && [[ -e ${repo_dir}/.gitmodules ]]; then
     (
       if ! cd $repo_dir ||
-         ! git submodule update --init --recursive; then
+         ! git submodule update --init --recursive --depth=1; then
         ret=$?
         >&2 print 'Could not initialize and update submodule(s).'
         return $ret
