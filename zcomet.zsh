@@ -309,19 +309,24 @@ _zcomet_clone_repo() {
   fi
 
   [[ $1 == ?*/?* || $1 == 'ohmyzsh' || $1 == 'prezto' ]] || return 1
-  local repo branch branch_string repo_dir ret file
+  local repo branch repo_dir ret file
   _zcomet_repo_shorthand "${1%@*}"
   repo=$REPLY
   repo_dir="${ZCOMET[REPOS_DIR]}/${repo}"
   [[ $1 == *@* ]] && branch=${1#*@}
-  [[ -n $branch ]] && branch_string="-b ${branch}"
 
   [[ -d $repo_dir ]] && return
 
   print -P "%B%F{yellow}Cloning ${repo}:%f%b"
-  if ! command git clone ${=branch_string} "https://${ZCOMET[GITSERVER]}/${repo}" --depth=1 "$repo_dir"; then
+  if ! command git clone "https://${ZCOMET[GITSERVER]}/${repo}" --depth=1 "$repo_dir"; then
     ret=$?
     >&2 print "Could not clone repository ${repo}."
+    return $ret
+  fi
+  if [[ -n $branch ]] && ! command git --git-dir="${repo_dir}/.git" \
+      --work-tree=$repo_dir checkout -q "$branch"; then
+    ret=$?
+    >&2 print "Could not checkout \`${branch}'."
     return $ret
   fi
   if (( submodules )) && [[ -e ${repo_dir}/.gitmodules ]]; then
