@@ -319,7 +319,7 @@ This feature is based on Marlon Richert's [Znap](https://github.com/marlonricher
 `fzf` is not structured like a normal Zsh plugin, but you can install it like this:
 
     zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
-    (( ${+commands[fzf]} )) || ~[fzf]/install --bin
+    whence fzf &> /dev/null || ~[fzf]/install --bin
 
 The first line makes sure the `fzf` repository gets cloned, its `bin/` subdirectory is added to `PATH`, and the relevant scripts get sourced. The second line checks to make sure that the `fzf` binary is actually available and installs it if it is not (note that `fzf` does not work on all systems and that its install script relies on `bash`'s being installed).
 

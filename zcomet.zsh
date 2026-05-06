@@ -459,6 +459,9 @@ _zcomet_fpath_command() {
 #   messages
 ############################################################
 _zcomet_snippet_command() {
+
+  setopt LOCAL_OPTIONS EQUALS
+
   [[ -z $1 ]] && print 'You need to specify a snippet.' && return 1
 
   local update snippet url method snippet_file snippet_dir ret temp_dir
@@ -492,11 +495,11 @@ _zcomet_snippet_command() {
       command mkdir -p "${temp_dir}"
     fi
     print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
-    if (( ${+commands[curl]} )); then
+    if [[ -x =curl ]]; then
       method='curl'
       curl "$url" > "${temp_dir}/${snippet_file}"
       ret=$?
-    elif (( ${+commands[wget]} )); then
+    elif [[ -x =wget ]]; then
       method='wget'
       wget "$url" -O "${temp_dir}/${snippet_file}"
       ret=$?

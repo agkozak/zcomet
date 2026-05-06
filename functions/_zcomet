@@ -1,7 +1,7 @@
 #compdef zcomet
 
-local -a commands
-commands=(
+local -a cmds
+cmds=(
 	'load:clone and load a plugin'
 	'trigger:create a shortcut for loading and running a plugin'
 	'snippet:load a snippet of code'
@@ -16,7 +16,7 @@ commands=(
 )
 
 if (( CURRENT == 2 )); then
-	_describe -t commands 'commands' commands
+	_describe -t commands 'commands' cmds
 fi
 
 return 0
