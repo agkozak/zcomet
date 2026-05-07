@@ -778,11 +778,40 @@ _zcomet_named_dirs() {
   fi
 }
 
-# The zsh_directory_name hook did not appear till Zsh v4.3.12, so for v4.3.11
-# we'll just have to use the zsh_directory_name function directly
 if is-at-least 4.3.12; then
+
+  # MobaXterm ships without add-zsh-hook
+  if ! autoload -Uz add-zsh-hook 2>/dev/null && ! typeset -f add-zsh-hook >/dev/null; then
+      add-zsh-hook() {
+          local hook="$2"
+          local fn="$3"
+          case $1 in
+              -d|--delete)
+                  # Removal: rebuild the hook array without the named function
+                  local -a new_hooks
+                  local h
+                  for h in ${(P)${:-${hook}_functions}}; do
+                      [[ $h != $fn ]] && new_hooks+=("$h")
+                  done
+                  set -A ${hook}_functions "${new_hooks[@]}"
+                  ;;
+              *)
+                  hook="$1"
+                  fn="$2"
+                  typeset -ga ${hook}_functions
+                  # Avoid duplicates
+                  if [[ -z ${${(P)${:-${hook}_functions}}[(r)$fn]} ]]; then
+                      eval "${hook}_functions+=(\"$fn\")"
+                  fi
+                  ;;
+          esac
+      }
+  fi
+
   add-zsh-hook zsh_directory_name _zcomet_named_dirs
 else
+  # The zsh_directory_name hook did not appear till Zsh v4.3.12, so for v4.3.11
+  # we'll just have to use the zsh_directory_name function directly
   zsh_directory_name() {
     _zcomet_named_dirs $@
   }
