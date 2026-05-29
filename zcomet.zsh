@@ -17,8 +17,13 @@ if ! is-at-least 4.3.11; then
   zcomet; return 1
 fi
 
+# Cache this script's resolved directory. ${ZCOMET[SCRIPT]:A:h} does a realpath
+# lookup; resolving it once avoids repeating that on every dynamic named-directory
+# lookup (the zsh_directory_name hook fires on every prompt that uses %~).
+ZCOMET[BIN_DIR]=${ZCOMET[SCRIPT]:A:h}
+
 # Add zcomet functions to FPATH and autoload some things
-fpath=( "${ZCOMET[SCRIPT]:A:h}/functions" "${fpath[@]}" )
+fpath=( "${ZCOMET[BIN_DIR]}/functions" "${fpath[@]}" )
 autoload -Uz add-zsh-hook \
              zcomet_{unload,update,list,self-update,help}
 
@@ -45,7 +50,7 @@ _zcomet_compile() {
           $1 != *.zwc &&
           $1 != */test-data/* ]]; then
       # Autoloadable functions
-      if [[ $1 == ${ZCOMET[SCRIPT]:A:h}/functions/zcomet_* ||
+      if [[ $1 == ${ZCOMET[BIN_DIR]}/functions/zcomet_* ||
             ${1:t} == prompt_*_setup ||
             ${1:t} == _* ]]; then
         builtin zcompile -Uz "$1"
@@ -723,7 +728,7 @@ zcomet() {
   setopt LOCAL_OPTIONS EXTENDED_GLOB
 
   _zcomet_compile "${ZCOMET[SCRIPT]}" \
-                  "${ZCOMET[SCRIPT]:A:h}"/functions/zcomet_*~*.zwc(N.)
+                  "${ZCOMET[BIN_DIR]}"/functions/zcomet_*~*.zwc(N.)
 }
 
 ############################################################
@@ -742,12 +747,12 @@ _zcomet_named_dirs() {
   local expl
 
   if [[ $1 == 'n' ]]; then
-    [[ $2 == 'zcomet-bin' ]] && reply=( ${ZCOMET[SCRIPT]:A:h} ) && return 0
+    [[ $2 == 'zcomet-bin' ]] && reply=( ${ZCOMET[BIN_DIR]} ) && return 0
     dirs=( ${ZCOMET[REPOS_DIR]}/*/$2(N/) )
     (( ${#dirs} != 1 )) && return 1
     reply=( ${dirs[1]} ) && return 0
   elif [[ $1 == 'd' ]]; then
-    if [[ $2 == ${ZCOMET[SCRIPT]:A:h} ]]; then
+    if [[ $2 == ${ZCOMET[BIN_DIR]} ]]; then
       reply=( 'zcomet-bin' ${#2} )
       return 0
     elif [[ ${${2:h}:h} == ${ZCOMET[REPOS_DIR]} ]]; then
