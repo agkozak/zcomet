@@ -42,13 +42,18 @@ SUITE_TMP=$(command mktemp -d "${TMPDIR:-/tmp}/zcomet-tests.XXXXXX") || {
   print -u2 'Could not create a temporary directory for the test suite.'
   exit 1
 }
-trap 'command rm -rf -- "$SUITE_TMP"' EXIT INT TERM
+# Note: trap only EXIT — zsh 4.3.11's `trap` does not accept signal *names*
+# (INT/TERM), only numbers, and EXIT covers normal completion and `exit`.
+trap 'command rm -rf -- "$SUITE_TMP"' EXIT
 
 # --------------------------------------------------------------------------- #
 # Counters and colours
 # --------------------------------------------------------------------------- #
 typeset -gi PASS=0 FAIL=0 SKIP=0 XFAIL=0 XPASS=0
-typeset -ga FAILED_NAMES=()
+# Declare without `=()`: on zsh 4.3.11 `typeset` is an ordinary builtin (not a
+# reserved word), so `typeset -ga NAME=()` parses as a function definition named
+# `typeset` rather than an empty-array init. A bare declaration is empty anyway.
+typeset -ga FAILED_NAMES
 
 if [[ -t 1 ]]; then
   typeset -g C_RED=$'\e[31m' C_GREEN=$'\e[32m' C_YELLOW=$'\e[33m' \
@@ -224,7 +229,7 @@ main() {
     print -u2 'Failed to source zcomet.zsh'; exit 1
   }
 
-  local -a files=( "${ZCOMET_TEST_DIR}"/test_*.zsh(N) )
+  local -a files; files=( "${ZCOMET_TEST_DIR}"/test_*.zsh(N) )
   if (( ! ${#files} )); then
     print -u2 'No test files (tests/test_*.zsh) found.'; exit 1
   fi
@@ -235,7 +240,7 @@ main() {
   done
 
   # Discover every test_* function, in sorted order.
-  local -a tests=( ${(ko)functions[(I)test_*]} )
+  local -a tests; tests=( ${(ko)functions[(I)test_*]} )
   if [[ -n $filter ]]; then
     tests=( ${(M)tests:#*${filter}*} )
   fi

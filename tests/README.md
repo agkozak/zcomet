@@ -98,3 +98,26 @@ test_load_sources_init_file() {
 `zc_reset` — fresh isolated zcomet environment.
 `mktempdir` — a throwaway directory under the auto-cleaned suite tempdir.
 `$ZCOMET_TEST_ROOT` · `$ZCOMET_TEST_DIR` · `$ZCOMET_TEST_FIXTURES` — locations.
+
+## zsh 4.3.11 compatibility
+
+zcomet supports zsh 4.3.11+, so the suite must run there too
+(`~/path/to/zsh-4.3.11 tests/runtests.zsh`). One non-obvious gotcha:
+
+**Never combine an array declaration with its initializer.** On 4.3.11 `typeset`
+and `local` are ordinary *builtins*, not *reserved words* (they only became
+reserved words later). That means `typeset -ga NAME=( … )` / `local -a NAME=( … )`
+do **not** get array-assignment parsing — the `=( … )` is misparsed (an empty
+`=()` even defines a bogus function literally named `typeset`/`local`, shadowing
+the builtin and causing unbounded recursion the next time it's called). Always
+split the declaration from the assignment:
+
+```zsh
+local -a files            # NOT: local -a files=( … )
+files=( … )               # bare array assignment is fine on 4.3.11
+```
+
+Bare assignments (`name=( … )`, `name+=( … )`) and scalar `local x=…` are fine;
+only the *declaration-with-array-initializer* form is unsafe. Likewise, `trap`
+on 4.3.11 accepts only `EXIT` and numeric signals, not signal *names* like
+`INT`/`TERM`.

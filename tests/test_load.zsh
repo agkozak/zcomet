@@ -37,7 +37,7 @@ test_load_no_duplicate_list_entry() {
   zc_reset
   local base="${ZCOMET_TEST_FIXTURES}/withbin"
   zcomet load "$base" sub sub.plugin.zsh >/dev/null 2>&1
-  local -a matches=( ${(M)zsh_loaded_plugins:#*withbin*} )
+  local -a matches; matches=( ${(M)zsh_loaded_plugins:#*withbin*} )
   assert_count 1 "${matches[@]}"
   assert_array_lacks "${base} sub" "${zsh_loaded_plugins[@]}"
 }
