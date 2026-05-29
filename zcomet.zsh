@@ -139,7 +139,7 @@ compdef() {
 # Outputs:
 #   Error messages
 ############################################################
-_zcomet_load() {
+_zcomet_activate() {
   typeset repo base_path subdir file plugin_path plugin_name plugin_loaded
   typeset -a files
   _zcomet_repo_shorthand "$1"
@@ -364,7 +364,7 @@ _zcomet_clone_repo() {
 #   Confirmation and error messages, plus raw Git output
 #   (for the time being)
 ############################################################
-_zcomet_load_command() {
+zcomet_load() {
   local clone_options
   [[ $1 == '--no-submodules' ]] && clone_options=$1 && shift
 
@@ -386,7 +386,7 @@ _zcomet_load_command() {
       _zcomet_compile "$file"
     done
   fi
-  _zcomet_load "${repo_branch%@*}" "$@"
+  _zcomet_activate "${repo_branch%@*}" "$@"
 }
 
 ############################################################
@@ -406,7 +406,7 @@ _zcomet_load_command() {
 # Output:
 #   Raw Git output and error messages
 ############################################################
-_zcomet_fpath_command() {
+zcomet_fpath() {
   local clone_options
   [[ $1 == '--no-submodules' ]] && clone_options=$1 && shift
 
@@ -458,7 +458,7 @@ _zcomet_fpath_command() {
 #   Informative messages, raw curl or wget output, error
 #   messages
 ############################################################
-_zcomet_snippet_command() {
+zcomet_snippet() {
 
   setopt LOCAL_OPTIONS EQUALS
 
@@ -554,7 +554,7 @@ _zcomet_snippet_command() {
 # the future so that the cloning process doesn't slow the
 # user down.
 ############################################################
-_zcomet_trigger_command() {
+zcomet_trigger() {
   local clone_options
   [[ $1 == '--no-submodules' ]] && clone_options=$1 && shift
 
@@ -670,10 +670,9 @@ zcomet() {
   [[ -n $1 ]] && cmd=$1 && shift
 
   case $cmd in
-    load|fpath|snippet|trigger)
-      _zcomet_${cmd}_command "$@"
+    load|fpath|snippet|trigger|unload|update|list|self-update|help)
+      zcomet_$cmd "$@"
       ;;
-    unload|update|list|self-update) zcomet_$cmd "$@" ;;
     compinit)
       autoload -Uz compinit
 
@@ -712,7 +711,7 @@ zcomet() {
       fi
       _zcomet_compile "$@"
       ;;
-    -h|--help|help) zcomet_help "$@" ;;
+    -h|--help) zcomet_help "$@" ;;
     *)
       zcomet_help
       return 1
