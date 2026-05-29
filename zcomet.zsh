@@ -462,7 +462,7 @@ zcomet_snippet() {
 
   setopt LOCAL_OPTIONS EQUALS
 
-  [[ -z $1 ]] && print 'You need to specify a snippet.' && return 1
+  [[ -z $1 ]] && >&2 print 'You need to specify a snippet.' && return 1
 
   local update snippet url method snippet_file snippet_dir ret temp_dir
 
