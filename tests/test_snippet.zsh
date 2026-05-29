@@ -13,15 +13,15 @@ test_snippet_local_sourced() {
   assert_match "${ZCOMET_SNIPPETS[1]}" '*fixtures/snippet/snip.zsh'
 }
 
-# Regression for SUGGESTIONS 1.7: "You need to specify a snippet." is printed to
-# stdout instead of stderr. Asking for a snippet with no argument should write
-# nothing to stdout.
+# Regression guard for SUGGESTIONS 1.7 (fixed): asking for a snippet with no
+# argument must write its error to stderr, not stdout.
 test_snippet_missing_arg_error_on_stderr() {
-  xfail 'SUGGESTIONS 1.7: missing-snippet message goes to stdout, not stderr'
   zc_reset
-  local out
+  local out err
   out="$(zcomet snippet 2>/dev/null)"
+  err="$(zcomet snippet 2>&1 >/dev/null)"
   assert_empty "$out" 'error message should not be on stdout'
+  assert_contains "$err" 'specify a snippet'
 }
 
 # vim: ft=zsh:ts=2:sts=2:sw=2

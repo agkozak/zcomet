@@ -45,7 +45,6 @@ Currently xfail (each maps to a SUGGESTIONS.md item):
 | `unload_removes_functions_from_fpath`| 1.4 — unload builds double-slash paths |
 | `help_works_without_columns`         | 1.5 — `fold -w $COLUMNS` breaks when `COLUMNS` is unset |
 | `list_no_stray_trigger_line`         | 1.6 — trigger block in `zcomet list` runs unconditionally |
-| `snippet_missing_arg_error_on_stderr`| 1.7 — missing-snippet message goes to stdout |
 
 ## Layout
 
