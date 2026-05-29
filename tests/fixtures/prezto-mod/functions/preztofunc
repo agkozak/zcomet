@@ -1,0 +1,3 @@
+# Fixture: an autoloadable function in a Prezto-style functions/ directory.
+# Loading the parent should add this directory to FPATH and autoload this.
+print 'preztofunc ran'

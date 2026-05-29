@@ -1,0 +1,3 @@
+# Fixture: gives unloadable/ a functions/ directory so loading adds an FPATH
+# entry that `unload` is expected to remove.
+print 'uhelper ran'

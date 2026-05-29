@@ -1,0 +1,3 @@
+#!/bin/sh
+# Fixture: a dummy executable so withbin/ has a bin/ directory.
+:
